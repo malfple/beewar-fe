@@ -13,7 +13,6 @@ pages:
   script:
     - CI=false npm run build
     - rm -rf public
-    - cp build/index.html build/404.html
     - mv build public
   artifacts:
     paths:
