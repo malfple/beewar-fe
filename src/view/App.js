@@ -1,10 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
+import { Route, Switch } from 'react-router-dom';
+import logo from '../logo.svg';
 import './App.css';
 
 import axios from 'axios';
 
-function App() {
+// App is the root router
+
+class App extends Component {
+  render() {
+    return (
+      <div className="main">
+        <Switch>
+          <Route exact path={"/"} component={Home} />
+        </Switch>
+      </div>
+    )
+  }
+}
+
+function Home() {
   return (
     <div className="App">
       <header className="App-header">
