@@ -3,9 +3,8 @@ import { Route, Switch } from 'react-router-dom';
 import logo from '../logo.svg';
 import './App.css';
 
-import axios from 'axios';
-
 import Login from './auth/login'
+import {APIRequest} from '../api/api'
 
 // App is the root router
 
@@ -48,10 +47,11 @@ class PingTest extends React.Component {
   handlePing(e) {
     e.preventDefault()
     console.log("ping!")
-    axios({
-      method: "GET",
-      url: "http://localhost:3001",
-    }).then(() => {
+    APIRequest(
+      '',
+      'GET',
+      null
+    ).then(() => {
       console.log("pong!")
     }).catch(err => {
       console.log("be server ded!")

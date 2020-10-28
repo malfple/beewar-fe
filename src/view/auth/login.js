@@ -1,4 +1,5 @@
 import React from 'react'
+import {APIRequestForm} from "../../api/api";
 
 class Login extends React.Component {
   constructor(props) {
@@ -21,7 +22,11 @@ class Login extends React.Component {
   }
 
   handleSubmit(e) {
-    console.log(this.state.username)
+    APIRequestForm('/auth/login', 'POST', {
+      username: this.state.username,
+    }).then(res => {
+      console.log(res.status)
+    })
     e.preventDefault()
   }
 
