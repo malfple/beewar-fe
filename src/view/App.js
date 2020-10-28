@@ -5,6 +5,8 @@ import './App.css';
 
 import axios from 'axios';
 
+import Login from './auth/login'
+
 // App is the root router
 
 class App extends Component {
@@ -13,6 +15,7 @@ class App extends Component {
       <div className="main">
         <Switch>
           <Route exact path={"/"} component={Home} />
+          <Route exact path={"/login"} component={Login} />
         </Switch>
       </div>
     )
