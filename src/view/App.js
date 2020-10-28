@@ -3,18 +3,36 @@ import { Route, Switch } from 'react-router-dom'
 import logo from '../logo.svg'
 import './App.css'
 
-import Login from './auth/login'
+import Login from './auth/Login'
 import {APIRequest} from '../api/api'
+import Navigation from '../components/Navigation'
 
 // App is the root router
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      token: ''
+    }
+
+    this.onLogin = this.onLogin.bind(this)
+  }
+
+  onLogin(token) {
+    console.log('App login ' + token)
+    this.setState({
+      token: token
+    })
+  }
+
   render() {
     return (
       <div className="main">
+        <Navigation loggedIn={this.state.token !== ''} username={this.state.token} />
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route exact path="/login" component={Login} />
+          <Route exact path="/login" render={(props) => (<Login {...props} onLogin={this.onLogin} />)} />
         </Switch>
       </div>
     )

@@ -7,6 +7,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.20.0",
+    "prop-types": "^15.7.2",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-router-dom": "^5.2.0",
@@ -23,10 +24,6 @@
   "eslintConfig": {
     "extends": "react-app",
     "rules": {
-      "semi": [
-        "error",
-        "never"
-      ],
       "no-trailing-spaces": [
         "warn",
         {
@@ -46,6 +43,14 @@
         "warn",
         "never"
       ],
+      "eol-last": [
+        "warn",
+        "always"
+      ],
+      "semi": [
+        "error",
+        "never"
+      ],
       "curly": "warn",
       "dot-notation": "error",
       "quotes": [
@@ -55,6 +60,10 @@
       "jsx-quotes": [
         "error",
         "prefer-double"
+      ],
+      "comma-dangle": [
+        "warn",
+        "never"
       ]
     }
   },

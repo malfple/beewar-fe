@@ -7,7 +7,7 @@ function APIRequest(api, method, data) {
   return axios({
     method: method,
     url: config.BEServer + api,
-    data: data,
+    data: data
   })
 }
 
@@ -20,7 +20,7 @@ function APIRequestForm(api, method, data) {
     method: method,
     url: config.BEServer + api,
     data: qs.stringify(data),
-    headers: headers,
+    headers: headers
   })
 }
 

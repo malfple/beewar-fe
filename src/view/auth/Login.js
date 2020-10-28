@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+
 import {APIRequestForm} from '../../api/api'
 
 class Login extends React.Component {
@@ -23,9 +25,9 @@ class Login extends React.Component {
 
   handleSubmit(e) {
     APIRequestForm('/auth/login', 'POST', {
-      username: this.state.username,
+      username: this.state.username
     }).then(res => {
-      console.log(res.status)
+      this.props.onLogin(res.data.token)
     })
     e.preventDefault()
   }
@@ -39,11 +41,15 @@ class Login extends React.Component {
             Username:
             <input type="text" name="username" onChange={this.handleInputChange} />
           </label>
-          <input type="submit" value="Submit" />
+          <input type="submit" value="Login" />
         </form>
       </div>
     )
   }
+}
+
+Login.propTypes = {
+  onLogin: PropTypes.func.isRequired
 }
 
 export default Login
