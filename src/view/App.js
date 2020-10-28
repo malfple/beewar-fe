@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import { Route, Switch } from 'react-router-dom';
-import logo from '../logo.svg';
-import './App.css';
+import React, {Component} from 'react'
+import { Route, Switch } from 'react-router-dom'
+import logo from '../logo.svg'
+import './App.css'
 
 import Login from './auth/login'
 import {APIRequest} from '../api/api'
@@ -13,8 +13,8 @@ class App extends Component {
     return (
       <div className="main">
         <Switch>
-          <Route exact path={"/"} component={Home} />
-          <Route exact path={"/login"} component={Login} />
+          <Route exact path="/" component={Home} />
+          <Route exact path="/login" component={Login} />
         </Switch>
       </div>
     )
@@ -40,21 +40,21 @@ function Home() {
       </header>
       <PingTest />
     </div>
-  );
+  )
 }
 
 class PingTest extends React.Component {
   handlePing(e) {
     e.preventDefault()
-    console.log("ping!")
+    console.log('ping!')
     APIRequest(
       '',
       'GET',
       null
     ).then(() => {
-      console.log("pong!")
+      console.log('pong!')
     }).catch(err => {
-      console.log("be server ded!")
+      console.log('be server ded!')
     })
   }
 
@@ -67,4 +67,4 @@ class PingTest extends React.Component {
   }
 }
 
-export default App;
+export default App

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import qs from 'querystring'
 
-import config from "../config/config";
+import config from '../config/config'
 
 function APIRequest(api, method, data) {
   return axios({
@@ -24,4 +24,4 @@ function APIRequestForm(api, method, data) {
   })
 }
 
-export {APIRequest, APIRequestForm};
+export {APIRequest, APIRequestForm}

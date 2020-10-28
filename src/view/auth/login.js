@@ -1,5 +1,5 @@
 import React from 'react'
-import {APIRequestForm} from "../../api/api";
+import {APIRequestForm} from '../../api/api'
 
 class Login extends React.Component {
   constructor(props) {
@@ -46,4 +46,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default Login
