@@ -28,18 +28,28 @@
         "never"
       ],
       "no-trailing-spaces": [
-        "error",
+        "warn",
         {
           "skipBlankLines": true
         }
       ],
       "no-irregular-whitespace": [
-        "error"
+        "warn"
       ],
-      "curly": "error",
+      "no-multi-spaces": "warn",
+      "space-before-blocks": "warn",
+      "space-before-function-paren": [
+        "warn",
+        "never"
+      ],
+      "space-in-parens": [
+        "warn",
+        "never"
+      ],
+      "curly": "warn",
       "dot-notation": "error",
       "quotes": [
-        "error",
+        "warn",
         "single"
       ],
       "jsx-quotes": [
