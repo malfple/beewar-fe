@@ -24,10 +24,11 @@ class Login extends React.Component {
   }
 
   handleSubmit(e) {
+    const username = this.state.username
     APIRequestForm('/auth/login', 'POST', {
-      username: this.state.username
+      username: username
     }).then(res => {
-      this.props.onLogin(res.data.token)
+      this.props.onLogin(username, res.data.token)
     })
     e.preventDefault()
   }

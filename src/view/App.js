@@ -13,15 +13,17 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      username: '',
       token: ''
     }
 
     this.onLogin = this.onLogin.bind(this)
   }
 
-  onLogin(token) {
-    console.log('App login ' + token)
+  onLogin(username, token) {
+    console.log('App login ' + username + ', token: ' + token)
     this.setState({
+      username: username,
       token: token
     })
   }
@@ -29,7 +31,7 @@ class App extends Component {
   render() {
     return (
       <div className="main">
-        <Navigation loggedIn={this.state.token !== ''} username={this.state.token} />
+        <Navigation loggedIn={this.state.username !== ''} username={this.state.username} />
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/login" render={(props) => (<Login {...props} onLogin={this.onLogin} />)} />
