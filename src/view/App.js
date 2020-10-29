@@ -3,9 +3,10 @@ import { Route, Switch } from 'react-router-dom'
 import logo from '../logo.svg'
 import './App.css'
 
-import Login from './auth/Login'
+import Login from './Login'
 import {APIRequest} from '../api/api'
 import Navigation from '../components/Navigation'
+import Profile from './Profile'
 
 // App is the root router
 
@@ -35,6 +36,7 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/login" render={(props) => (<Login {...props} onLogin={this.onLogin} />)} />
+          <Route exact path="/profile" render={(props) => (<Profile {...props} username={this.state.username} />)} />
         </Switch>
       </div>
     )

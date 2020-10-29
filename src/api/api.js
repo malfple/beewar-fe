@@ -11,6 +11,14 @@ function APIRequest(api, method, data) {
   })
 }
 
+function APIRequestGet(api, params) {
+  return axios({
+    method: 'GET',
+    url: config.BEServer + api,
+    params: params
+  })
+}
+
 function APIRequestForm(api, method, data) {
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded'
@@ -24,4 +32,4 @@ function APIRequestForm(api, method, data) {
   })
 }
 
-export {APIRequest, APIRequestForm}
+export {APIRequest, APIRequestGet, APIRequestForm}

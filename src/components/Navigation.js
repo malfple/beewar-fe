@@ -7,7 +7,7 @@ class Navigation extends React.Component {
     if(this.props.loggedIn) {
       return (
         <div>
-          Logged in user = {this.props.username}
+          <Link to="/profile">Logged in user = {this.props.username}</Link>
         </div>
       )
     }
