@@ -3,33 +3,34 @@ import qs from 'querystring'
 
 import config from '../config/config'
 
-function APIRequest(api, method, data) {
-  return axios({
-    method: method,
-    url: config.BEServer + api,
-    data: data
+const axiosCustom = axios.create({
+  baseURL: config.BEServer,
+  timeout: 5000
+})
+
+function requestLogin(username) {
+  return axiosCustom({
+    method: 'POST',
+    url: '/auth/login',
+    data: qs.stringify({
+      username: username
+    }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
   })
 }
 
-function APIRequestGet(api, params) {
-  return axios({
-    method: 'GET',
-    url: config.BEServer + api,
-    params: params
+function requestProfile(username) {
+  return axiosCustom.get('/profile', {
+    params: {
+      username: username
+    }
   })
 }
 
-function APIRequestForm(api, method, data) {
-  const headers = {
-    'Content-Type': 'application/x-www-form-urlencoded'
-  }
-
-  return axios({
-    method: method,
-    url: config.BEServer + api,
-    data: qs.stringify(data),
-    headers: headers
-  })
+export {
+  axiosCustom,
+  requestLogin,
+  requestProfile
 }
-
-export {APIRequest, APIRequestGet, APIRequestForm}

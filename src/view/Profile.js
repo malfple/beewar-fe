@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import {APIRequestGet} from '../api/api'
+import * as api from '../api/api'
 
 class Profile extends React.Component {
   constructor(props) {
@@ -23,9 +23,7 @@ class Profile extends React.Component {
   }
 
   fetchUserProfile() {
-    APIRequestGet('/profile', {
-        username: this.props.username
-    }).then(res => {
+    api.requestProfile(this.props.username).then(res => {
       console.log(res.data)
       if(res.data.user) {
         this.setState({

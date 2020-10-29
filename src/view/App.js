@@ -4,7 +4,7 @@ import logo from '../logo.svg'
 import './App.css'
 
 import Login from './Login'
-import {APIRequest} from '../api/api'
+import * as api from '../api/api'
 import Navigation from '../components/Navigation'
 import Profile from './Profile'
 
@@ -69,11 +69,7 @@ class PingTest extends React.Component {
   handlePing(e) {
     e.preventDefault()
     console.log('ping!')
-    APIRequest(
-      '',
-      'GET',
-      null
-    ).then(() => {
+    api.axiosCustom.get('/').then(() => {
       console.log('pong!')
     }).catch(err => {
       console.log('be server ded!')

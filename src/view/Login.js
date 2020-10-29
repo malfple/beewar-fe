@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import {APIRequestForm} from '../api/api'
+import * as api from '../api/api'
 
 class Login extends React.Component {
   constructor(props) {
@@ -25,9 +25,7 @@ class Login extends React.Component {
 
   handleSubmit(e) {
     const username = this.state.username
-    APIRequestForm('/auth/login', 'POST', {
-      username: username
-    }).then(res => {
+    api.requestLogin(username).then(res => {
       this.props.onLogin(username, res.data.token)
     })
     e.preventDefault()
