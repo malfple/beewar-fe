@@ -34,9 +34,15 @@ class App extends Component {
       <div className="main">
         <Navigation loggedIn={this.state.username !== ''} username={this.state.username} />
         <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/login" render={(props) => (<Login {...props} onLogin={this.onLogin} />)} />
-          <Route exact path="/profile" render={(props) => (<Profile {...props} username={this.state.username} />)} />
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route exact path="/login">
+            <Login onLogin={this.onLogin} />
+          </Route>
+          <Route exact path="/profile">
+            <Profile username={this.state.username} />
+          </Route>
         </Switch>
       </div>
     )
@@ -65,8 +71,8 @@ function Home() {
   )
 }
 
-class PingTest extends React.Component {
-  handlePing(e) {
+function PingTest() {
+  function handlePing(e) {
     e.preventDefault()
     console.log('ping!')
     api.axiosCustom.get('/').then(() => {
@@ -76,13 +82,11 @@ class PingTest extends React.Component {
     })
   }
 
-  render() {
-    return (
-      <button onClick={this.handlePing.bind(this)}>
-        ping the server
-      </button>
-    )
-  }
+  return (
+    <button onClick={handlePing}>
+      ping the server
+    </button>
+  )
 }
 
 export default App

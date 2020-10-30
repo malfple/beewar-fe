@@ -1,51 +1,41 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 
 import * as api from '../api/api'
 
-class Profile extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      username: null,
-      email: null
-    }
-  }
+function Profile(props) {
+  const [user, setUser] = useState(null)
 
-  componentDidMount() {
-    this.fetchUserProfile()
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if(this.props.username !== prevProps.username) {
-      this.fetchUserProfile()
-    }
-  }
-
-  fetchUserProfile() {
-    api.requestProfile(this.props.username).then(res => {
+  useEffect(() => {
+    api.requestProfile(props.username).then(res => {
       console.log(res.data)
       if(res.data.user) {
-        this.setState({
+        setUser({
           username: res.data.user.username,
           email: res.data.user.email
         })
       }
     })
-  }
+  }, [props.username])
 
-  render() {
+  if(!user) {
     return (
       <div>
-        <div>
-          Username: {this.state.username}
-        </div>
-        <div>
-          Email: {this.state.email}
-        </div>
+        Loading...
       </div>
     )
   }
+
+  return (
+    <div>
+      <div>
+        Username: {user.username}
+      </div>
+      <div>
+        Email: {user.email}
+      </div>
+    </div>
+  )
 }
 
 Profile.propTypes = {
