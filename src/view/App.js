@@ -37,11 +37,11 @@ class App extends Component {
           <Route exact path="/">
             <Home />
           </Route>
-          <Route exact path="/login">
+          <Route path="/login">
             <Login onLogin={this.onLogin} />
           </Route>
-          <Route exact path="/profile">
-            <Profile username={this.state.username} />
+          <Route path="/profile/:username">
+            <Profile />
           </Route>
         </Switch>
       </div>

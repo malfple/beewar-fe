@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react'
-import PropTypes from 'prop-types'
+import {useParams} from 'react-router-dom'
 
 import * as api from '../api/api'
 
-function Profile(props) {
+function Profile() {
   const [user, setUser] = useState(null)
+  const {username} = useParams()
 
   useEffect(() => {
-    api.requestProfile(props.username).then(res => {
+    api.requestProfile(username).then(res => {
       console.log(res.data)
       if(res.data.user) {
         setUser({
@@ -16,12 +17,12 @@ function Profile(props) {
         })
       }
     })
-  }, [props.username])
+  }, [username])
 
   if(!user) {
     return (
       <div>
-        Loading...
+        User does not exist.
       </div>
     )
   }
@@ -36,10 +37,6 @@ function Profile(props) {
       </div>
     </div>
   )
-}
-
-Profile.propTypes = {
-  username: PropTypes.string.isRequired
 }
 
 export default Profile
