@@ -2,32 +2,28 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 
-class Navigation extends React.Component {
-  renderButtons() {
-    if(this.props.loggedIn) {
-      return (
-        <div>
-          <Link to={`/profile/${this.props.username}`}>Logged in user = {this.props.username}</Link>
-        </div>
-      )
-    }
+function Navigation(props) {
+  let userButtons = (
+    <div>
+      <Link to="/login">Login</Link>
+    </div>
+  )
 
-    return (
+  if(props.loggedIn) {
+    userButtons = (
       <div>
-        <Link to="/login">Login</Link>
+        <Link to={`/profile/${props.username}`}>Logged in user = {props.username}</Link>
       </div>
     )
   }
 
-  render() {
-    return (
-      <div>
-        This is navigation bar. <Link to="/">Home</Link>
-        {this.renderButtons()}
-        <hr />
-      </div>
-    )
-  }
+  return (
+    <div>
+      This is navigation bar. <Link to="/">Home</Link>
+      {userButtons}
+      <hr />
+    </div>
+  )
 }
 
 Navigation.propTypes = {
