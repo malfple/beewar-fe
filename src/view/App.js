@@ -7,6 +7,7 @@ import Login from './Login'
 import * as api from '../api/api'
 import Navigation from '../components/Navigation'
 import Profile from './Profile'
+import Map from './map/Map'
 
 // App is the root router
 
@@ -42,6 +43,9 @@ class App extends Component {
           </Route>
           <Route path="/profile/:username">
             <Profile />
+          </Route>
+          <Route path="/map">
+            <Map />
           </Route>
         </Switch>
       </div>
