@@ -18,6 +18,23 @@ function MapView() {
     })
   }, [id])
 
+  function renderMap() {
+    console.log(map.terrain_info)
+    let terrainInfo = atob(map.terrain_info)
+    let terrainInfoString = ""
+    console.log(terrainInfo)
+    console.log(terrainInfo.length)
+    for(let i = 0; i < terrainInfo.length; i++) {
+      terrainInfoString += ` ${'0' + terrainInfo[i]}`
+    }
+
+    return (
+      <div>
+        {terrainInfoString}
+      </div>
+    )
+  }
+
   if(!map) {
     return (
       <div>
@@ -31,6 +48,10 @@ function MapView() {
       {id}
       <div>size (w * h): {map.width} x {map.height}</div>
       <div>name: {map.name}</div>
+      <div>
+        Terrain
+        {renderMap()}
+      </div>
     </div>
   )
 }
