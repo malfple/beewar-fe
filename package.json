@@ -79,6 +79,6 @@
       "last 1 safari version"
     ]
   },
-  "homepage": ".",
+  "homepage": "https://otqee.gitlab.io/otqee-fe",
   "proxy": "http://localhost:3001"
 }
