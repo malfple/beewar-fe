@@ -2,8 +2,10 @@ import React, {useEffect, useState} from 'react'
 import {useParams} from 'react-router-dom'
 import {axiosCustom} from '../../api/api'
 
+import Grid from '../../components/gamemap/Grid'
+
 function MapView() {
-  let [map, setMap] = useState()
+  let [map, setMap] = useState(null)
   let {id} = useParams()
 
   useEffect(() => {
@@ -17,23 +19,6 @@ function MapView() {
       }
     })
   }, [id])
-
-  function renderMap() {
-    console.log(map.terrain_info)
-    let terrainInfo = atob(map.terrain_info)
-    let terrainInfoString = ""
-    console.log(terrainInfo)
-    console.log(terrainInfo.length)
-    for(let i = 0; i < terrainInfo.length; i++) {
-      terrainInfoString += ` ${'0' + terrainInfo[i]}`
-    }
-
-    return (
-      <div>
-        {terrainInfoString}
-      </div>
-    )
-  }
 
   if(!map) {
     return (
@@ -50,7 +35,7 @@ function MapView() {
       <div>name: {map.name}</div>
       <div>
         Terrain
-        {renderMap()}
+        <Grid map={map} />
       </div>
     </div>
   )
