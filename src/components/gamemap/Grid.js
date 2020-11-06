@@ -6,6 +6,18 @@ const bunny = 'https://i.imgur.com/IaUrttj.png'
 const bunnyTexture = PIXI.Texture.from(bunny)
 const app = new PIXI.Application({width: window.innerWidth, height: window.innerHeight, backgroundColor: 0x1099bb})
 
+const hexGraphics = new PIXI.Graphics()
+hexGraphics.lineStyle(2, 0xffffff, 1)
+hexGraphics.moveTo(0, 10)
+hexGraphics.lineTo(0, 30)
+hexGraphics.lineTo(20, 40)
+hexGraphics.lineTo(40, 30)
+hexGraphics.lineTo(40, 10)
+hexGraphics.lineTo(20, 0)
+hexGraphics.lineTo(0, 10)
+
+const hexTexture = app.renderer.generateTexture(hexGraphics)
+
 function Grid(props) {
   console.log(props.map.terrain_info)
   let terrainInfo = atob(props.map.terrain_info)
@@ -21,15 +33,15 @@ function Grid(props) {
     document.getElementById('grid-view').appendChild(app.view)
     for(let i = 0; i < props.map.height; i++) {
       for(let j = 0; j < props.map.width; j++) {
-        let bunnySprite = new PIXI.Sprite(bunnyTexture)
-        bunnySprite.anchor.set(0.5, 0.5)
+        let hexSprite = new PIXI.Sprite(j < 5 ? hexTexture : bunnyTexture)
+        hexSprite.anchor.set(0.5, 0.5)
         let x = 50 + 50 * j
-        let y = 50 + 50 * i
+        let y = 50 + 40 * i
         if(i % 2 === 0) {
           x += 25
         }
-        bunnySprite.position.set(x, y)
-        app.stage.addChild(bunnySprite)
+        hexSprite.position.set(x, y)
+        app.stage.addChild(hexSprite)
       }
     }
     console.log(`map has ${app.stage.children.length} instances`)
