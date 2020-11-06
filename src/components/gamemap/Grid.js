@@ -3,11 +3,8 @@ import React, {useEffect} from 'react'
 import * as PIXI from 'pixi.js'
 
 const bunny = 'https://i.imgur.com/IaUrttj.png'
-const app = new PIXI.Application({width: 800, height: 600, backgroundColor: 0x1099bb})
-const bunnySprite = PIXI.Sprite.from(bunny)
-bunnySprite.anchor.set(0.5, 0.5)
-bunnySprite.position.set(app.screen.width/2, app.screen.height/2)
-app.stage.addChild(bunnySprite)
+const bunnyTexture = PIXI.Texture.from(bunny)
+const app = new PIXI.Application({width: window.innerWidth, height: window.innerHeight, backgroundColor: 0x1099bb})
 
 function Grid(props) {
   console.log(props.map.terrain_info)
@@ -20,7 +17,26 @@ function Grid(props) {
   }
 
   useEffect(() => {
+    console.log('load map pixi')
     document.getElementById('grid-view').appendChild(app.view)
+    for(let i = 0; i < props.map.height; i++) {
+      for(let j = 0; j < props.map.width; j++) {
+        let bunnySprite = new PIXI.Sprite(bunnyTexture)
+        bunnySprite.anchor.set(0.5, 0.5)
+        let x = 50 + 50 * j
+        let y = 50 + 50 * i
+        if(i % 2 === 0) {
+          x += 25
+        }
+        bunnySprite.position.set(x, y)
+        app.stage.addChild(bunnySprite)
+      }
+    }
+    console.log(`map has ${app.stage.children.length} instances`)
+
+    return function cleanup() {
+      console.log('map cleanup')
+    }
   })
 
   return (
