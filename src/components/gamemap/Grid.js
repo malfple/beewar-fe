@@ -24,7 +24,7 @@ function Grid(props) {
   let terrainInfoString = ''
   console.log('terrain info length ' + terrainInfo.length)
   for(let i = 0; i < terrainInfo.length; i++) {
-    terrainInfoString += ` ${'0' + terrainInfo[i]}`
+    terrainInfoString += ` ${terrainInfo.charCodeAt(i)}`
   }
 
   console.log(props.map.unit_info)
@@ -32,7 +32,7 @@ function Grid(props) {
   let unitInfoString = ''
   console.log('unit info length ' + unitInfo.length)
   for(let i = 0; i < unitInfo.length; i++) {
-    unitInfoString += ` ${'0' + unitInfo[i]}`
+    unitInfoString += ` ${unitInfo.charCodeAt(i)}`
   }
 
   useEffect(() => {
@@ -40,7 +40,8 @@ function Grid(props) {
     document.getElementById('grid-view').appendChild(app.view)
     for(let i = 0; i < props.map.height; i++) {
       for(let j = 0; j < props.map.width; j++) {
-        let hexSprite = new PIXI.Sprite(j < 5 ? hexTexture : bunnyTexture)
+        let hexVal = terrainInfo.charCodeAt(i * props.map.width + j)
+        let hexSprite = new PIXI.Sprite(hexVal === 0 ? hexTexture : bunnyTexture)
         hexSprite.anchor.set(0.5, 0.5)
         let x = 50 + 50 * j
         let y = 50 + 40 * i
