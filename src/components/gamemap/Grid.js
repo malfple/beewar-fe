@@ -22,10 +22,17 @@ function Grid(props) {
   console.log(props.map.terrain_info)
   let terrainInfo = atob(props.map.terrain_info)
   let terrainInfoString = ''
-  console.log(terrainInfo)
-  console.log(terrainInfo.length)
+  console.log('terrain info length ' + terrainInfo.length)
   for(let i = 0; i < terrainInfo.length; i++) {
     terrainInfoString += ` ${'0' + terrainInfo[i]}`
+  }
+
+  console.log(props.map.unit_info)
+  let unitInfo = atob(props.map.unit_info)
+  let unitInfoString = ''
+  console.log('unit info length ' + unitInfo.length)
+  for(let i = 0; i < unitInfo.length; i++) {
+    unitInfoString += ` ${'0' + unitInfo[i]}`
   }
 
   useEffect(() => {
@@ -54,7 +61,10 @@ function Grid(props) {
   return (
     <div>
       <div>
-        {terrainInfoString}
+        terrain: {terrainInfoString}
+      </div>
+      <div>
+        unit: {unitInfoString}
       </div>
       <div id="grid-view">
       </div>
