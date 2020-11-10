@@ -8,12 +8,13 @@ const axiosCustom = axios.create({
   timeout: 5000
 })
 
-function requestLogin(username) {
+function requestLogin(username, password) {
   return axiosCustom({
     method: 'POST',
     url: '/auth/login',
     data: qs.stringify({
-      username: username
+      username: username,
+      password: password
     }),
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'

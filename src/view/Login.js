@@ -7,7 +7,8 @@ class Login extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      username: ''
+      username: '',
+      password: ''
     }
 
     this.handleInputChange = this.handleInputChange.bind(this)
@@ -25,7 +26,7 @@ class Login extends React.Component {
 
   handleSubmit(e) {
     const username = this.state.username
-    api.requestLogin(username).then(res => {
+    api.requestLogin(username, this.state.password).then(res => {
       this.props.onLogin(username, res.data.token)
     })
     e.preventDefault()
@@ -39,6 +40,10 @@ class Login extends React.Component {
           <label>
             Username:
             <input type="text" name="username" onChange={this.handleInputChange} />
+          </label>
+          <label>
+            Password:
+            <input type="password" name="password" onChange={this.handleInputChange} />
           </label>
           <input type="submit" value="Login" />
         </form>
