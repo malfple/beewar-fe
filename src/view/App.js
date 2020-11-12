@@ -37,9 +37,15 @@ function App(props) {
     setToken(token)
   }
 
+  function onLogout() {
+    console.log('Logout')
+    setUsername('')
+    setToken('')
+  }
+
   return (
     <div className="main">
-      <Navigation loggedIn={username !== ''} username={username} token={token} />
+      <Navigation loggedIn={username !== ''} username={username} token={token} onLogout={onLogout} />
       <Switch>
         <Route exact path="/">
           <Home />
