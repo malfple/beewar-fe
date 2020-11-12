@@ -12,6 +12,7 @@ function Navigation(props) {
   if(props.loggedIn) {
     userButtons = (
       <div>
+        <div>Token: {props.token}</div>
         <Link to={`/profile/${props.username}`}>Logged in user = {props.username}</Link>
       </div>
     )

@@ -1,7 +1,9 @@
-import React, {Component} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Route, Switch } from 'react-router-dom'
 import logo from '../logo.svg'
 import './App.css'
+
+import jwt from 'jwt-decode'
 
 import Login from './Login'
 import * as api from '../api/api'
@@ -11,46 +13,49 @@ import Map from './map/Map'
 
 // App is the root router
 
-class App extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      username: '',
-      token: ''
-    }
+function App(props) {
+  let [username, setUsername] = useState('')
+  let [token, setToken] = useState('') // access token
 
-    this.onLogin = this.onLogin.bind(this)
-  }
-
-  onLogin(username, token) {
-    console.log('App login ' + username + ', token: ' + token)
-    this.setState({
-      username: username,
-      token: token
+  useEffect(() => {
+    // check if there is refresh token and if it's valid
+    api.axiosCustom({
+      method: 'POST',
+      url: '/auth/token'
+    }).then(res => {
+      // refresh token is valid, and we get access token
+      setToken(res.data.token)
+      setUsername(jwt(res.data.token).sub)
+    }).catch(err => {
+      // refresh token is invalid
     })
+  }, [])
+
+  function onLogin(username, token) {
+    console.log('App login ' + username + ', token: ' + token)
+    setUsername(username)
+    setToken(token)
   }
 
-  render() {
-    return (
-      <div className="main">
-        <Navigation loggedIn={this.state.username !== ''} username={this.state.username} />
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="/login">
-            <Login onLogin={this.onLogin} />
-          </Route>
-          <Route path="/profile/:username">
-            <Profile />
-          </Route>
-          <Route path="/map">
-            <Map />
-          </Route>
-        </Switch>
-      </div>
-    )
-  }
+  return (
+    <div className="main">
+      <Navigation loggedIn={username !== ''} username={username} token={token} />
+      <Switch>
+        <Route exact path="/">
+          <Home />
+        </Route>
+        <Route path="/login">
+          <Login onLogin={onLogin} />
+        </Route>
+        <Route path="/profile/:username">
+          <Profile />
+        </Route>
+        <Route path="/map">
+          <Map />
+        </Route>
+      </Switch>
+    </div>
+  )
 }
 
 function Home() {
