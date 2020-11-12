@@ -14,8 +14,10 @@ import Map from './map/Map'
 // App is the root router
 
 function App(props) {
-  let [username, setUsername] = useState('')
-  let [token, setToken] = useState('') // access token
+  let [state, setState] = useState({
+    username: '',
+    token: '' // access token
+  })
 
   useEffect(() => {
     // check if there is refresh token and if it's valid
@@ -24,8 +26,10 @@ function App(props) {
       url: '/auth/token'
     }).then(res => {
       // refresh token is valid, and we get access token
-      setToken(res.data.token)
-      setUsername(jwt(res.data.token).sub)
+      setState({
+        username: jwt(res.data.token).sub,
+        token: res.data.token
+      })
     }).catch(err => {
       // refresh token is invalid
     })
@@ -33,19 +37,23 @@ function App(props) {
 
   function onLogin(username, token) {
     console.log('App login ' + username + ', token: ' + token)
-    setUsername(username)
-    setToken(token)
+    setState({
+      username: username,
+      token: token
+    })
   }
 
   function onLogout() {
     console.log('Logout')
-    setUsername('')
-    setToken('')
+    setState({
+      username: '',
+      token: ''
+    })
   }
 
   return (
     <div className="main">
-      <Navigation loggedIn={username !== ''} username={username} token={token} onLogout={onLogout} />
+      <Navigation loggedIn={state.username !== ''} username={state.username} token={state.token} onLogout={onLogout} />
       <Switch>
         <Route exact path="/">
           <Home />
