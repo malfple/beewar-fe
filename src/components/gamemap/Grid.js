@@ -4,7 +4,8 @@ import * as PIXI from 'pixi.js'
 
 const bunny = 'https://i.imgur.com/IaUrttj.png'
 const bunnyTexture = PIXI.Texture.from(bunny)
-const app = new PIXI.Application({width: window.innerWidth, height: window.innerHeight, backgroundColor: 0x1099bb})
+
+const renderer = new PIXI.Renderer({width: window.innerWidth, height: window.innerHeight, backgroundColor: 0x1099bb})
 
 const hexGraphics = new PIXI.Graphics()
 hexGraphics.lineStyle(2, 0xffffff, 1)
@@ -16,7 +17,7 @@ hexGraphics.lineTo(40, 10)
 hexGraphics.lineTo(20, 0)
 hexGraphics.lineTo(0, 10)
 
-const hexTexture = app.renderer.generateTexture(hexGraphics)
+const hexTexture = renderer.generateTexture(hexGraphics)
 
 function Grid(props) {
   console.log(props.map.terrain_info)
@@ -36,8 +37,15 @@ function Grid(props) {
   }
 
   useEffect(() => {
+    let stage = new PIXI.Container()
+    let ticker = new PIXI.Ticker()
+    ticker.add(() => {
+      renderer.render(stage)
+    }, PIXI.UPDATE_PRIORITY.LOW)
+    ticker.start()
+
     console.log('load map pixi')
-    document.getElementById('grid-view').appendChild(app.view)
+    document.getElementById('grid-view').appendChild(renderer.view)
     for(let i = 0; i < props.map.height; i++) {
       for(let j = 0; j < props.map.width; j++) {
         let hexVal = terrainInfo.charCodeAt(i * props.map.width + j)
@@ -49,13 +57,15 @@ function Grid(props) {
           x += 25
         }
         hexSprite.position.set(x, y)
-        app.stage.addChild(hexSprite)
+        stage.addChild(hexSprite)
       }
     }
-    console.log(`map has ${app.stage.children.length} instances`)
+    console.log(`map has ${stage.children.length} instances`)
 
     return function cleanup() {
       console.log('map cleanup')
+      stage.destroy()
+      ticker.destroy()
     }
   })
 
