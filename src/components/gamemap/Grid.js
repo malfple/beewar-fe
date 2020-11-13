@@ -24,6 +24,8 @@ function Grid(props) {
 
   useEffect(() => {
     let stage = new PIXI.Container()
+    let viewport = new PIXI.Container()
+    stage.addChild(viewport)
     let ticker = new PIXI.Ticker()
     ticker.add(() => {
       renderer.render(stage)
@@ -37,20 +39,51 @@ function Grid(props) {
         let hexVal = terrainInfo.charCodeAt(i * props.map.width + j)
         let hexSprite = new PIXI.Sprite(hexVal === 0 ? hexTexture : bunnyTexture)
         hexSprite.anchor.set(0.5, 0.5)
-        let x = 50 + 50 * j
-        let y = 50 + 40 * i
+        let x = 25 + 50 * j
+        let y = 20 + 40 * i
         if(i % 2 === 0) {
           x += 25
         }
         hexSprite.position.set(x, y)
-        stage.addChild(hexSprite)
+        viewport.addChild(hexSprite)
       }
     }
-    console.log(`map has ${stage.children.length} instances`)
+
+    console.log(`stage has ${stage.children.length} instances`)
+    console.log(`viewport has ${viewport.children.length} instances`)
+
+    stage.hitArea = new PIXI.Rectangle(0, 0, renderer.width, renderer.height)
+    stage.interactive = true
+
+    // dragging the screen
+    let drag = false
+    let dragPosition = null
+    function onDragStart(e) {
+      viewport.alpha = 0.5
+      dragPosition = e.data.getLocalPosition(viewport)
+      drag = true
+    }
+    stage.on('pointerdown', onDragStart)
+    function onDragStop(e) {
+      viewport.alpha = 1
+      dragPosition = null
+      drag = false
+    }
+    stage.on('pointerup', onDragStop)
+    function onDragMove(e) {
+      if(drag) {
+        const newPosition = e.data.getLocalPosition(stage)
+        viewport.x = newPosition.x - dragPosition.x
+        viewport.y = newPosition.y - dragPosition.y
+      }
+    }
+    stage.on('pointermove', onDragMove)
 
     return function cleanup() {
       console.log('map cleanup')
-      stage.destroy()
+      stage.destroy({
+        children: true
+      })
       ticker.destroy()
     }
   })
