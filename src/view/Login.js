@@ -1,55 +1,36 @@
-import React from 'react'
+import React, {useState} from 'react'
 import PropTypes from 'prop-types'
 
 import * as api from '../api/api'
 
-class Login extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      username: '',
-      password: ''
-    }
+function Login(props) {
+  let [username, setUsername] = useState('')
+  let [password, setPassword] = useState('')
 
-    this.handleInputChange = this.handleInputChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-  }
-
-  handleInputChange(e) {
-    const value = e.target.value
-    const name = e.target.name
-
-    this.setState({
-      [name]: value
-    })
-  }
-
-  handleSubmit(e) {
-    const username = this.state.username
-    api.requestLogin(username, this.state.password).then(res => {
-      this.props.onLogin(username, res.data.token)
+  function handleSubmit(e) {
+    const localUsername = username
+    api.requestLogin(localUsername, password).then(res => {
+      props.onLogin(localUsername, res.data.token)
     })
     e.preventDefault()
   }
 
-  render() {
-    return (
-      <div>
-        login
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Username:
-            <input type="text" name="username" onChange={this.handleInputChange} />
-          </label>
-          <label>
-            Password:
-            <input type="password" name="password" onChange={this.handleInputChange} />
-          </label>
-          <input type="submit" value="Login" />
-        </form>
-      </div>
-    )
-  }
+  return (
+    <div>
+      login
+      <form onSubmit={handleSubmit}>
+        <label>
+          Username:
+          <input type="text" name="username" onChange={e => setUsername(e.target.value)} />
+        </label>
+        <label>
+          Password:
+          <input type="password" name="password" onChange={e => setPassword(e.target.value)} />
+        </label>
+        <input type="submit" value="Login" />
+      </form>
+    </div>
+  )
 }
 
 Login.propTypes = {
