@@ -3,7 +3,13 @@ import React, {useEffect} from 'react'
 import * as PIXI from 'pixi.js'
 
 import {renderer} from '../../pixi/renderer'
-import {bunnyTexture, hexTexture} from '../../pixi/textures'
+import {
+  hexTexture,
+  youMaskTexture,
+  youTintTexture,
+  infantryMaskTexture,
+  infantryTintTexture
+} from '../../pixi/textures'
 
 function Grid(props) {
   console.log(props.map.terrain_info)
@@ -26,6 +32,7 @@ function Grid(props) {
     let stage = new PIXI.Container()
     let viewport = new PIXI.Container()
     stage.addChild(viewport)
+
     let ticker = new PIXI.Ticker()
     ticker.add(() => {
       renderer.render(stage)
@@ -37,16 +44,34 @@ function Grid(props) {
     for(let i = 0; i < props.map.height; i++) {
       for(let j = 0; j < props.map.width; j++) {
         let hexVal = terrainInfo.charCodeAt(i * props.map.width + j)
-        let hexSprite = new PIXI.Sprite(hexVal === 0 ? hexTexture : bunnyTexture)
-        hexSprite.anchor.set(0.5, 0.5)
-        let x = 25 + 50 * j
-        let y = 20 + 40 * i
-        if(i % 2 === 0) {
-          x += 25
+        if(hexVal === 0) {
+          continue
         }
+        let hexSprite = new PIXI.Sprite(hexTexture)
+        hexSprite.anchor.set(0.5, 0.5)
+        let y = 40 * i + 20
+        let x = 50 * j + (i % 2 === 0 ? 50 : 25)
         hexSprite.position.set(x, y)
         viewport.addChild(hexSprite)
       }
+    }
+
+    for(let i = 0; i < unitInfo.length; i += 5) {
+      let cy = unitInfo.charCodeAt(i)
+      let cx = unitInfo.charCodeAt(i+1)
+      let y = 40 * cy + 20
+      let x = 50 * cx + (cy % 2 === 0 ? 50 : 25)
+      let t = unitInfo.charCodeAt(i+3)
+      let p = unitInfo.charCodeAt(i+2)
+      let unitMaskSprite = new PIXI.Sprite(t === 1 ? youMaskTexture : infantryMaskTexture)
+      let unitTintSprite = new PIXI.Sprite(t === 1 ? youTintTexture : infantryTintTexture)
+      unitMaskSprite.anchor.set(0.5, 0.5)
+      unitTintSprite.anchor.set(0.5, 0.5)
+      unitMaskSprite.position.set(x, y)
+      unitTintSprite.position.set(x, y)
+      unitTintSprite.tint = (p === 1 ? 0xFF5555 : 0x5555FF)
+      viewport.addChild(unitMaskSprite)
+      viewport.addChild(unitTintSprite)
     }
 
     console.log(`stage has ${stage.children.length} instances`)

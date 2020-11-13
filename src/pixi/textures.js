@@ -1,8 +1,10 @@
 import * as PIXI from 'pixi.js'
 import {renderer} from './renderer'
 
-const bunny = 'https://i.imgur.com/IaUrttj.png'
-const bunnyTexture = PIXI.Texture.from(bunny)
+import youMaskPNG from './assets/you-mask.png'
+import youTintPNG from './assets/you-tint.png'
+import infantryMaskPNG from './assets/infantry-mask.png'
+import infantryTintPNG from './assets/infantry-tint.png'
 
 const hexGraphics = new PIXI.Graphics()
 hexGraphics.lineStyle(2, 0xffffff, 1)
@@ -16,7 +18,16 @@ hexGraphics.lineTo(0, 10)
 
 const hexTexture = renderer.generateTexture(hexGraphics)
 
+const youMaskTexture = PIXI.Texture.from(youMaskPNG)
+const youTintTexture = PIXI.Texture.from(youTintPNG)
+
+const infantryMaskTexture = PIXI.Texture.from(infantryMaskPNG)
+const infantryTintTexture = PIXI.Texture.from(infantryTintPNG)
+
 export {
-  bunnyTexture,
-  hexTexture
+  hexTexture,
+  youMaskTexture,
+  youTintTexture,
+  infantryMaskTexture,
+  infantryTintTexture
 }
