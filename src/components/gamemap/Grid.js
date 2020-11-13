@@ -2,22 +2,8 @@ import React, {useEffect} from 'react'
 
 import * as PIXI from 'pixi.js'
 
-const bunny = 'https://i.imgur.com/IaUrttj.png'
-const bunnyTexture = PIXI.Texture.from(bunny)
-
-const renderer = new PIXI.Renderer({width: window.innerWidth, height: window.innerHeight, backgroundColor: 0x1099bb})
-
-const hexGraphics = new PIXI.Graphics()
-hexGraphics.lineStyle(2, 0xffffff, 1)
-hexGraphics.moveTo(0, 10)
-hexGraphics.lineTo(0, 30)
-hexGraphics.lineTo(20, 40)
-hexGraphics.lineTo(40, 30)
-hexGraphics.lineTo(40, 10)
-hexGraphics.lineTo(20, 0)
-hexGraphics.lineTo(0, 10)
-
-const hexTexture = renderer.generateTexture(hexGraphics)
+import {renderer} from '../../pixi/renderer'
+import {bunnyTexture, hexTexture} from '../../pixi/textures'
 
 function Grid(props) {
   console.log(props.map.terrain_info)
