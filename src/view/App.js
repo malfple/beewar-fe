@@ -5,6 +5,7 @@ import './App.css'
 
 import jwt from 'jwt-decode'
 
+import RouteWithoutLogin from '../components/route/RouteWithoutLogin'
 import Login from './Login'
 import * as api from '../api/api'
 import Navigation from '../components/Navigation'
@@ -58,9 +59,9 @@ function App(props) {
         <Route exact path="/">
           <Home />
         </Route>
-        <Route path="/login">
+        <RouteWithoutLogin path="/login" isLoggedIn={state.username !== ''}>
           <Login onLogin={onLogin} />
-        </Route>
+        </RouteWithoutLogin>
         <Route path="/profile/:username">
           <Profile />
         </Route>
