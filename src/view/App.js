@@ -11,6 +11,7 @@ import * as api from '../api/api'
 import Navigation from '../components/Navigation'
 import Profile from './Profile'
 import Map from './map/Map'
+import Game from './game/Game'
 
 // App is the root router
 
@@ -67,6 +68,9 @@ function App(props) {
         </Route>
         <Route path="/map">
           <Map />
+        </Route>
+        <Route path="/game">
+          <Game />
         </Route>
       </Switch>
     </div>
