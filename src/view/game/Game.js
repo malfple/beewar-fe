@@ -1,37 +1,19 @@
-import React, {useState} from 'react'
+import React from 'react'
+import {Route, Switch, useRouteMatch} from 'react-router-dom'
 
-const ws = new WebSocket('ws://localhost:3001/api/game/ws')
-
-ws.onopen = () => {
-  console.log('Successfully Connected')
-  ws.send('client hello')
-}
-
-ws.onmessage = msg => {
-  console.log('ws msg: ', msg)
-}
-
-ws.onclose = event => {
-  console.log('ws close: ', event)
-}
-
-ws.onerror = error => {
-  console.log('ws error: ', error)
-}
+import GameView from './GameView'
 
 function Game() {
-  let [msg, setMsg] = useState('')
-
-  function sendMsg() {
-    console.log('send message', msg)
-    ws.send(msg)
-  }
+  let {path} = useRouteMatch()
 
   return (
     <div>
-      <div>Game</div>
-      <input type="text" onChange={e => setMsg(e.target.value)} />
-      <button onClick={sendMsg}>send</button>
+      Game
+      <Switch>
+        <Route path={`${path}/:id`} >
+          <GameView />
+        </Route>
+      </Switch>
     </div>
   )
 }
