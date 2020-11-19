@@ -11,10 +11,15 @@ function GameView() {
 
     ws.current.onopen = () => {
       console.log('Successfully Connected')
-      ws.current.send('client hello')
+      ws.current.send(JSON.stringify({
+        cmd: 'JUST_A_TEXT',
+        data: 'client hello'
+      }))
     }
     ws.current.onmessage = msg => {
-      console.log('ws msg: ', msg)
+      // console.log('ws msg: ', msg)
+      // console.log(msg.data)
+      console.log('ws msg: ', JSON.parse(msg.data))
     }
     ws.current.onclose = event => {
       console.log('ws close: ', event)
@@ -30,7 +35,10 @@ function GameView() {
 
   function sendMsg() {
     console.log('send message', msg)
-    ws.current.send(msg)
+    ws.current.send(JSON.stringify({
+      cmd: 'JUST_A_TEXT',
+      data: msg
+    }))
   }
 
   return (
