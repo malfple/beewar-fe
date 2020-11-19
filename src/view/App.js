@@ -70,7 +70,7 @@ function App(props) {
           <Map />
         </Route>
         <Route path="/game">
-          <Game />
+          <Game token={state.token} />
         </Route>
       </Switch>
     </div>

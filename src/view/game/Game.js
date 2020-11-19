@@ -3,7 +3,7 @@ import {Route, Switch, useRouteMatch} from 'react-router-dom'
 
 import GameView from './GameView'
 
-function Game() {
+function Game(props) {
   let {path} = useRouteMatch()
 
   return (
@@ -11,7 +11,7 @@ function Game() {
       Game
       <Switch>
         <Route path={`${path}/:id`} >
-          <GameView />
+          <GameView token={props.token} />
         </Route>
       </Switch>
     </div>
