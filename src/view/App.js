@@ -5,9 +5,11 @@ import './App.css'
 
 import jwt from 'jwt-decode'
 
+import * as api from '../api/api'
+import {UserTokenContext} from '../context'
+
 import RouteWithoutLogin from '../components/route/RouteWithoutLogin'
 import Login from './Login'
-import * as api from '../api/api'
 import Navigation from '../components/Navigation'
 import Profile from './Profile'
 import Map from './map/Map'
@@ -55,24 +57,26 @@ function App(props) {
 
   return (
     <div className="main">
-      <Navigation loggedIn={state.username !== ''} username={state.username} token={state.token} onLogout={onLogout} />
-      <Switch>
-        <Route exact path="/">
-          <Home />
-        </Route>
-        <RouteWithoutLogin path="/login" isLoggedIn={state.username !== ''}>
-          <Login onLogin={onLogin} />
-        </RouteWithoutLogin>
-        <Route path="/profile/:username">
-          <Profile />
-        </Route>
-        <Route path="/map">
-          <Map />
-        </Route>
-        <Route path="/game">
-          <Game token={state.token} />
-        </Route>
-      </Switch>
+      <UserTokenContext.Provider value={state} >
+        <Navigation onLogout={onLogout} />
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <RouteWithoutLogin path="/login" isLoggedIn={state.username !== ''}>
+            <Login onLogin={onLogin} />
+          </RouteWithoutLogin>
+          <Route path="/profile/:username">
+            <Profile />
+          </Route>
+          <Route path="/map">
+            <Map />
+          </Route>
+          <Route path="/game">
+            <Game />
+          </Route>
+        </Switch>
+      </UserTokenContext.Provider>
     </div>
   )
 }

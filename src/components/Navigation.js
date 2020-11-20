@@ -1,10 +1,14 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 
 import * as api from '../api/api'
+import {UserTokenContext} from '../context'
 
 function Navigation(props) {
+  const userToken = useContext(UserTokenContext)
+  console.log('re-render navigation bar ', userToken)
+
   function logout() {
     api.axiosCustom({
       method: 'POST',
@@ -20,11 +24,11 @@ function Navigation(props) {
     </div>
   )
 
-  if(props.loggedIn) {
+  if(userToken.username !== '') { // logged-in
     userButtons = (
       <div>
-        <div>Token: {props.token}</div>
-        <Link to={`/profile/${props.username}`}>Logged in user = {props.username}</Link>
+        <div>Token: {userToken.token}</div>
+        <Link to={`/profile/${userToken.username}`}>Logged in user = {userToken.username}</Link>
         <button onClick={logout}>Logout</button>
       </div>
     )
@@ -40,8 +44,6 @@ function Navigation(props) {
 }
 
 Navigation.propTypes = {
-  loggedIn: PropTypes.bool.isRequired,
-  username: PropTypes.string.isRequired,
   onLogout: PropTypes.func.isRequired
 }
 

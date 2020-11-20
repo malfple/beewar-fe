@@ -1,14 +1,17 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useContext, useEffect, useRef, useState} from 'react'
 import {useParams} from 'react-router-dom'
 
-function GameView(props) {
+import {UserTokenContext} from '../../context'
+
+function GameView() {
   let {id} = useParams()
+  let userToken = useContext(UserTokenContext)
   let [msg, setMsg] = useState('')
   let ws = useRef(null)
 
   useEffect(() => {
-    if(props.token !== '') {
-      ws.current = new WebSocket(`ws://localhost:3001/api/game/ws?id=${id}`, ['game_room', props.token])
+    if(userToken.token !== '') {
+      ws.current = new WebSocket(`ws://localhost:3001/api/game/ws?id=${id}`, ['game_room', userToken.token])
 
       ws.current.onopen = () => {
         console.log('Successfully Connected')
@@ -33,7 +36,7 @@ function GameView(props) {
         ws.current.close()
       }
     }
-  }, [id, props.token])
+  }, [id, userToken.token])
 
   function sendMsg() {
     console.log('send message', msg)
