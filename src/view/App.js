@@ -9,6 +9,7 @@ import * as api from '../api/api'
 import {UserTokenContext} from '../context'
 
 import RouteWithoutLogin from '../components/route/RouteWithoutLogin'
+import RouteWithLogin from '../components/route/RouteWithLogin'
 import Login from './Login'
 import Navigation from '../components/Navigation'
 import Profile from './Profile'
@@ -64,7 +65,7 @@ function App(props) {
           <Route exact path="/">
             <Home />
           </Route>
-          <RouteWithoutLogin path="/login" isLoggedIn={state.username !== ''}>
+          <RouteWithoutLogin path="/login">
             <Login onLogin={onLogin} />
           </RouteWithoutLogin>
           <Route path="/profile/:username">
@@ -73,9 +74,9 @@ function App(props) {
           <Route path="/map">
             <Map />
           </Route>
-          <Route path="/game">
+          <RouteWithLogin path="/game">
             <Game />
-          </Route>
+          </RouteWithLogin>
           <Route path="*">
             <NotFound />
           </Route>
