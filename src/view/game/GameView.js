@@ -46,6 +46,14 @@ function GameView() {
     }))
   }
 
+  if(userToken.token === '') {
+    return (
+      <div>
+        Game not found
+      </div>
+    )
+  }
+
   return (
     <div>
       <input type="text" onChange={e => setMsg(e.target.value)} />

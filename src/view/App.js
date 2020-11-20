@@ -14,6 +14,7 @@ import Navigation from '../components/Navigation'
 import Profile from './Profile'
 import Map from './map/Map'
 import Game from './game/Game'
+import NotFound from './NotFound'
 
 // App is the root router
 
@@ -74,6 +75,9 @@ function App(props) {
           </Route>
           <Route path="/game">
             <Game />
+          </Route>
+          <Route path="*">
+            <NotFound />
           </Route>
         </Switch>
       </UserTokenContext.Provider>
