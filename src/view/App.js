@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import { Route, Switch } from 'react-router-dom'
 import logo from '../logo.svg'
 import './App.css'
@@ -16,6 +16,7 @@ import Profile from './Profile'
 import Map from './map/Map'
 import Game from './game/Game'
 import NotFound from './NotFound'
+import {axiosCustom} from '../api/api'
 
 // App is the root router
 
@@ -103,7 +104,37 @@ function Home() {
           Learn React
         </a>
       </header>
+      <ServerStats />
       <PingTest />
+    </div>
+  )
+}
+
+function ServerStats() {
+  let userToken = useContext(UserTokenContext)
+
+  let [state, setState] = useState({
+    hub_count: 0,
+    session_count: 0
+  })
+
+  useEffect(() => {
+    axiosCustom.get('/server_stats').then(res => {
+      setState({
+        hub_count: res.data.hub_count,
+        session_count: res.data.session_count
+      })
+    })
+  }, [userToken.username])
+
+  return (
+    <div>
+      <div>
+        Active game hubs: {state.hub_count} hubs
+      </div>
+      <div>
+        Logged-in users: {state.session_count} users
+      </div>
     </div>
   )
 }
