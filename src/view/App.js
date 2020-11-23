@@ -27,6 +27,10 @@ function App(props) {
   })
 
   useEffect(() => {
+    refreshTheToken()
+  }, [])
+
+  function refreshTheToken() {
     // check if there is refresh token and if it's valid
     api.axiosCustom({
       method: 'POST',
@@ -39,8 +43,12 @@ function App(props) {
       })
     }).catch(err => {
       // refresh token is invalid
+      setState({
+        username: '',
+        token: ''
+      })
     })
-  }, [])
+  }
 
   function onLogin(username, token) {
     console.log('App login ' + username + ', token: ' + token)
@@ -60,7 +68,11 @@ function App(props) {
 
   return (
     <div className="main">
-      <UserTokenContext.Provider value={state} >
+      <UserTokenContext.Provider value={{
+        username: state.username,
+        token: state.token,
+        refreshTheToken: refreshTheToken
+      }}>
         <Navigation onLogout={onLogout} />
         <Switch>
           <Route exact path="/">

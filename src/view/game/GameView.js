@@ -1,6 +1,8 @@
 import React, {useContext, useEffect, useRef, useState} from 'react'
 import {useParams} from 'react-router-dom'
 
+import jwt from 'jwt-decode'
+
 import {UserTokenContext} from '../../context'
 
 function GameView() {
@@ -30,13 +32,18 @@ function GameView() {
       }
       ws.current.onerror = error => {
         console.log('ws error: ', error)
+        // reset access token if the token is expired
+        if(Date.now() >= jwt(userToken.token).exp * 1000) {
+          console.log('expired')
+          userToken.refreshTheToken()
+        }
       }
 
       return function cleanup() {
         ws.current.close()
       }
     }
-  }, [id, userToken.token])
+  }, [id, userToken])
 
   function sendMsg() {
     console.log('send message', msg)
