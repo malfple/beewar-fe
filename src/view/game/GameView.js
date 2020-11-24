@@ -18,8 +18,8 @@ function GameView() {
       ws.current.onopen = () => {
         console.log('Successfully Connected')
         ws.current.send(JSON.stringify({
-          cmd: 'JUST_A_TEXT',
-          data: 'client hello'
+          cmd: 'CHAT',
+          data: `${userToken.username} says hello`
         }))
       }
       ws.current.onmessage = msg => {
@@ -48,7 +48,7 @@ function GameView() {
   function sendMsg() {
     console.log('send message', msg)
     ws.current.send(JSON.stringify({
-      cmd: 'JUST_A_TEXT',
+      cmd: 'CHAT',
       data: msg
     }))
   }
