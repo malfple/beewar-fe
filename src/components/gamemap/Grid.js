@@ -56,7 +56,7 @@ function Grid(props) {
       }
     }
 
-    for(let i = 0; i < unitInfo.length; i += 5) {
+    for(let i = 0; i < unitInfo.length; i += 6) {
       let cy = unitInfo.charCodeAt(i)
       let cx = unitInfo.charCodeAt(i+1)
       let y = 40 * cy + 20
