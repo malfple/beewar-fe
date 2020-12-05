@@ -9,6 +9,7 @@ function GameView() {
   let {id} = useParams()
   let userToken = useContext(UserTokenContext)
   let [msg, setMsg] = useState('')
+  let [messages, setMessages] = useState(['start of chat'])
   let ws = useRef(null)
 
   useEffect(() => {
@@ -22,10 +23,14 @@ function GameView() {
           data: `${userToken.username} says hello`
         }))
       }
-      ws.current.onmessage = msg => {
+      ws.current.onmessage = rawMsg => {
         // console.log('ws msg: ', msg)
         // console.log(msg.data)
-        console.log('ws msg: ', JSON.parse(msg.data))
+        let msg = JSON.parse(rawMsg.data)
+        console.log('ws msg: ', msg)
+        if(msg.cmd === 'CHAT') {
+          setMessages(prevMessages => [...prevMessages, `${msg.sender}: ${msg.data}`])
+        }
       }
       ws.current.onclose = event => {
         console.log('ws close: ', event)
@@ -65,6 +70,9 @@ function GameView() {
     <div>
       <input type="text" onChange={e => setMsg(e.target.value)} />
       <button onClick={sendMsg}>send</button>
+      <div>
+        {messages.map((msg, i) => <div key={i}>{msg}</div>)}
+      </div>
     </div>
   )
 }
