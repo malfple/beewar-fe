@@ -58,6 +58,12 @@ function GameView() {
     }))
   }
 
+  function endTurn() {
+    ws.current.send(JSON.stringify({
+      cmd: 'END_TURN'
+    }))
+  }
+
   if(userToken.token === '') {
     return (
       <div>
@@ -68,6 +74,7 @@ function GameView() {
 
   return (
     <div>
+      <button onClick={endTurn}>end turn</button> <br />
       <input type="text" onChange={e => setMsg(e.target.value)} />
       <button onClick={sendMsg}>send</button>
       <div>
