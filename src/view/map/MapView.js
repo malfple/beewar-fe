@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {useParams} from 'react-router-dom'
 import {axiosCustom} from '../../api/api'
 
-import Grid from '../../components/gamemap/Grid'
+import Grid from '../../components/pixiapp/Grid'
 
 function MapView() {
   let [map, setMap] = useState(null)

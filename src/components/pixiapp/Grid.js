@@ -4,23 +4,14 @@ import * as PIXI from 'pixi.js'
 
 import {renderer} from '../../pixi/renderer'
 import ViewPort from '../../pixi/objects/ViewPort'
+import MapController from '../../pixi/objects/MapController'
 
 function Grid(props) {
-  let terrainInfo = atob(props.map.terrain_info)
-  let terrainInfoString = ''
-  for(let i = 0; i < terrainInfo.length; i++) {
-    terrainInfoString += ` ${terrainInfo.charCodeAt(i)}`
-  }
-
-  let unitInfo = atob(props.map.unit_info)
-  let unitInfoString = ''
-  for(let i = 0; i < unitInfo.length; i++) {
-    unitInfoString += ` ${unitInfo.charCodeAt(i)}`
-  }
-
   useEffect(() => {
     let stage = new PIXI.Container()
-    let viewport = ViewPort(props.map)
+    let mapController = new MapController(props.map)
+    let viewport = ViewPort(mapController)
+
     stage.addChild(viewport)
 
     let ticker = new PIXI.Ticker()
@@ -45,12 +36,6 @@ function Grid(props) {
 
   return (
     <div>
-      <div>
-        terrain: {terrainInfoString}
-      </div>
-      <div>
-        unit: {unitInfoString}
-      </div>
       <div id="grid-view">
       </div>
     </div>
