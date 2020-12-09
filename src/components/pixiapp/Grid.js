@@ -24,6 +24,7 @@ function Grid(props) {
     document.getElementById('grid-view').appendChild(renderer.view)
 
     console.log(`stage has ${stage.children.length} instances`)
+    console.log(`mapController has ${mapController.pixiNode.children.length} instances`)
 
     return function cleanup() {
       console.log('map cleanup')

@@ -9,7 +9,7 @@ import {renderer} from '../renderer'
 function ViewPort(mapController) {
   let fixedFrame = new PIXI.Container()
   let movedFrame = new PIXI.Container()
-  let mapContainer = mapController.stage
+  let mapContainer = mapController.pixiNode
   fixedFrame.addChild(movedFrame)
   movedFrame.addChild(mapContainer)
 

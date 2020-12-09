@@ -1,0 +1,23 @@
+/*
+MIRROR: These constants are mirrored from backend
+ */
+
+const UNIT_TYPE_YOU = 1
+const UNIT_TYPE_INFANTRY = 3
+
+const UNIT_WEIGHT_YOU = 0
+const UNIT_WEIGHT_INFANTRY = 0
+
+const UNIT_MOVE_STEPS_YOU = 1
+const UNIT_MOVE_STEPS_INFANTRY = 3
+
+export {
+  UNIT_TYPE_YOU,
+  UNIT_TYPE_INFANTRY,
+
+  UNIT_WEIGHT_YOU,
+  UNIT_WEIGHT_INFANTRY,
+
+  UNIT_MOVE_STEPS_YOU,
+  UNIT_MOVE_STEPS_INFANTRY
+}
