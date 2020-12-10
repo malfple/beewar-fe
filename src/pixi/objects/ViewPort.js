@@ -19,18 +19,21 @@ function ViewPort(mapController) {
   // dragging the screen
   let drag = false
   let dragPosition = null
+
   function onDragStart(e) {
     movedFrame.alpha = 0.5
     dragPosition = e.data.getLocalPosition(movedFrame)
     drag = true
   }
-  fixedFrame.on('pointerdown', onDragStart)
-  function onDragStop(e) {
+  fixedFrame.on('rightdown', onDragStart)
+
+  function onDragStop() {
     movedFrame.alpha = 1
     dragPosition = null
     drag = false
   }
-  fixedFrame.on('pointerup', onDragStop)
+  fixedFrame.on('rightup', onDragStop)
+
   function onDragMove(e) {
     if(drag) {
       const newPosition = e.data.getLocalPosition(fixedFrame)
