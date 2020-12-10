@@ -43,4 +43,5 @@ function Grid(props) {
   )
 }
 
-export default Grid
+// Grid is memo-ed by default
+export default React.memo(Grid)

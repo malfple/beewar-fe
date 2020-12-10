@@ -4,12 +4,14 @@ import {useParams} from 'react-router-dom'
 import jwt from 'jwt-decode'
 
 import {UserTokenContext} from '../../context'
+import Grid from './../../components/pixiapp/Grid'
 
 function GameView() {
   let {id} = useParams()
   let userToken = useContext(UserTokenContext)
   let [msg, setMsg] = useState('')
   let [messages, setMessages] = useState(['start of chat'])
+  let [gameData, setGameData] = useState(null)
   let ws = useRef(null)
 
   useEffect(() => {
@@ -30,6 +32,8 @@ function GameView() {
         console.log('ws msg: ', msg)
         if(msg.cmd === 'CHAT') {
           setMessages(prevMessages => [...prevMessages, `${msg.sender}: ${msg.data}`])
+        } else if(msg.cmd === 'GAME_DATA') {
+          setGameData(msg.data)
         }
       }
       ws.current.onclose = event => {
@@ -80,6 +84,7 @@ function GameView() {
       <div>
         {messages.map((msg, i) => <div key={i}>{msg}</div>)}
       </div>
+      {gameData ? <Grid map={gameData.game}/> : null}
     </div>
   )
 }
