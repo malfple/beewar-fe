@@ -22,7 +22,7 @@ import {axiosCustom} from '../api/api'
 
 function App(props) {
   let [state, setState] = useState({
-    username: '',
+    username: null, // null for first time loading
     token: '' // access token
   })
 
@@ -64,6 +64,12 @@ function App(props) {
       username: '',
       token: ''
     })
+  }
+
+  if(state.username === null) {
+    return (
+      <div />
+    )
   }
 
   return (
