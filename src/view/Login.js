@@ -4,8 +4,8 @@ import PropTypes from 'prop-types'
 import * as api from '../api/api'
 
 function Login(props) {
-  let [username, setUsername] = useState('')
-  let [password, setPassword] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   function handleSubmit(e) {
     const localUsername = username

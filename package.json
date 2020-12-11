@@ -27,19 +27,21 @@
   "eslintConfig": {
     "extends": "react-app",
     "rules": {
+      "prefer-const": "warn",
+      "no-var": "warn",
       "no-trailing-spaces": ["warn", {
           "skipBlankLines": true
       }],
-      "no-irregular-whitespace": "warn",
+      "no-irregular-whitespace": "error",
       "no-multi-spaces": "warn",
       "space-before-blocks": "warn",
       "space-before-function-paren": ["warn", "never"],
-      "space-in-parens": ["warn", "never"],
-      "eol-last": ["warn", "always"],
+      "space-in-parens": ["error", "never"],
+      "eol-last": ["error", "always"],
       "semi": ["error", "never"],
-      "curly": "warn",
+      "curly": "error",
       "dot-notation": "error",
-      "quotes": ["warn", "single"],
+      "quotes": ["error", "single"],
       "jsx-quotes": ["error", "prefer-double"],
       "comma-dangle": ["warn", "always-multiline"]
     }

@@ -7,12 +7,12 @@ import {UserTokenContext} from '../../context'
 import Grid from './../../components/pixiapp/Grid'
 
 function GameView() {
-  let {id} = useParams()
-  let userToken = useContext(UserTokenContext)
-  let [msg, setMsg] = useState('')
-  let [messages, setMessages] = useState(['start of chat'])
-  let [gameData, setGameData] = useState(null)
-  let ws = useRef(null)
+  const {id} = useParams()
+  const userToken = useContext(UserTokenContext)
+  const [msg, setMsg] = useState('')
+  const [messages, setMessages] = useState(['start of chat'])
+  const [gameData, setGameData] = useState(null)
+  const ws = useRef(null)
 
   useEffect(() => {
     if(userToken.token !== '') {
@@ -28,7 +28,7 @@ function GameView() {
       ws.current.onmessage = rawMsg => {
         // console.log('ws msg: ', msg)
         // console.log(msg.data)
-        let msg = JSON.parse(rawMsg.data)
+        const msg = JSON.parse(rawMsg.data)
         console.log('ws msg: ', msg)
         if(msg.cmd === 'CHAT') {
           setMessages(prevMessages => [...prevMessages, `${msg.sender}: ${msg.data}`])

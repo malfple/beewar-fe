@@ -4,7 +4,7 @@ import {Route, Switch, useRouteMatch} from 'react-router-dom'
 import MapView from './MapView'
 
 function Map() {
-  let {path} = useRouteMatch()
+  const {path} = useRouteMatch()
 
   return (
     <div>

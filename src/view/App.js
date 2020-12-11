@@ -21,7 +21,7 @@ import {axiosCustom} from '../api/api'
 // App is the root router
 
 function App(props) {
-  let [state, setState] = useState({
+  const [state, setState] = useState({
     username: null, // null for first time loading
     token: '', // access token
   })
@@ -129,9 +129,9 @@ function Home() {
 }
 
 function ServerStats() {
-  let userToken = useContext(UserTokenContext)
+  const userToken = useContext(UserTokenContext)
 
-  let [state, setState] = useState({
+  const [state, setState] = useState({
     hub_count: 0,
     session_count: 0,
   })

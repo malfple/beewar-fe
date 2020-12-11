@@ -4,7 +4,7 @@ import {Route, Switch, useRouteMatch} from 'react-router-dom'
 import GameView from './GameView'
 
 function Game() {
-  let {path} = useRouteMatch()
+  const {path} = useRouteMatch()
 
   return (
     <div>

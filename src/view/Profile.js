@@ -4,8 +4,8 @@ import {useParams} from 'react-router-dom'
 import * as api from '../api/api'
 
 function Profile() {
-  let [user, setUser] = useState(null)
-  let {username} = useParams()
+  const [user, setUser] = useState(null)
+  const {username} = useParams()
 
   useEffect(() => {
     api.requestProfile(username).then(res => {

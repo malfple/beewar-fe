@@ -12,16 +12,16 @@ class MapController {
     this.terrains = []
     this.units = []
 
-    let terrainInfo = atob(mapData.terrain_info)
-    let unitInfo = atob(mapData.unit_info)
+    const terrainInfo = atob(mapData.terrain_info)
+    const unitInfo = atob(mapData.unit_info)
 
     // also builds units grid
     for(let i = 0; i < mapData.height; i++) {
       this.terrains.push([])
       this.units.push([])
       for(let j = 0; j < mapData.width; j++) {
-        let terrainType = terrainInfo.charCodeAt(i * mapData.width + j)
-        let terrain = new Terrain(terrainType, i, j)
+        const terrainType = terrainInfo.charCodeAt(i * mapData.width + j)
+        const terrain = new Terrain(terrainType, i, j)
         if(terrain.pixiNode) {
           this.pixiNode.addChild(terrain.pixiNode)
         }
@@ -33,12 +33,12 @@ class MapController {
     // MIRROR: this is mirrored from a function in backend
     // however, it is more simple because units are grouped
     for(let i = 0; i < unitInfo.length;) {
-      let cy = unitInfo.charCodeAt(i)
-      let cx = unitInfo.charCodeAt(i+1)
-      let p = unitInfo.charCodeAt(i+2)
-      let t = unitInfo.charCodeAt(i+3)
-      let hp = unitInfo.charCodeAt(i+4)
-      let s = unitInfo.charCodeAt(i+5)
+      const cy = unitInfo.charCodeAt(i)
+      const cx = unitInfo.charCodeAt(i+1)
+      const p = unitInfo.charCodeAt(i+2)
+      const t = unitInfo.charCodeAt(i+3)
+      const hp = unitInfo.charCodeAt(i+4)
+      const s = unitInfo.charCodeAt(i+5)
 
       // switch is only for special cases
       let unit = null

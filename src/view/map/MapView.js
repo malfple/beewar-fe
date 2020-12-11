@@ -5,8 +5,8 @@ import {axiosCustom} from '../../api/api'
 import Grid from '../../components/pixiapp/Grid'
 
 function MapView() {
-  let [map, setMap] = useState(null)
-  let {id} = useParams()
+  const [map, setMap] = useState(null)
+  const {id} = useParams()
 
   useEffect(() => {
     axiosCustom.get('/map/get', {

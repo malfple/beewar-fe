@@ -8,13 +8,13 @@ import MapController from '../../pixi/objects/MapController'
 
 function Grid(props) {
   useEffect(() => {
-    let stage = new PIXI.Container()
-    let mapController = new MapController(props.map, true)
-    let viewport = ViewPort(mapController)
+    const stage = new PIXI.Container()
+    const mapController = new MapController(props.map, true)
+    const viewport = ViewPort(mapController)
 
     stage.addChild(viewport)
 
-    let ticker = new PIXI.Ticker()
+    const ticker = new PIXI.Ticker()
     ticker.add(() => {
       renderer.render(stage)
     }, PIXI.UPDATE_PRIORITY.LOW)
