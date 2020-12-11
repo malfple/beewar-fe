@@ -29,8 +29,13 @@
     "rules": {
       "prefer-const": "warn",
       "no-var": "warn",
+      "func-style": ["warn", "declaration"],
+      "no-param-reassign": "warn",
+      "class-methods-use-this": "warn",
       "prefer-template": "error",
       "template-curly-spacing": "error",
+      "arrow-spacing": "error",
+      "arrow-body-style": "error",
       "no-trailing-spaces": ["warn", {
           "skipBlankLines": true
       }],
