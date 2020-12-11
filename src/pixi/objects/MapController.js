@@ -8,9 +8,11 @@ import Unit from './Unit'
  */
 class MapController {
   constructor(mapData, unitInteractive=false) {
-    this.pixiNode = new PIXI.Container()
+    this.height = mapData.height
+    this.width = mapData.width
     this.terrains = []
     this.units = []
+    this.pixiNode = new PIXI.Container()
 
     const terrainInfo = atob(mapData.terrain_info)
     const unitInfo = atob(mapData.unit_info)
@@ -59,6 +61,23 @@ class MapController {
     console.log('click')
     console.log('unit ', unit)
     console.log('this ', this)
+  }
+
+  // ends turn and starts turn for the specified players
+  // MIRROR: there is a similar backend function to this one
+  nextTurn(endTurnPlayer, startTurnPlayer) {
+    for(let i = 0; i < this.height; i++) {
+      for(let j = 0; j < this.width; j++) {
+        if(!this.units[i][j]) {
+          continue
+        }
+        if(this.units[i][j].owner === endTurnPlayer) {
+          this.units[i][j].endTurn()
+        }else if(this.units[i][j].owner === startTurnPlayer) {
+          this.units[i][j].startTurn()
+        }
+      }
+    }
   }
 }
 

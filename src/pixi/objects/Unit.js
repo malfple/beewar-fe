@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 import {infantryMaskTexture, infantryTintTexture, youMaskTexture, youTintTexture} from '../textures'
-import {PLAYER_COLOR_TINT, UNIT_TYPE_INFANTRY, UNIT_TYPE_YOU} from './unitConstants'
+import {PLAYER_COLOR_TINT, UNIT_STATE_BIT_MOVED, UNIT_TYPE_INFANTRY, UNIT_TYPE_YOU} from './unitConstants'
 
 class Unit {
   /**
@@ -56,6 +56,12 @@ class Unit {
         callbackClick(this, e)
       })
     }
+  }
+
+  static startTurn() {}
+
+  endTurn() {
+    this.state &= ~UNIT_STATE_BIT_MOVED
   }
 }
 
