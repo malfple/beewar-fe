@@ -29,7 +29,7 @@ function Grid(props) {
     return function cleanup() {
       console.log('map cleanup')
       stage.destroy({
-        children: true
+        children: true,
       })
       ticker.destroy()
     }

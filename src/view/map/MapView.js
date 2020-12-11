@@ -11,8 +11,8 @@ function MapView() {
   useEffect(() => {
     axiosCustom.get('/map/get', {
       params: {
-        id: id
-      }
+        id: id,
+      },
     }).then(res => {
       if(res.data.map) {
         setMap(res.data.map)

@@ -34,7 +34,7 @@ function Login(props) {
 }
 
 Login.propTypes = {
-  onLogin: PropTypes.func.isRequired
+  onLogin: PropTypes.func.isRequired,
 }
 
 export default Login

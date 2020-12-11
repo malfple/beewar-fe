@@ -22,7 +22,7 @@ function GameView() {
         console.log('Successfully Connected')
         ws.current.send(JSON.stringify({
           cmd: 'CHAT',
-          data: `${userToken.username} says hello`
+          data: `${userToken.username} says hello`,
         }))
       }
       ws.current.onmessage = rawMsg => {
@@ -58,13 +58,13 @@ function GameView() {
     console.log('send message', msg)
     ws.current.send(JSON.stringify({
       cmd: 'CHAT',
-      data: msg
+      data: msg,
     }))
   }
 
   function endTurn() {
     ws.current.send(JSON.stringify({
-      cmd: 'END_TURN'
+      cmd: 'END_TURN',
     }))
   }
 

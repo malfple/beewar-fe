@@ -17,7 +17,7 @@ Color constants
 const PLAYER_COLOR_TINT = [
   0, // unused
   0xFF6666,
-  0x6666FF
+  0x6666FF,
 ]
 
 export {
@@ -30,5 +30,5 @@ export {
   UNIT_MOVE_STEPS_YOU,
   UNIT_MOVE_STEPS_INFANTRY,
 
-  PLAYER_COLOR_TINT
+  PLAYER_COLOR_TINT,
 }

@@ -12,7 +12,7 @@ function Navigation(props) {
   function logout() {
     api.axiosCustom({
       method: 'POST',
-      url: '/auth/logout'
+      url: '/auth/logout',
     }).then(() => {
       props.onLogout()
     })
@@ -44,7 +44,7 @@ function Navigation(props) {
 }
 
 Navigation.propTypes = {
-  onLogout: PropTypes.func.isRequired
+  onLogout: PropTypes.func.isRequired,
 }
 
 export default Navigation

@@ -29,5 +29,5 @@ export {
   youMaskTexture,
   youTintTexture,
   infantryMaskTexture,
-  infantryTintTexture
+  infantryTintTexture,
 }

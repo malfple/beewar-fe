@@ -23,7 +23,7 @@ import {axiosCustom} from '../api/api'
 function App(props) {
   let [state, setState] = useState({
     username: null, // null for first time loading
-    token: '' // access token
+    token: '', // access token
   })
 
   useEffect(() => {
@@ -34,18 +34,18 @@ function App(props) {
     // check if there is refresh token and if it's valid
     api.axiosCustom({
       method: 'POST',
-      url: '/auth/token'
+      url: '/auth/token',
     }).then(res => {
       // refresh token is valid, and we get access token
       setState({
         username: jwt(res.data.token).sub,
-        token: res.data.token
+        token: res.data.token,
       })
     }).catch(err => {
       // refresh token is invalid
       setState({
         username: '',
-        token: ''
+        token: '',
       })
     })
   }
@@ -54,7 +54,7 @@ function App(props) {
     console.log('App login ' + username + ', token: ' + token)
     setState({
       username: username,
-      token: token
+      token: token,
     })
   }
 
@@ -62,7 +62,7 @@ function App(props) {
     console.log('Logout')
     setState({
       username: '',
-      token: ''
+      token: '',
     })
   }
 
@@ -77,7 +77,7 @@ function App(props) {
       <UserTokenContext.Provider value={{
         username: state.username,
         token: state.token,
-        refreshTheToken: refreshTheToken
+        refreshTheToken: refreshTheToken,
       }}>
         <Navigation onLogout={onLogout} />
         <Switch>
@@ -133,14 +133,14 @@ function ServerStats() {
 
   let [state, setState] = useState({
     hub_count: 0,
-    session_count: 0
+    session_count: 0,
   })
 
   useEffect(() => {
     axiosCustom.get('/server_stats').then(res => {
       setState({
         hub_count: res.data.hub_count,
-        session_count: res.data.session_count
+        session_count: res.data.session_count,
       })
     })
   }, [userToken.username])

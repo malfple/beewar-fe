@@ -5,7 +5,7 @@ import config from '../config/config'
 
 const axiosCustom = axios.create({
   baseURL: config.BEServer,
-  timeout: 5000
+  timeout: 5000,
 })
 
 function requestLogin(username, password) {
@@ -14,24 +14,24 @@ function requestLogin(username, password) {
     url: '/auth/login',
     data: qs.stringify({
       username: username,
-      password: password
+      password: password,
     }),
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
   })
 }
 
 function requestProfile(username) {
   return axiosCustom.get('/profile', {
     params: {
-      username: username
-    }
+      username: username,
+    },
   })
 }
 
 export {
   axiosCustom,
   requestLogin,
-  requestProfile
+  requestProfile,
 }

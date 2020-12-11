@@ -4,5 +4,5 @@ const renderer = new PIXI.Renderer({width: window.innerWidth, height: 0.75 * win
 renderer.view.oncontextmenu = e => e.preventDefault()
 
 export {
-  renderer
+  renderer,
 }

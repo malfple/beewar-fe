@@ -5,9 +5,9 @@ import React from 'react'
 const UserTokenContext = React.createContext({
   username: '',
   token: '',
-  refreshTheToken: () => {}
+  refreshTheToken: () => {},
 })
 
 export {
-  UserTokenContext
+  UserTokenContext,
 }

@@ -13,7 +13,7 @@ function Profile() {
       if(res.data.user) {
         setUser({
           username: res.data.user.username,
-          email: res.data.user.email
+          email: res.data.user.email,
         })
       }
     })
