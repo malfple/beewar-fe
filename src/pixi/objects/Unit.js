@@ -10,8 +10,10 @@ class Unit {
    * @param type
    * @param hp
    * @param state
+   * @param interactive: boolean, if true, create listeners
+   * @param callbackClick: function(target_unit, event)
    */
-  constructor(i, j, owner, type, hp, state) {
+  constructor(i, j, owner, type, hp, state, interactive, callbackClick) {
     this.i = i
     this.j = j
     this.owner = owner
@@ -45,6 +47,15 @@ class Unit {
     let y = 40 * i + 20
     let x = 50 * j + (i % 2 === 0 ? 50 : 25)
     this.pixiNode.position.set(x, y)
+
+    // events
+    if(interactive) {
+      this.pixiNode.interactive = true
+      this.pixiNode.on('click', e => {
+        this.pixiNode.alpha = (this.pixiNode.alpha === 1 ? 0.5 : 1)
+        callbackClick(this, e)
+      })
+    }
   }
 }
 

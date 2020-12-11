@@ -9,7 +9,7 @@ import MapController from '../../pixi/objects/MapController'
 function Grid(props) {
   useEffect(() => {
     let stage = new PIXI.Container()
-    let mapController = new MapController(props.map)
+    let mapController = new MapController(props.map, true)
     let viewport = ViewPort(mapController)
 
     stage.addChild(viewport)

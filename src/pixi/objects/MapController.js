@@ -3,9 +3,11 @@ import * as PIXI from 'pixi.js'
 import Terrain from './Terrain'
 import Unit from './Unit'
 
-// this class is responsible for rendering the map and updating it
+/**
+ * this class is responsible for rendering the map and updating it
+ */
 class MapController {
-  constructor(mapData) {
+  constructor(mapData, unitInteractive=false) {
     this.pixiNode = new PIXI.Container()
     this.terrains = []
     this.units = []
@@ -42,7 +44,7 @@ class MapController {
       let unit = null
       switch (t) {
         default: // basic ordinary units
-          unit = new Unit(cy, cx, p, t, hp, s)
+          unit = new Unit(cy, cx, p, t, hp, s, unitInteractive, this.handleUnitClick.bind(this))
           i += 6
       }
 
@@ -51,6 +53,12 @@ class MapController {
         this.units[cy][cx] = unit
       }
     }
+  }
+
+  handleUnitClick(unit, e) {
+    console.log('click')
+    console.log('unit ', unit)
+    console.log('this ', this)
   }
 }
 
