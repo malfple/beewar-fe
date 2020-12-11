@@ -29,6 +29,8 @@
     "rules": {
       "prefer-const": "warn",
       "no-var": "warn",
+      "prefer-template": "error",
+      "template-curly-spacing": "error",
       "no-trailing-spaces": ["warn", {
           "skipBlankLines": true
       }],

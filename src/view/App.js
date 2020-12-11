@@ -51,7 +51,7 @@ function App(props) {
   }
 
   function onLogin(username, token) {
-    console.log('App login ' + username + ', token: ' + token)
+    console.log(`App login ${username}, token: ${token}`)
     setState({
       username: username,
       token: token,
