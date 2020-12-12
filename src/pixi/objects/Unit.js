@@ -4,18 +4,16 @@ import {PLAYER_COLOR_TINT, UNIT_STATE_BIT_MOVED, UNIT_TYPE_INFANTRY, UNIT_TYPE_Y
 
 class Unit {
   /**
-   * @param i       row
-   * @param j       column
+   * @param y       row
+   * @param x       column
    * @param owner
    * @param type
    * @param hp
    * @param state
-   * @param interactive: boolean, if true, create listeners
-   * @param callbackClick: function(target_unit, event)
    */
-  constructor(i, j, owner, type, hp, state, interactive, callbackClick) {
-    this.i = i
-    this.j = j
+  constructor(y, x, owner, type, hp, state) {
+    this.y = y
+    this.x = x
     this.owner = owner
     this.type = type
     this.hp = hp
@@ -44,18 +42,18 @@ class Unit {
     this.pixiNode.addChild(unitMaskSprite)
     this.pixiNode.addChild(unitTintSprite)
 
-    const y = 40 * i + 20
-    const x = 50 * j + (i % 2 === 0 ? 50 : 25)
-    this.pixiNode.position.set(x, y)
+    const py = 40 * y + 20
+    const px = 50 * x + (y % 2 === 0 ? 50 : 25)
+    this.pixiNode.position.set(px, py)
+  }
 
-    // events
-    if(interactive) {
-      this.pixiNode.interactive = true
-      this.pixiNode.on('click', e => {
-        this.pixiNode.alpha = (this.pixiNode.alpha === 1 ? 0.5 : 1)
-        callbackClick(this, e)
-      })
-    }
+  // triggered when this unit is selected to move
+  select() {
+    this.pixiNode.scale.set(1.2)
+  }
+  // reverse of above
+  deselect() {
+    this.pixiNode.scale.set(1)
   }
 
   static startTurn() {}
