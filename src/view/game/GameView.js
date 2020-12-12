@@ -4,7 +4,7 @@ import {useParams} from 'react-router-dom'
 import jwt from 'jwt-decode'
 
 import {UserTokenContext} from '../../context'
-import Grid from './../../components/pixiapp/Grid'
+import GameApp from '../../components/pixiapp/GameApp'
 
 function GameView() {
   const {id} = useParams()
@@ -54,11 +54,12 @@ function GameView() {
     }
   }, [id, userToken])
 
-  function sendMsg() {
+  // sends message to backend server
+  function sendMsg(cmd, data) {
     console.log('send message', msg)
     ws.current.send(JSON.stringify({
-      cmd: 'CHAT',
-      data: msg,
+      cmd: cmd,
+      data: data,
     }))
   }
 
@@ -80,11 +81,11 @@ function GameView() {
     <div>
       <button onClick={endTurn}>end turn</button> <br />
       <input type="text" onChange={e => setMsg(e.target.value)} />
-      <button onClick={sendMsg}>send</button>
+      <button onClick={() => sendMsg('CHAT', msg)}>send</button>
       <div>
         {messages.map((msg, i) => <div key={i}>{msg}</div>)}
       </div>
-      {gameData ? <Grid map={gameData.game}/> : null}
+      {gameData ? <GameApp map={gameData.game}/> : null}
     </div>
   )
 }

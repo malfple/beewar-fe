@@ -7,7 +7,7 @@ class Terrain {
    * @param y     row
    * @param x     column
    * @param interactive: boolean, if true, create listeners
-   * @param callbackClick: function(y, x, event)
+   * @param callbackClick: function(y, x)
    */
   constructor(type, y, x, interactive, callbackClick) {
     this.y = y
@@ -35,7 +35,7 @@ class Terrain {
         this.pixiNode.scale.set(1)
       })
       this.pixiNode.on('click', e => {
-        callbackClick(this.y, this.x, e)
+        callbackClick(this.y, this.x)
       })
     }
   }

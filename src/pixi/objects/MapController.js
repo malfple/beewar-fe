@@ -27,7 +27,7 @@ function getAdjList(y, x) {
  * this class is responsible for rendering the map and updating it
  */
 class MapController {
-  constructor(mapData, unitInteractive=false) {
+  constructor(mapData, interactive=false) {
     this.height = mapData.height
     this.width = mapData.width
     this.terrains = []
@@ -38,13 +38,13 @@ class MapController {
     const terrainInfo = atob(mapData.terrain_info)
     const unitInfo = atob(mapData.unit_info)
 
-    // also builds units grid
+    // builds terrains, also builds units grid
     for(let i = 0; i < mapData.height; i++) {
       this.terrains.push([])
       this.units.push([])
       for(let j = 0; j < mapData.width; j++) {
         const terrainType = terrainInfo.charCodeAt(i * mapData.width + j)
-        const terrain = new Terrain(terrainType, i, j, unitInteractive, this.handleUnitClick.bind(this))
+        const terrain = new Terrain(terrainType, i, j, interactive, this.handleGridClick.bind(this))
         if(terrain.pixiNode) {
           this.pixiNode.addChild(terrain.pixiNode)
         }
@@ -78,10 +78,8 @@ class MapController {
     }
   }
 
-  handleUnitClick(y, x, e) {
-    console.log('click')
-    console.log('pos ', y, x)
-    if(this.units[y][x]) { // select unit to move
+  handleGridClick(y, x) {
+    if(this.units[y][x]) { // select unit to move, or deselect
       if(this.selectedUnit) {
         this.selectedUnit.deselect()
         this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x)
@@ -93,11 +91,15 @@ class MapController {
       this.units[y][x].select()
       this.selectedUnit = this.units[y][x]
       this._activateTerrains(y, x)
-    } else { // deselect
+    } else if(this.terrains[y][x].dist === -1) { // select out of range cells, deselect
       if(this.selectedUnit) {
         this.selectedUnit.deselect()
         this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x)
         this.selectedUnit = null
+      }
+    } else { // move
+      if(this.selectedUnit) {
+        console.log(`move (${this.selectedUnit.y}, ${this.selectedUnit.x}) -> (${y}, ${x}), dist ${this.terrains[y][x].dist}`)
       }
     }
   }

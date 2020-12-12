@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {useParams} from 'react-router-dom'
 import {axiosCustom} from '../../api/api'
 
-import Grid from '../../components/pixiapp/Grid'
+import MapViewApp from '../../components/pixiapp/MapViewApp'
 
 function MapView() {
   const [map, setMap] = useState(null)
@@ -35,7 +35,7 @@ function MapView() {
       <div>name: {map.name}</div>
       <div>
         Terrain
-        <Grid map={map} />
+        <MapViewApp map={map} />
       </div>
     </div>
   )

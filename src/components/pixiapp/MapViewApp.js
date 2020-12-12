@@ -6,10 +6,10 @@ import {renderer} from '../../pixi/renderer'
 import ViewPort from '../../pixi/objects/ViewPort'
 import MapController from '../../pixi/objects/MapController'
 
-function Grid(props) {
+function MapViewApp(props) {
   useEffect(() => {
     const stage = new PIXI.Container()
-    const mapController = new MapController(props.map, true)
+    const mapController = new MapController(props.map)
     const viewport = ViewPort(mapController)
 
     stage.addChild(viewport)
@@ -20,14 +20,9 @@ function Grid(props) {
     }, PIXI.UPDATE_PRIORITY.LOW)
     ticker.start()
 
-    console.log('load map pixi')
-    document.getElementById('grid-view').appendChild(renderer.view)
-
-    console.log(`stage has ${stage.children.length} instances`)
-    console.log(`mapController has ${mapController.pixiNode.children.length} instances`)
+    document.getElementById('map-view-app').appendChild(renderer.view)
 
     return function cleanup() {
-      console.log('map cleanup')
       stage.destroy({
         children: true,
       })
@@ -37,11 +32,11 @@ function Grid(props) {
 
   return (
     <div>
-      <div id="grid-view">
+      <div id="map-view-app">
       </div>
     </div>
   )
 }
 
-// Grid is memo-ed by default
-export default React.memo(Grid)
+// MapViewApp is memo-ed by default
+export default React.memo(MapViewApp)
