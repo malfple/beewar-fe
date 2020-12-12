@@ -5,6 +5,7 @@ import jwt from 'jwt-decode'
 
 import {UserTokenContext} from '../../context'
 import GameApp from '../../components/pixiapp/GameApp'
+import {CMD_CHAT, CMD_END_TURN, CMD_GAME_DATA} from '../../pixi/objects/messageConstants'
 
 function GameView() {
   const {id} = useParams()
@@ -21,7 +22,7 @@ function GameView() {
       ws.current.onopen = () => {
         console.log('Successfully Connected')
         ws.current.send(JSON.stringify({
-          cmd: 'CHAT',
+          cmd: CMD_CHAT,
           data: `${userToken.username} says hello`,
         }))
       }
@@ -30,9 +31,9 @@ function GameView() {
         // console.log(msg.data)
         const msg = JSON.parse(rawMsg.data)
         console.log('ws msg: ', msg)
-        if(msg.cmd === 'CHAT') {
+        if(msg.cmd === CMD_CHAT) {
           setMessages(prevMessages => [...prevMessages, `${msg.sender}: ${msg.data}`])
-        } else if(msg.cmd === 'GAME_DATA') {
+        } else if(msg.cmd === CMD_GAME_DATA) {
           setGameData(msg.data)
         }
       }
@@ -65,7 +66,7 @@ function GameView() {
 
   function endTurn() {
     ws.current.send(JSON.stringify({
-      cmd: 'END_TURN',
+      cmd: CMD_END_TURN,
     }))
   }
 
@@ -81,7 +82,7 @@ function GameView() {
     <div>
       <button onClick={endTurn}>end turn</button> <br />
       <input type="text" onChange={e => setMsg(e.target.value)} />
-      <button onClick={() => sendMsg('CHAT', msg)}>send</button>
+      <button onClick={() => sendMsg(CMD_CHAT, msg)}>send</button>
       <div>
         {messages.map((msg, i) => <div key={i}>{msg}</div>)}
       </div>
