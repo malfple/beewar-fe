@@ -20,6 +20,7 @@ class Unit {
     this.state = state
     this.pixiNode = new PIXI.Container()
 
+    // main sprite
     let maskTexture = null
     let tintTexture = null
     switch (type) {
@@ -34,16 +35,28 @@ class Unit {
       default:
         console.error('load unit: unknown unit type')
     }
-    const unitMaskSprite = new PIXI.Sprite(maskTexture)
-    const unitTintSprite = new PIXI.Sprite(tintTexture)
-    unitTintSprite.tint = PLAYER_COLOR_TINT[owner]
-    unitMaskSprite.anchor.set(0.5)
-    unitTintSprite.anchor.set(0.5)
-    this.pixiNode.addChild(unitMaskSprite)
-    this.pixiNode.addChild(unitTintSprite)
-    this._setPosition(y, x)
+    this.maskSprite = new PIXI.Sprite(maskTexture)
+    this.tintSprite = new PIXI.Sprite(tintTexture)
+    this.tintSprite.tint = PLAYER_COLOR_TINT[owner]
+    this.maskSprite.anchor.set(0.5)
+    this.tintSprite.anchor.set(0.5)
+    this.pixiNode.addChild(this.maskSprite)
+    this.pixiNode.addChild(this.tintSprite)
+    this._updateSpriteFromState()
 
-    this.update()
+    // hp text
+    this.hpText = new PIXI.Text(this.hp, {
+      fontFamily: 'Arial',
+      fontSize: 12,
+      align: 'left',
+      fill: 'white',
+      stroke: 'black',
+      strokeThickness: 4,
+    })
+    this.hpText.position.set(-20, -5)
+    this.pixiNode.addChild(this.hpText)
+
+    this._setPosition(y, x)
   }
 
   _setPosition(y, x) {
@@ -66,18 +79,20 @@ class Unit {
   moveTo(y, x) {
     this._setPosition(y, x)
     this.state |= UNIT_STATE_BIT_MOVED
-    this.update()
+    this._updateSpriteFromState()
   }
   isMoved() {
     return (this.state & UNIT_STATE_BIT_MOVED) !== 0
   }
 
-  // updates display from state
-  update() {
+  // update functions for rendering
+  _updateSpriteFromState() {
     if(this.isMoved()) {
-      this.pixiNode.alpha = 0.5
+      this.maskSprite.alpha = 0.5
+      this.tintSprite.alpha = 0.5
     } else {
-      this.pixiNode.alpha = 1
+      this.maskSprite.alpha = 1
+      this.tintSprite.alpha = 1
     }
   }
 
@@ -86,7 +101,7 @@ class Unit {
   }
   endTurn() {
     this.state &= ~UNIT_STATE_BIT_MOVED
-    this.update()
+    this._updateSpriteFromState()
   }
 }
 

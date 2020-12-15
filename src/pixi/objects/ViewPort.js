@@ -21,18 +21,17 @@ function ViewPort(mapController) {
   let dragPosition = null
 
   function onDragStart(e) {
-    movedFrame.alpha = 0.5
     dragPosition = e.data.getLocalPosition(movedFrame)
     drag = true
   }
   fixedFrame.on('rightdown', onDragStart)
 
   function onDragStop() {
-    movedFrame.alpha = 1
     dragPosition = null
     drag = false
   }
   fixedFrame.on('rightup', onDragStop)
+  fixedFrame.on('rightupoutside', onDragStop)
 
   function onDragMove(e) {
     if(drag) {
