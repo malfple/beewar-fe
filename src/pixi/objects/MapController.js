@@ -9,6 +9,7 @@ import {
   UNIT_TYPE_YOU,
   UNIT_WEIGHT_MAP,
 } from './unitConstants'
+import {CMD_CHAT, CMD_END_TURN, CMD_ERROR, CMD_UNIT_MOVE} from './messageConstants'
 
 // MIRROR: for bfs
 const K = 6
@@ -27,13 +28,17 @@ function getAdjList(y, x) {
  * this class is responsible for rendering the map and updating it
  */
 class MapController {
-  constructor(mapData, interactive=false) {
+  constructor(mapData, interactive=false, sendMsg=(cmd, data) => null) {
     this.height = mapData.height
     this.width = mapData.width
     this.terrains = []
     this.units = []
+    this.player_count = mapData.player_count
+    this.turn_count = mapData.turn_count
+    this.turn_player = mapData.turn_player
     this.pixiNode = new PIXI.Container()
     this.selectedUnit = null
+    this.sendMsg = sendMsg
 
     const terrainInfo = atob(mapData.terrain_info)
     const unitInfo = atob(mapData.unit_info)
@@ -79,28 +84,46 @@ class MapController {
   }
 
   handleGridClick(y, x) {
-    if(this.units[y][x]) { // select unit to move, or deselect
-      if(this.selectedUnit) {
-        this.selectedUnit.deselect()
-        this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x)
+    if(this.units[y][x]) { // select unit
+      if(this.units[y][x].isMoved()) { // unit already moved
+        this._clearSelection(y, x)
+      } else { // select unit to move
+        this._selectUnit(y, x)
       }
-      if(this.selectedUnit === this.units[y][x]) {
-        this.selectedUnit = null
-        return
-      }
-      this.units[y][x].select()
-      this.selectedUnit = this.units[y][x]
-      this._activateTerrains(y, x)
     } else if(this.terrains[y][x].dist === -1) { // select out of range cells, deselect
-      if(this.selectedUnit) {
-        this.selectedUnit.deselect()
-        this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x)
-        this.selectedUnit = null
-      }
+      this._clearSelection(y, x)
     } else { // move
       if(this.selectedUnit) {
         console.log(`move (${this.selectedUnit.y}, ${this.selectedUnit.x}) -> (${y}, ${x}), dist ${this.terrains[y][x].dist}`)
+        this.sendMsg(CMD_UNIT_MOVE, {
+          y_1: this.selectedUnit.y,
+          x_1: this.selectedUnit.x,
+          y_2: y,
+          x_2: x,
+        })
+        this._clearSelection(y, x)
       }
+    }
+  }
+
+  _selectUnit(y, x) {
+    if(this.selectedUnit) {
+      this.selectedUnit.deselect()
+      this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x)
+    }
+    if(this.selectedUnit === this.units[y][x]) {
+      this.selectedUnit = null
+      return
+    }
+    this.units[y][x].select()
+    this.selectedUnit = this.units[y][x]
+    this._activateTerrains(y, x)
+  }
+  _clearSelection(y, x) {
+    if(this.selectedUnit) {
+      this.selectedUnit.deselect()
+      this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x)
+      this.selectedUnit = null
     }
   }
 
@@ -202,9 +225,37 @@ class MapController {
     }
   }
 
-  // ends turn and starts turn for the specified players
+  // handle ws events from BE
+  handleWSMessage(msg) {
+    switch(msg.cmd) {
+      case CMD_UNIT_MOVE:
+        const unit = this.units[msg.data.y_1][msg.data.x_1]
+        this.units[msg.data.y_1][msg.data.x_1] = null
+        this.units[msg.data.y_2][msg.data.x_2] = unit
+        unit.moveTo(msg.data.y_2, msg.data.x_2)
+        break
+      case CMD_END_TURN:
+        this._nextTurn()
+        break
+      case CMD_CHAT:
+      case CMD_ERROR:
+        // do nothing
+        break
+      default:
+        console.error('unknown event')
+    }
+  }
+
+  // ends current player turn and start next player turn
   // MIRROR: there is a similar backend function to this one
-  nextTurn(endTurnPlayer, startTurnPlayer) {
+  _nextTurn() {
+    const endTurnPlayer = this.turn_player
+    this.turn_player++
+    if(this.turn_player > this.player_count) {
+      this.turn_count++
+      this.turn_player = 1
+    }
+    // update units
     for(let i = 0; i < this.height; i++) {
       for(let j = 0; j < this.width; j++) {
         if(!this.units[i][j]) {
@@ -212,7 +263,7 @@ class MapController {
         }
         if(this.units[i][j].owner === endTurnPlayer) {
           this.units[i][j].endTurn()
-        }else if(this.units[i][j].owner === startTurnPlayer) {
+        }else if(this.units[i][j].owner === this.turn_player) {
           this.units[i][j].startTurn()
         }
       }

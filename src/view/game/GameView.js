@@ -57,7 +57,7 @@ function GameView() {
 
   // sends message to backend server
   function sendMsg(cmd, data) {
-    console.log('send message', msg)
+    console.log('send message', cmd, data)
     ws.current.send(JSON.stringify({
       cmd: cmd,
       data: data,
@@ -86,7 +86,7 @@ function GameView() {
       <div>
         {messages.map((msg, i) => <div key={i}>{msg}</div>)}
       </div>
-      {gameData ? <GameApp map={gameData.game}/> : null}
+      {gameData ? <GameApp map={gameData.game} ws={ws.current} /> : null}
     </div>
   )
 }

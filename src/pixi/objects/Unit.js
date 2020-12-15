@@ -41,7 +41,14 @@ class Unit {
     unitTintSprite.anchor.set(0.5)
     this.pixiNode.addChild(unitMaskSprite)
     this.pixiNode.addChild(unitTintSprite)
+    this._setPosition(y, x)
 
+    this.update()
+  }
+
+  _setPosition(y, x) {
+    this.y = y
+    this.x = x
     const py = 40 * y + 20
     const px = 50 * x + (y % 2 === 0 ? 50 : 25)
     this.pixiNode.position.set(px, py)
@@ -56,10 +63,30 @@ class Unit {
     this.pixiNode.scale.set(1)
   }
 
-  static startTurn() {}
+  moveTo(y, x) {
+    this._setPosition(y, x)
+    this.state |= UNIT_STATE_BIT_MOVED
+    this.update()
+  }
+  isMoved() {
+    return (this.state & UNIT_STATE_BIT_MOVED) !== 0
+  }
 
+  // updates display from state
+  update() {
+    if(this.isMoved()) {
+      this.pixiNode.alpha = 0.5
+    } else {
+      this.pixiNode.alpha = 1
+    }
+  }
+
+  startTurn() {
+    // nothing yet
+  }
   endTurn() {
     this.state &= ~UNIT_STATE_BIT_MOVED
+    this.update()
   }
 }
 

@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react'
+import PropTypes from 'prop-types'
 
 import * as PIXI from 'pixi.js'
 
@@ -36,6 +37,10 @@ function MapViewApp(props) {
       </div>
     </div>
   )
+}
+
+MapViewApp.propTypes = {
+  map: PropTypes.object.isRequired,
 }
 
 // MapViewApp is memo-ed by default
