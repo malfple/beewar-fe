@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import {infantryMaskTexture, infantryTintTexture, youMaskTexture, youTintTexture} from '../textures'
 import {PLAYER_COLOR_TINT, UNIT_STATE_BIT_MOVED, UNIT_TYPE_INFANTRY, UNIT_TYPE_YOU} from './unitConstants'
+import {dimFilter} from '../filters'
 
 class Unit {
   /**
@@ -88,11 +89,11 @@ class Unit {
   // update functions for rendering
   _updateSpriteFromState() {
     if(this.isMoved()) {
-      this.maskSprite.alpha = 0.5
-      this.tintSprite.alpha = 0.5
+      this.maskSprite.filters = [dimFilter]
+      this.tintSprite.filters = [dimFilter]
     } else {
-      this.maskSprite.alpha = 1
-      this.tintSprite.alpha = 1
+      this.maskSprite.filters = null
+      this.tintSprite.filters = null
     }
   }
 
