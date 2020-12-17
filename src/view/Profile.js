@@ -8,7 +8,11 @@ function Profile() {
   const {username} = useParams()
 
   useEffect(() => {
-    api.requestProfile(username).then(res => {
+    api.axiosCustom.get('/user/get_by_username', {
+      params: {
+        username: username,
+      },
+    }).then(res => {
       console.log(res.data)
       if(res.data.user) {
         setUser({

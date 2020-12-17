@@ -22,16 +22,7 @@ function requestLogin(username, password) {
   })
 }
 
-function requestProfile(username) {
-  return axiosCustom.get('/profile', {
-    params: {
-      username: username,
-    },
-  })
-}
-
 export {
   axiosCustom,
   requestLogin,
-  requestProfile,
 }
