@@ -9,7 +9,7 @@ import {
   UNIT_TYPE_YOU,
   UNIT_WEIGHT_MAP,
 } from './unitConstants'
-import {CMD_CHAT, CMD_END_TURN, CMD_ERROR, CMD_UNIT_MOVE} from './messageConstants'
+import {CMD_CHAT, CMD_END_TURN, CMD_ERROR, CMD_UNIT_MOVE} from '../../modules/communication/messageConstants'
 
 // MIRROR: for bfs
 const K = 6

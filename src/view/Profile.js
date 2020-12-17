@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from 'react-router-dom'
 
-import * as api from '../api/api'
+import * as api from '../modules/api/api'
 
 function Profile() {
   const [user, setUser] = useState(null)

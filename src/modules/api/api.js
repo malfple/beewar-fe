@@ -1,7 +1,7 @@
 import axios from 'axios'
 import qs from 'querystring'
 
-import config from '../config/config'
+import config from '../../config/config'
 
 const axiosCustom = axios.create({
   baseURL: config.BEServer,

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from 'react-router-dom'
-import {axiosCustom} from '../../api/api'
+import {axiosCustom} from '../../modules/api/api'
 
 import MapViewApp from '../../components/pixiapp/MapViewApp'
 

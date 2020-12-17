@@ -5,7 +5,7 @@ import './App.css'
 
 import jwt from 'jwt-decode'
 
-import * as api from '../api/api'
+import * as api from '../modules/api/api'
 import {UserTokenContext} from '../context'
 
 import RouteWithoutLogin from '../components/route/RouteWithoutLogin'
@@ -16,7 +16,7 @@ import Profile from './Profile'
 import Map from './map/Map'
 import Game from './game/Game'
 import NotFound from './NotFound'
-import {axiosCustom} from '../api/api'
+import {axiosCustom} from '../modules/api/api'
 
 // App is the root router
 

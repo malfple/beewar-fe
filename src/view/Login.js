@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import PropTypes from 'prop-types'
 
-import * as api from '../api/api'
+import * as api from '../modules/api/api'
 
 function Login(props) {
   const [username, setUsername] = useState('')

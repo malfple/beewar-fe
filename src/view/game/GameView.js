@@ -5,7 +5,7 @@ import jwt from 'jwt-decode'
 
 import {UserTokenContext} from '../../context'
 import GameApp from '../../components/pixiapp/GameApp'
-import {CMD_CHAT, CMD_END_TURN, CMD_GAME_DATA} from '../../pixi/objects/messageConstants'
+import {CMD_CHAT, CMD_END_TURN, CMD_GAME_DATA} from '../../modules/communication/messageConstants'
 
 function GameView() {
   const {id} = useParams()

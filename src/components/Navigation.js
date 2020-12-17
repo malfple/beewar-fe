@@ -2,7 +2,7 @@ import React, {useContext} from 'react'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 
-import * as api from '../api/api'
+import * as api from '../modules/api/api'
 import {UserTokenContext} from '../context'
 
 function Navigation(props) {
