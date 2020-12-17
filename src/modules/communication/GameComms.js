@@ -49,6 +49,7 @@ class GameComms {
    * @param {string} group       - if group is not provided, will send to every subscriber
    */
   triggerMsg(msg, group=GROUP_NONE) {
+    console.log('trigger msg', msg, group)
     if(group === GROUP_NONE) {
       this.allSubscribers.forEach(subscriber => {
         subscriber.handleComms(msg)

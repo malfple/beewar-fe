@@ -6,15 +6,16 @@ import * as PIXI from 'pixi.js'
 import {renderer} from '../../pixi/renderer'
 import ViewPort from '../../pixi/objects/ViewPort'
 import MapController from '../../pixi/objects/MapController'
+import {GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/groupConstants'
 
 function GameApp(props) {
   // sends message to websocket
   function sendMsg(cmd, data) {
     console.log('send message2', cmd, data)
-    props.ws.send(JSON.stringify({
+    props.comms.triggerMsg({
       cmd: cmd,
       data: data,
-    }))
+    }, GROUP_WEBSOCKET)
   }
 
   useEffect(() => {
@@ -37,13 +38,13 @@ function GameApp(props) {
     console.log(`stage has ${stage.children.length} instances`)
     console.log(`mapController has ${mapController.pixiNode.children.length} instances`)
 
-    // override websocket listener
-    const currOnMessageListener = props.ws.onmessage
-    props.ws.onmessage = rawMsg => {
-      const msg = JSON.parse(rawMsg.data)
-      mapController.handleWSMessage(msg)
-      currOnMessageListener(rawMsg)
+    // create a dummy object to listen for ws events
+    const selfDummy = {
+      handleComms(msg) {
+        mapController.handleWSMessage(msg)
+      },
     }
+    props.comms.registerSubscriber(selfDummy, [GROUP_WEBSOCKET_LISTENERS])
 
     return function cleanup() {
       console.log('map cleanup')
@@ -51,6 +52,8 @@ function GameApp(props) {
         children: true,
       })
       ticker.destroy()
+
+      props.comms.unregisterSubscriber(selfDummy, [GROUP_WEBSOCKET_LISTENERS])
     }
   })
 
@@ -64,7 +67,7 @@ function GameApp(props) {
 
 GameApp.propTypes = {
   map: PropTypes.object.isRequired,
-  ws: PropTypes.object.isRequired,
+  comms: PropTypes.object.isRequired,
 }
 
 // MapViewApp is memo-ed by default

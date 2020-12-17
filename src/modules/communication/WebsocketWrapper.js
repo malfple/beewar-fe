@@ -1,5 +1,5 @@
 import {CMD_CHAT} from './messageConstants'
-import {GROUP_WEBSOCKET_LISTENERS} from './groupConstants'
+import {GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from './groupConstants'
 
 /**
  * Wraps javascript's WebSocket class for use with Games
@@ -15,11 +15,9 @@ class WebsocketWrapper {
    * @param {GameComms} gameComms
    */
   constructor(gameID, token, gameComms) {
-    this.onMessageListeners = [rawMsg => {
-      // console.log('ws msg: ', msg)
-      // console.log(msg.data)
-      const msg = JSON.parse(rawMsg.data)
-      console.log('ws msg: ', msg)
+    gameComms.registerSubscriber(this, [GROUP_WEBSOCKET])
+
+    this.onMessageListeners = [msg => {
       gameComms.triggerMsg(msg, GROUP_WEBSOCKET_LISTENERS)
     }]
 
@@ -34,8 +32,12 @@ class WebsocketWrapper {
     }
 
     this.ws.onmessage = rawMsg => {
+      // console.log('ws msg: ', msg)
+      const msg = JSON.parse(rawMsg.data)
+      // console.log(msg.data)
+      console.log('ws msg: ', msg)
       for(let i = 0; i < this.onMessageListeners.length; i++) {
-        this.onMessageListeners[i](rawMsg)
+        this.onMessageListeners[i](msg)
       }
     }
 
@@ -54,7 +56,7 @@ class WebsocketWrapper {
   }
 
   /**
-   * @param {function} listener
+   * @param {function} listener   - function(msg), msg is an object in the form of {cmd, data}
    */
   addOnMessageListener(listener) {
     this.onMessageListeners.push(listener)
