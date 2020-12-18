@@ -94,7 +94,6 @@ class MapController {
       this._clearSelection(y, x)
     } else { // move
       if(this.selectedUnit) {
-        console.log(`move (${this.selectedUnit.y}, ${this.selectedUnit.x}) -> (${y}, ${x}), dist ${this.terrains[y][x].dist}`)
         this.sendMsg(CMD_UNIT_MOVE, {
           y_1: this.selectedUnit.y,
           x_1: this.selectedUnit.x,

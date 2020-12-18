@@ -11,7 +11,6 @@ import {GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from '../../modules/communic
 function GameApp(props) {
   // sends message to websocket
   function sendMsg(cmd, data) {
-    console.log('send message2', cmd, data)
     props.comms.triggerMsg({
       cmd: cmd,
       data: data,

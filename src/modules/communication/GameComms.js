@@ -17,11 +17,14 @@ class GameComms {
   }
 
   /**
-   * @param {Object} subscriber
-   * @param {string[]} groups        - an array of strings. Use groupConstants for the group names
+   * @param {Object}    subscriber
+   * @param {string[]}  groups          - an array of strings. Use groupConstants for the group names
+   * @param {boolean}   excludeFromAll  - if true, won't add to all subscribers
    */
-  registerSubscriber(subscriber, groups=[]) {
-    this.allSubscribers.add(subscriber)
+  registerSubscriber(subscriber, groups=[], excludeFromAll=false) {
+    if(!excludeFromAll) {
+      this.allSubscribers.add(subscriber)
+    }
     for(let i = 0; i < groups.length; i++) {
       const group = groups[i]
       if(!(group in this.groupedSubscribers)) {
@@ -32,8 +35,8 @@ class GameComms {
   }
 
   /**
-   * @param {Object} subscriber
-   * @param {string[]} groups        - the groups given has to be the same when registering
+   * @param {Object}    subscriber
+   * @param {string[]}  groups          - the groups given has to be the same when registering
    */
   unregisterSubscriber(subscriber, groups=[]) {
     this.allSubscribers.delete(subscriber)
@@ -49,7 +52,7 @@ class GameComms {
    * @param {string} group       - if group is not provided, will send to every subscriber
    */
   triggerMsg(msg, group=GROUP_NONE) {
-    console.log('trigger msg', msg, group)
+    console.log('COMMS: trigger msg', msg, group)
     if(group === GROUP_NONE) {
       this.allSubscribers.forEach(subscriber => {
         subscriber.handleComms(msg)
@@ -59,6 +62,16 @@ class GameComms {
         subscriber.handleComms(msg)
       })
     }
+  }
+
+  /**
+   * unregisters all subscribers
+   *
+   * do not use after destroyed
+   */
+  destroy() {
+    this.allSubscribers = null
+    this.groupedSubscribers = null
   }
 }
 

@@ -15,7 +15,7 @@ class WebsocketWrapper {
    * @param {GameComms} gameComms
    */
   constructor(gameID, token, gameComms) {
-    gameComms.registerSubscriber(this, [GROUP_WEBSOCKET])
+    gameComms.registerSubscriber(this, [GROUP_WEBSOCKET], true)
 
     this.onMessageListeners = [msg => {
       gameComms.triggerMsg(msg, GROUP_WEBSOCKET_LISTENERS)
@@ -35,7 +35,7 @@ class WebsocketWrapper {
       // console.log('ws msg: ', msg)
       const msg = JSON.parse(rawMsg.data)
       // console.log(msg.data)
-      console.log('ws msg: ', msg)
+      // console.log('ws msg: ', msg)
       for(let i = 0; i < this.onMessageListeners.length; i++) {
         this.onMessageListeners[i](msg)
       }

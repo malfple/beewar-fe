@@ -14,7 +14,13 @@ function GameView() {
   const [msg, setMsg] = useState('')
   const [messages, setMessages] = useState(['start of chat'])
   const [gameData, setGameData] = useState(null)
+  /**
+   * @type {React.MutableRefObject<WebsocketWrapper>}
+   */
   const ws = useRef(null)
+  /**
+   * @type {React.MutableRefObject<GameComms>}
+   */
   const comms = useRef(null)
 
   useEffect(() => {
@@ -31,13 +37,14 @@ function GameView() {
     })
 
     return function cleanup() {
+      comms.current.destroy()
+
       ws.current.close()
     }
   }, [id, userToken])
 
   // sends message to backend server
   function sendMsg(cmd, data) {
-    console.log('send message', cmd, data)
     comms.current.triggerMsg({
       cmd: cmd,
       data: data,
