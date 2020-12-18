@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useContext, useEffect} from 'react'
 import PropTypes from 'prop-types'
 
 import * as PIXI from 'pixi.js'
@@ -7,12 +7,22 @@ import {renderer} from '../../pixi/renderer'
 import ViewPort from '../../pixi/objects/ViewPort'
 import MapController from '../../pixi/objects/MapController'
 import {GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/groupConstants'
+import {UserTokenContext} from '../../context'
 
 function GameApp(props) {
+  const userToken = useContext(UserTokenContext)
+
+  let currentPlayer = 0
+  for(let i = 0; i < props.gameData.players.length; i++) {
+    if(userToken.userID === props.gameData.players[i].user_id) {
+      currentPlayer = props.gameData.players[i].player_order
+    }
+  }
+
   useEffect(() => {
     // setup app
     const stage = new PIXI.Container()
-    const mapController = new MapController(props.map, true, props.comms)
+    const mapController = new MapController(props.gameData.game, currentPlayer, true, props.comms)
     props.comms.registerSubscriber(mapController, [GROUP_WEBSOCKET_LISTENERS])
     const viewport = ViewPort(mapController)
 
@@ -48,7 +58,7 @@ function GameApp(props) {
 }
 
 GameApp.propTypes = {
-  map: PropTypes.object.isRequired,
+  gameData: PropTypes.object.isRequired,
   comms: PropTypes.object.isRequired,
 }
 

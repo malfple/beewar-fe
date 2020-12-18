@@ -23,6 +23,7 @@ import {axiosCustom} from '../modules/api/api'
 function App(props) {
   const [state, setState] = useState({
     username: null, // null for first time loading
+    userID: 0,
     token: '', // access token
   })
 
@@ -37,23 +38,28 @@ function App(props) {
       url: '/auth/token',
     }).then(res => {
       // refresh token is valid, and we get access token
+      const tokenDecoded = jwt(res.data.token)
       setState({
-        username: jwt(res.data.token).sub,
+        username: tokenDecoded.sub,
+        userID: tokenDecoded.user_id,
         token: res.data.token,
       })
     }).catch(err => {
       // refresh token is invalid
       setState({
         username: '',
+        userID: 0,
         token: '',
       })
     })
   }
 
-  function onLogin(username, token) {
-    console.log(`App login ${username}, token: ${token}`)
+  function onLogin(token) {
+    const tokenDecoded = jwt(token)
+    console.log(`App login ${tokenDecoded.sub}, user_id ${tokenDecoded.user_id} token: ${token}`)
     setState({
-      username: username,
+      username: tokenDecoded.sub,
+      userID: tokenDecoded.user_id,
       token: token,
     })
   }
@@ -62,6 +68,7 @@ function App(props) {
     console.log('Logout')
     setState({
       username: '',
+      userID: 0,
       token: '',
     })
   }
@@ -76,6 +83,7 @@ function App(props) {
     <div className="main">
       <UserTokenContext.Provider value={{
         username: state.username,
+        userID: state.userID,
         token: state.token,
         refreshTheToken: refreshTheToken,
       }}>

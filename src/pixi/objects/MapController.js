@@ -31,10 +31,12 @@ function getAdjList(y, x) {
 class MapController {
   /**
    * @param {Object}    mapData
+   * @param {int}       currentPlayer
    * @param {boolean}   interactive
    * @param {GameComms} comms
    */
-  constructor(mapData, interactive=false, comms=null) {
+  constructor(mapData, currentPlayer, interactive=false, comms=null) {
+    this.currentPlayer = currentPlayer
     this.height = mapData.height
     this.width = mapData.width
     this.terrains = []
@@ -109,8 +111,8 @@ class MapController {
             x_2: x,
           },
         }, GROUP_WEBSOCKET)
-        this._clearSelection(y, x)
       }
+      this._clearSelection(y, x)
     }
   }
 

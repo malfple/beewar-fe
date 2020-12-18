@@ -8,9 +8,8 @@ function Login(props) {
   const [password, setPassword] = useState('')
 
   function handleSubmit(e) {
-    const localUsername = username
-    api.requestLogin(localUsername, password).then(res => {
-      props.onLogin(localUsername, res.data.token)
+    api.requestLogin(username, password).then(res => {
+      props.onLogin(res.data.token)
     })
     e.preventDefault()
   }

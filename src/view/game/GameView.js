@@ -59,7 +59,7 @@ function GameView() {
       <div>
         {messages.map((msg, i) => <div key={i}>{msg}</div>)}
       </div>
-      {gameData ? <GameApp map={gameData.game} comms={comms.current} /> : null}
+      {gameData ? <GameApp gameData={gameData} comms={comms.current} /> : null}
     </div>
   )
 }
