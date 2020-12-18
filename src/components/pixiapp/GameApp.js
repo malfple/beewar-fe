@@ -6,21 +6,14 @@ import * as PIXI from 'pixi.js'
 import {renderer} from '../../pixi/renderer'
 import ViewPort from '../../pixi/objects/ViewPort'
 import MapController from '../../pixi/objects/MapController'
-import {GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/groupConstants'
+import {GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/groupConstants'
 
 function GameApp(props) {
-  // sends message to websocket
-  function sendMsg(cmd, data) {
-    props.comms.triggerMsg({
-      cmd: cmd,
-      data: data,
-    }, GROUP_WEBSOCKET)
-  }
-
   useEffect(() => {
     // setup app
     const stage = new PIXI.Container()
-    const mapController = new MapController(props.map, true, sendMsg)
+    const mapController = new MapController(props.map, true, props.comms)
+    props.comms.registerSubscriber(mapController, [GROUP_WEBSOCKET_LISTENERS])
     const viewport = ViewPort(mapController)
 
     stage.addChild(viewport)
@@ -37,22 +30,12 @@ function GameApp(props) {
     console.log(`stage has ${stage.children.length} instances`)
     console.log(`mapController has ${mapController.pixiNode.children.length} instances`)
 
-    // create a dummy object to listen for ws events
-    const selfDummy = {
-      handleComms(msg) {
-        mapController.handleWSMessage(msg)
-      },
-    }
-    props.comms.registerSubscriber(selfDummy, [GROUP_WEBSOCKET_LISTENERS])
-
     return function cleanup() {
       console.log('map cleanup')
       stage.destroy({
         children: true,
       })
       ticker.destroy()
-
-      props.comms.unregisterSubscriber(selfDummy, [GROUP_WEBSOCKET_LISTENERS])
     }
   })
 

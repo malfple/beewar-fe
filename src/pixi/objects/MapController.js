@@ -10,6 +10,7 @@ import {
   UNIT_WEIGHT_MAP,
 } from './unitConstants'
 import {CMD_CHAT, CMD_END_TURN, CMD_ERROR, CMD_UNIT_MOVE} from '../../modules/communication/messageConstants'
+import {GROUP_WEBSOCKET} from '../../modules/communication/groupConstants'
 
 // MIRROR: for bfs
 const K = 6
@@ -28,7 +29,12 @@ function getAdjList(y, x) {
  * this class is responsible for rendering the map and updating it
  */
 class MapController {
-  constructor(mapData, interactive=false, sendMsg=(cmd, data) => null) {
+  /**
+   * @param {Object}    mapData
+   * @param {boolean}   interactive
+   * @param {GameComms} comms
+   */
+  constructor(mapData, interactive=false, comms=null) {
     this.height = mapData.height
     this.width = mapData.width
     this.terrains = []
@@ -38,7 +44,7 @@ class MapController {
     this.turn_player = mapData.turn_player
     this.pixiNode = new PIXI.Container()
     this.selectedUnit = null
-    this.sendMsg = sendMsg
+    this.comms = comms
 
     const terrainInfo = atob(mapData.terrain_info)
     const unitInfo = atob(mapData.unit_info)
@@ -94,12 +100,15 @@ class MapController {
       this._clearSelection(y, x)
     } else { // move
       if(this.selectedUnit) {
-        this.sendMsg(CMD_UNIT_MOVE, {
-          y_1: this.selectedUnit.y,
-          x_1: this.selectedUnit.x,
-          y_2: y,
-          x_2: x,
-        })
+        this.comms.triggerMsg({
+          cmd: CMD_UNIT_MOVE,
+          data: {
+            y_1: this.selectedUnit.y,
+            x_1: this.selectedUnit.x,
+            y_2: y,
+            x_2: x,
+          },
+        }, GROUP_WEBSOCKET)
         this._clearSelection(y, x)
       }
     }
@@ -225,7 +234,7 @@ class MapController {
   }
 
   // handle ws events from BE
-  handleWSMessage(msg) {
+  handleComms(msg) {
     switch(msg.cmd) {
       case CMD_UNIT_MOVE:
         const unit = this.units[msg.data.y_1][msg.data.x_1]

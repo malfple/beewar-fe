@@ -10,6 +10,7 @@ import {GROUP_NONE} from './groupConstants'
  *
  * registered subscribers need to have handleComms function
  */
+
 class GameComms {
   constructor() {
     this.allSubscribers = new Set()
@@ -17,7 +18,7 @@ class GameComms {
   }
 
   /**
-   * @param {Object}    subscriber
+   * @param {Object}    subscriber      - need to have handleComms(msg) function defined
    * @param {string[]}  groups          - an array of strings. Use groupConstants for the group names
    * @param {boolean}   excludeFromAll  - if true, won't add to all subscribers
    */
@@ -48,8 +49,8 @@ class GameComms {
 
   /**
    * triggers message
-   * @param {Object} msg
-   * @param {string} group       - if group is not provided, will send to every subscriber
+   * @param {Object} msg          - in the form of {cmd, data}
+   * @param {string} group        - if group is not provided, will send to all subscriber (except those that excludes themselves)
    */
   triggerMsg(msg, group=GROUP_NONE) {
     console.log('COMMS: trigger msg', msg, group)
@@ -62,16 +63,6 @@ class GameComms {
         subscriber.handleComms(msg)
       })
     }
-  }
-
-  /**
-   * unregisters all subscribers
-   *
-   * do not use after destroyed
-   */
-  destroy() {
-    this.allSubscribers = null
-    this.groupedSubscribers = null
   }
 }
 
