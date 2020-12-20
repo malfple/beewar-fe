@@ -31,7 +31,7 @@ function getAdjList(y, x) {
 class MapController {
   /**
    * @param {Object}    mapData
-   * @param {int}       currentPlayer
+   * @param {int}       currentPlayer   - the player of this client (not the current turn's player)
    * @param {boolean}   interactive
    * @param {GameComms} comms
    */

@@ -8,6 +8,7 @@ import ViewPort from '../../pixi/objects/ViewPort'
 import MapController from '../../pixi/objects/MapController'
 import {GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/groupConstants'
 import {UserTokenContext} from '../../context'
+import InfoPanel from '../../pixi/objects/InfoPanel'
 
 function GameApp(props) {
   const userToken = useContext(UserTokenContext)
@@ -25,8 +26,11 @@ function GameApp(props) {
     const mapController = new MapController(props.gameData.game, currentPlayer, true, props.comms)
     props.comms.registerSubscriber(mapController, [GROUP_WEBSOCKET_LISTENERS])
     const viewport = ViewPort(mapController)
-
     stage.addChild(viewport)
+
+    const infoPanel = new InfoPanel(props.gameData.game)
+    props.comms.registerSubscriber(infoPanel, [GROUP_WEBSOCKET_LISTENERS])
+    stage.addChild(infoPanel.pixiNode)
 
     const ticker = new PIXI.Ticker()
     ticker.add(() => {
