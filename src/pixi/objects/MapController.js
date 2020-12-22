@@ -31,7 +31,7 @@ function getAdjList(y, x) {
 class MapController {
   /**
    * @param {Object}    mapData
-   * @param {int}       currentPlayer   - the player of this client (not the current turn's player)
+   * @param {int}       currentPlayer   - the player of this client (not the current turn's player) This is not userID, but player number (1..n)
    * @param {boolean}   interactive
    * @param {GameComms} comms
    */
@@ -105,30 +105,29 @@ class MapController {
       }, GROUP_WEBSOCKET)
       this._clearSelection()
     } else if(this.units[y][x]) { // select unit
-      this._clearSelection()
       if(!this.units[y][x].isMoved()) { // only if not yet moved
         this._selectUnit(y, x)
+      } else {
+        this._clearSelection()
       }
     } else if(this.terrains[y][x].dist === -1) { // select out of range cells, deselect
       this._clearSelection()
     } else { // move
-      if(this.selectedUnit) {
+      // only go to move confirmation if selected unit is own unit and it is currently your turn
+      if(this.selectedUnit && this.selectedUnit.owner === this.currentPlayer && this.currentPlayer === this.turn_player) {
         this.selectedTerrainToMove = this.terrains[y][x]
-      }
-      this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x) // deactivate, but don't deselect
-      if(this.selectedTerrainToMove) {
+        this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x) // deactivate, but don't deselect
         this.selectedTerrainToMove.activateMoveTarget()
+      } else {
+        this._clearSelection()
       }
     }
   }
 
   _selectUnit(y, x) {
-    if(this.selectedUnit) {
-      this.selectedUnit.deselect()
-      this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x)
-    }
-    if(this.selectedUnit === this.units[y][x]) {
-      this.selectedUnit = null
+    const prevUnit = this.selectedUnit
+    this._clearSelection()
+    if(prevUnit === this.units[y][x]) { // deselect if select again
       return
     }
     this.units[y][x].select()
