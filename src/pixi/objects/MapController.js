@@ -46,6 +46,7 @@ class MapController {
     this.turn_player = mapData.turn_player
     this.pixiNode = new PIXI.Container()
     this.selectedUnit = null
+    this.selectedTerrainToMove = null
     this.comms = comms
 
     const terrainInfo = atob(mapData.terrain_info)
@@ -92,27 +93,32 @@ class MapController {
   }
 
   handleGridClick(y, x) {
-    if(this.units[y][x]) { // select unit
-      if(this.units[y][x].isMoved()) { // unit already moved
-        this._clearSelection(y, x)
-      } else { // select unit to move
+    if(this.terrains[y][x] === this.selectedTerrainToMove) { // confirm move
+      this.comms.triggerMsg({
+        cmd: CMD_UNIT_MOVE,
+        data: {
+          y_1: this.selectedUnit.y,
+          x_1: this.selectedUnit.x,
+          y_2: y,
+          x_2: x,
+        },
+      }, GROUP_WEBSOCKET)
+      this._clearSelection()
+    } else if(this.units[y][x]) { // select unit
+      this._clearSelection()
+      if(!this.units[y][x].isMoved()) { // only if not yet moved
         this._selectUnit(y, x)
       }
     } else if(this.terrains[y][x].dist === -1) { // select out of range cells, deselect
-      this._clearSelection(y, x)
+      this._clearSelection()
     } else { // move
       if(this.selectedUnit) {
-        this.comms.triggerMsg({
-          cmd: CMD_UNIT_MOVE,
-          data: {
-            y_1: this.selectedUnit.y,
-            x_1: this.selectedUnit.x,
-            y_2: y,
-            x_2: x,
-          },
-        }, GROUP_WEBSOCKET)
+        this.selectedTerrainToMove = this.terrains[y][x]
       }
-      this._clearSelection(y, x)
+      this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x) // deactivate, but don't deselect
+      if(this.selectedTerrainToMove) {
+        this.selectedTerrainToMove.activateMoveTarget()
+      }
     }
   }
 
@@ -129,11 +135,16 @@ class MapController {
     this.selectedUnit = this.units[y][x]
     this._activateTerrains(y, x)
   }
-  _clearSelection(y, x) {
+  _clearSelection() {
+    // clears all selection
     if(this.selectedUnit) {
       this.selectedUnit.deselect()
       this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x)
       this.selectedUnit = null
+    }
+    if(this.selectedTerrainToMove) {
+      this.selectedTerrainToMove.deactivate()
+      this.selectedTerrainToMove = null
     }
   }
 
