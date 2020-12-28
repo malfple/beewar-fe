@@ -44,21 +44,27 @@ class Terrain {
 
   // triggered when the cell is in movement range of the current selected unit
   activateMoveTarget() {
-    this.pixiNode.tint = 0x00FF00
-    this.status = TERRAIN_STATUS_MOVE_TARGET
+    if(this.pixiNode) {
+      this.pixiNode.tint = 0x00FF00
+      this.status = TERRAIN_STATUS_MOVE_TARGET
+    }
   }
   // triggered when the cell contains an attack target for the current selected unit
   activateAttackTarget() {
-    this.pixiNode.tint = 0xFF0000
-    this.status = TERRAIN_STATUS_ATTACK_TARGET
+    if(this.pixiNode) {
+      this.pixiNode.tint = 0xFF0000
+      this.status = TERRAIN_STATUS_ATTACK_TARGET
+    }
   }
   isAttackTarget() {
     return this.status === TERRAIN_STATUS_ATTACK_TARGET
   }
   // return to normal
   deactivate() {
-    this.pixiNode.tint = 0xFFFFFF
-    this.status = TERRAIN_STATUS_NORMAL
+    if(this.pixiNode) {
+      this.pixiNode.tint = 0xFFFFFF
+      this.status = TERRAIN_STATUS_NORMAL
+    }
   }
 }
 

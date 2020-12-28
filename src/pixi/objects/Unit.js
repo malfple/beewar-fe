@@ -86,6 +86,16 @@ class Unit {
     return (this.state & UNIT_STATE_BIT_MOVED) !== 0
   }
 
+  setHP(hp) {
+    this.hp = hp
+    this.hpText.text = this.hp
+    if(this.hp === 0) { // unit destroyed, remove sprite
+      this.pixiNode.destroy({
+        children: true,
+      })
+    }
+  }
+
   // update functions for rendering
   _updateSpriteFromState() {
     if(this.isMoved()) {

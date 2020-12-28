@@ -3,14 +3,22 @@ import * as PIXI from 'pixi.js'
 import Terrain from './Terrain'
 import Unit from './Unit'
 import {
+  UNIT_ATTACK_RANGE_INFANTRY,
   UNIT_MOVE_STEPS_INFANTRY,
   UNIT_MOVE_STEPS_YOU,
   UNIT_TYPE_INFANTRY,
   UNIT_TYPE_YOU,
   UNIT_WEIGHT_MAP,
 } from './unitConstants'
-import {CMD_CHAT, CMD_END_TURN, CMD_ERROR, CMD_UNIT_MOVE} from '../../modules/communication/messageConstants'
+import {
+  CMD_CHAT,
+  CMD_END_TURN,
+  CMD_ERROR,
+  CMD_UNIT_MOVE,
+  CMD_UNIT_MOVE_AND_ATTACK,
+} from '../../modules/communication/messageConstants'
 import {GROUP_WEBSOCKET} from '../../modules/communication/groupConstants'
+import {hexDistance} from '../../utils/grid'
 
 // MIRROR: for bfs
 const K = 6
@@ -104,6 +112,19 @@ class MapController {
         },
       }, GROUP_WEBSOCKET)
       this._clearSelection()
+    } else if(this.terrains[y][x].isAttackTarget()) { // attack
+      this.comms.triggerMsg({
+        cmd: CMD_UNIT_MOVE_AND_ATTACK,
+        data: {
+          y_1: this.selectedUnit.y,
+          x_1: this.selectedUnit.x,
+          y_2: this.selectedTerrainToMove.y,
+          x_2: this.selectedTerrainToMove.x,
+          y_t: y,
+          x_t: x,
+        },
+      }, GROUP_WEBSOCKET)
+      this._clearSelection()
     } else if(this.units[y][x]) { // select unit
       if(!this.units[y][x].isMoved()) { // only if not yet moved
         this._selectUnit(y, x)
@@ -118,6 +139,7 @@ class MapController {
         this.selectedTerrainToMove = this.terrains[y][x]
         this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x) // deactivate, but don't deselect
         this.selectedTerrainToMove.activateMoveTarget()
+        this._activateAttackTerrains(y, x)
       } else {
         this._clearSelection()
       }
@@ -132,23 +154,24 @@ class MapController {
     }
     this.units[y][x].select()
     this.selectedUnit = this.units[y][x]
-    this._activateTerrains(y, x)
+    this._activateMoveTerrains(y, x)
   }
   _clearSelection() {
     // clears all selection
+    if(this.selectedTerrainToMove) {
+      this._deactivateAttackTerrains(this.selectedTerrainToMove.y, this.selectedTerrainToMove.x)
+      this.selectedTerrainToMove.deactivate()
+      this.selectedTerrainToMove = null
+    }
     if(this.selectedUnit) {
       this.selectedUnit.deselect()
       this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x)
       this.selectedUnit = null
     }
-    if(this.selectedTerrainToMove) {
-      this.selectedTerrainToMove.deactivate()
-      this.selectedTerrainToMove = null
-    }
   }
 
   // there needs to be a unit at (y, x)
-  _activateTerrains(y, x) {
+  _activateMoveTerrains(y, x) {
     switch(this.units[y][x].type) {
       case UNIT_TYPE_YOU:
         this._bfs(y, x, UNIT_MOVE_STEPS_YOU)
@@ -160,7 +183,60 @@ class MapController {
         console.error('null or unknown unit')
     }
   }
-
+  _activateAttackTerrains(y, x) {
+    let atkRange = 0
+    switch(this.selectedUnit.type) {
+      case UNIT_TYPE_YOU:
+        break
+      case UNIT_TYPE_INFANTRY:
+        atkRange = UNIT_ATTACK_RANGE_INFANTRY
+        break
+      default:
+        console.error('null or unknown unit')
+    }
+    for(let i = y-atkRange; i <= y+atkRange; i++) {
+      for(let j = x-atkRange; j <= x+atkRange; j++) {
+        if(i === y && j === x) {
+          continue
+        }
+        if(i < 0 || i >= this.height || j < 0 || j >= this.width) {
+          continue
+        }
+        if(hexDistance(y, x, i, j) > atkRange) {
+          continue
+        }
+        if(this.units[i][j] && this.units[i][j].owner !== this.selectedUnit.owner) {
+          this.terrains[i][j].activateAttackTarget()
+        }
+      }
+    }
+  }
+  _deactivateAttackTerrains(y, x) {
+    let atkRange = 0
+    switch(this.selectedUnit.type) {
+      case UNIT_TYPE_YOU:
+        break
+      case UNIT_TYPE_INFANTRY:
+        atkRange = UNIT_ATTACK_RANGE_INFANTRY
+        break
+      default:
+        console.error('null or unknown unit')
+    }
+    for(let i = y-atkRange; i <= y+atkRange; i++) {
+      for(let j = x-atkRange; j <= x+atkRange; j++) {
+        if(i === y && j === x) {
+          continue
+        }
+        if(i < 0 || i >= this.height || j < 0 || j >= this.width) {
+          continue
+        }
+        if(hexDistance(y, x, i, j) > atkRange) {
+          continue
+        }
+        this.terrains[i][j].deactivate()
+      }
+    }
+  }
   _deactivateTerrains(y, x) {
     switch(this.units[y][x].type) {
       case UNIT_TYPE_YOU:
@@ -254,6 +330,20 @@ class MapController {
         this.units[msg.data.y_2][msg.data.x_2] = unit
         unit.moveTo(msg.data.y_2, msg.data.x_2)
         break
+      case CMD_UNIT_MOVE_AND_ATTACK:
+        const unit2 = this.units[msg.data.y_1][msg.data.x_1]
+        this.units[msg.data.y_1][msg.data.x_1] = null
+        this.units[msg.data.y_2][msg.data.x_2] = unit2
+        unit2.moveTo(msg.data.y_2, msg.data.x_2)
+        this.units[msg.data.y_2][msg.data.x_2].setHP(msg.data.hp_atk)
+        if(this.units[msg.data.y_2][msg.data.x_2].hp === 0) {
+          this.units[msg.data.y_2][msg.data.x_2] = null
+        }
+        this.units[msg.data.y_t][msg.data.x_t].setHP(msg.data.hp_def)
+        if(this.units[msg.data.y_t][msg.data.x_t].hp === 0) {
+          this.units[msg.data.y_t][msg.data.x_t] = null
+        }
+        break
       case CMD_END_TURN:
         this._nextTurn()
         break
@@ -262,7 +352,7 @@ class MapController {
         // do nothing
         break
       default:
-        console.error('unknown event')
+        console.error(`map controller comms: unknown event: ${msg.cmd}`)
     }
   }
 
