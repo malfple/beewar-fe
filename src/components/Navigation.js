@@ -12,7 +12,7 @@ function Navigation(props) {
   function logout() {
     api.axiosCustom({
       method: 'POST',
-      url: '/auth/logout',
+      url: '/api/auth/logout',
     }).then(() => {
       props.onLogout()
     })

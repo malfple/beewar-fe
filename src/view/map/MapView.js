@@ -9,7 +9,7 @@ function MapView() {
   const {id} = useParams()
 
   useEffect(() => {
-    axiosCustom.get('/map/get', {
+    axiosCustom.get('/api/map/get', {
       params: {
         id: id,
       },

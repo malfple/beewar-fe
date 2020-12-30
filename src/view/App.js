@@ -35,7 +35,7 @@ function App(props) {
     // check if there is refresh token and if it's valid
     api.axiosCustom({
       method: 'POST',
-      url: '/auth/token',
+      url: '/api/auth/token',
     }).then(res => {
       // refresh token is valid, and we get access token
       const tokenDecoded = jwt(res.data.token)
@@ -145,7 +145,7 @@ function ServerStats() {
   })
 
   useEffect(() => {
-    axiosCustom.get('/server_stats').then(res => {
+    axiosCustom.get('/api/server_stats').then(res => {
       setState({
         hub_count: res.data.hub_count,
         session_count: res.data.session_count,
@@ -169,7 +169,7 @@ function PingTest() {
   function handlePing(e) {
     e.preventDefault()
     console.log('ping!')
-    api.axiosCustom.get('/').then(() => {
+    api.axiosCustom.get('/api/').then(() => {
       console.log('pong!')
     }).catch(err => {
       console.log('be server ded!')
