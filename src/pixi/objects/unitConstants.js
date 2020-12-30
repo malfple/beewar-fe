@@ -28,6 +28,8 @@ const PLAYER_COLOR_TINT = [
   0, // unused
   0xFF6666,
   0x6666FF,
+  0x22AA00,
+  0xFFCC00,
 ]
 
 export {
