@@ -1,7 +1,7 @@
 import {CMD_CHAT} from './messageConstants'
 import {GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from './groupConstants'
 
-import config from '../../config/config'
+const BE_SERVER_WEBSOCKET_URL = process.env.REACT_APP_BE_SERVER_WEBSOCKET_URL
 
 /**
  * Wraps javascript's WebSocket class for use with Games
@@ -23,7 +23,7 @@ class WebsocketWrapper {
       gameComms.triggerMsg(msg, GROUP_WEBSOCKET_LISTENERS)
     }]
 
-    this.ws = new WebSocket(`${config.BEServerWebsocket}/api/game/ws?id=${gameID}`, ['game_room', token])
+    this.ws = new WebSocket(`${BE_SERVER_WEBSOCKET_URL}/api/game/ws?id=${gameID}`, ['game_room', token])
 
     this.ws.onopen = () => {
       console.log('Successfully Connected')
