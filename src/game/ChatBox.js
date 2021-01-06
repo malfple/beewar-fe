@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import {CMD_CHAT} from '../modules/communication/messageConstants'
 import {GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from '../modules/communication/groupConstants'
 
+import PlayerText from './PlayerText'
+
 function ChatBox(props) {
   const [msg, setMsg] = useState('')
   const [messages, setMessages] = useState(['start of chat'])
@@ -21,7 +23,14 @@ function ChatBox(props) {
     const dummy = {
       handleComms(msg) {
         if(msg.cmd === CMD_CHAT) {
-          setMessages(prevMessages => [...prevMessages, `${msg.sender}: ${msg.data}`])
+          let username = ''
+          for(const player of props.players) {
+            if(player.user_id === msg.sender) {
+              username = player.user.username
+              break
+            }
+          }
+          setMessages(prevMessages => [...prevMessages, `${username}: ${msg.data}`])
         }
       },
     }
@@ -31,12 +40,15 @@ function ChatBox(props) {
     return function cleanup() {
       props.comms.unregisterSubscriber(dummy, [GROUP_WEBSOCKET_LISTENERS])
     }
-  }, [props.comms])
+  }, [props.comms, props.players])
 
   return (
     <div>
       <div>
         Players:
+        <div>
+          {props.players.map((player, i) => <PlayerText key={i} gameUser={player} />)}
+        </div>
       </div>
       <div>
         Chat:
@@ -52,6 +64,7 @@ function ChatBox(props) {
 
 ChatBox.propTypes = {
   comms: PropTypes.object.isRequired,
+  players: PropTypes.array.isRequired,
 }
 
 export default ChatBox

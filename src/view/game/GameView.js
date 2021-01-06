@@ -7,7 +7,7 @@ import {CMD_END_TURN, CMD_GAME_DATA} from '../../modules/communication/messageCo
 import GameComms from '../../modules/communication/GameComms'
 import WebsocketWrapper from '../../modules/communication/WebsocketWrapper'
 import {GROUP_WEBSOCKET} from '../../modules/communication/groupConstants'
-import ChatBox from '../../components/ChatBox'
+import ChatBox from '../../game/ChatBox'
 
 function GameView() {
   const {id} = useParams()
@@ -50,7 +50,7 @@ function GameView() {
 
   return (
     <div>
-      <ChatBox comms={comms.current} />
+      <ChatBox comms={comms.current} players={gameData.players} />
       <button onClick={endTurn}>end turn</button> <br />
       <GameApp gameData={gameData} comms={comms.current} />
     </div>
