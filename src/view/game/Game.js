@@ -8,7 +8,6 @@ function Game() {
 
   return (
     <div>
-      Game
       <Switch>
         <Route path={`${path}/:id`} >
           <GameView />
