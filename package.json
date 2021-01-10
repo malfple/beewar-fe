@@ -1,5 +1,5 @@
 {
-  "name": "otqee-fe",
+  "name": "beewar-fe",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -29,27 +29,54 @@
     "rules": {
       "prefer-const": "warn",
       "no-var": "warn",
-      "func-style": ["warn", "declaration"],
+      "func-style": [
+        "warn",
+        "declaration"
+      ],
       "no-param-reassign": "warn",
       "prefer-template": "error",
       "template-curly-spacing": "error",
       "arrow-spacing": "error",
       "arrow-body-style": "error",
-      "no-trailing-spaces": ["warn", {
+      "no-trailing-spaces": [
+        "warn",
+        {
           "skipBlankLines": true
-      }],
+        }
+      ],
       "no-irregular-whitespace": "error",
       "no-multi-spaces": "warn",
       "space-before-blocks": "warn",
-      "space-before-function-paren": ["warn", "never"],
-      "space-in-parens": ["error", "never"],
-      "eol-last": ["error", "always"],
-      "semi": ["error", "never"],
+      "space-before-function-paren": [
+        "warn",
+        "never"
+      ],
+      "space-in-parens": [
+        "error",
+        "never"
+      ],
+      "eol-last": [
+        "error",
+        "always"
+      ],
+      "semi": [
+        "error",
+        "never"
+      ],
       "curly": "error",
       "dot-notation": "error",
-      "quotes": ["error", "single"],
-      "jsx-quotes": ["error", "prefer-double"],
-      "comma-dangle": ["warn", "always-multiline"]
+      "quotes": [
+        "error",
+        "single"
+      ],
+      "jsx-quotes": [
+        "error",
+        "prefer-double"
+      ],
+      "comma-dangle": [
+        "warn",
+        "always-multiline"
+      ]
     }
   },
   "browserslist": {
@@ -64,5 +91,5 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://otqee.gitlab.io/otqee-fe"
+  "homepage": "https://beewar.gitlab.io/beewar-fe"
 }
