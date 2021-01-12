@@ -7,8 +7,8 @@ import {
   UNIT_MOVE_STEPS_INFANTRY,
   UNIT_MOVE_STEPS_YOU,
   UNIT_TYPE_INFANTRY,
-  UNIT_TYPE_YOU,
-  UNIT_WEIGHT_MAP,
+  UNIT_TYPE_YOU, UNIT_WEIGHT_INFANTRY,
+  UNIT_WEIGHT_MAP, UNIT_WEIGHT_YOU,
 } from './unitConstants'
 import {
   CMD_CHAT,
@@ -172,12 +172,13 @@ class MapController {
 
   // there needs to be a unit at (y, x)
   _activateMoveTerrains(y, x) {
-    switch(this.units[y][x].type) {
+    const unit = this.units[y][x]
+    switch(unit.type) {
       case UNIT_TYPE_YOU:
-        this._bfs(y, x, UNIT_MOVE_STEPS_YOU)
+        this._bfs(y, x, UNIT_MOVE_STEPS_YOU, unit.owner, UNIT_WEIGHT_YOU)
         break
       case UNIT_TYPE_INFANTRY:
-        this._bfs(y, x, UNIT_MOVE_STEPS_INFANTRY)
+        this._bfs(y, x, UNIT_MOVE_STEPS_INFANTRY, unit.owner, UNIT_WEIGHT_INFANTRY)
         break
       default:
         console.error('null or unknown unit')
@@ -249,11 +250,9 @@ class MapController {
   }
 
   // MIRROR: bfs function from backend
-  // there needs to be a unit at (y, x)
-  _bfs(y, x, steps) {
+  _bfs(y, x, steps, owner, weight) {
     const queue = []
     let ptq = 0
-    const unit = this.units[y][x]
     this.terrains[y][x].dist = 0
     this.terrains[y][x].activateMoveTarget()
     queue.push({y: y, x: x})
@@ -279,10 +278,10 @@ class MapController {
         }
         const currUnit = this.units[ty][tx]
         if(currUnit) {
-          if(currUnit.owner !== unit.owner) {
+          if(currUnit.owner !== owner) {
             continue
           }
-          if(UNIT_WEIGHT_MAP[currUnit.type] + UNIT_WEIGHT_MAP[unit.type] > 1) {
+          if(UNIT_WEIGHT_MAP[currUnit.type] + weight > 1) {
             continue
           }
         }
