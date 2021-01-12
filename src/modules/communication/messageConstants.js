@@ -12,6 +12,11 @@ const CMD_UNIT_MOVE_AND_ATTACK = 'UNIT_MOVE_ATTACK'
 
 const CMD_END_TURN = 'END_TURN'
 
+/*
+FE specific commands
+ */
+const CMD_TERRAIN_CLICK = 'TERRAIN_CLICK'
+
 export {
   CMD_CHAT,
 
@@ -22,4 +27,6 @@ export {
   CMD_UNIT_MOVE_AND_ATTACK,
 
   CMD_END_TURN,
+
+  CMD_TERRAIN_CLICK,
 }

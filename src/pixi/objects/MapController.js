@@ -13,12 +13,13 @@ import {
 import {
   CMD_CHAT,
   CMD_END_TURN,
-  CMD_ERROR,
+  CMD_ERROR, CMD_TERRAIN_CLICK,
   CMD_UNIT_MOVE,
   CMD_UNIT_MOVE_AND_ATTACK,
 } from '../../modules/communication/messageConstants'
 import {GROUP_WEBSOCKET} from '../../modules/communication/groupConstants'
 import {hexDistance} from '../../utils/grid'
+import {nullGameComms} from '../../modules/communication/GameComms'
 
 // MIRROR: for bfs
 const K = 6
@@ -43,7 +44,7 @@ class MapController {
    * @param {boolean}   interactive
    * @param {GameComms} comms
    */
-  constructor(mapData, currentPlayer, interactive=false, comms=null) {
+  constructor(mapData, currentPlayer, interactive=false, comms=nullGameComms) {
     this.currentPlayer = currentPlayer
     this.height = mapData.height
     this.width = mapData.width
@@ -66,7 +67,7 @@ class MapController {
       this.units.push([])
       for(let j = 0; j < mapData.width; j++) {
         const terrainType = terrainInfo.charCodeAt(i * mapData.width + j)
-        const terrain = new Terrain(terrainType, i, j, interactive, this.handleGridClick.bind(this))
+        const terrain = new Terrain(terrainType, i, j, interactive, this.comms)
         if(terrain.pixiNode) {
           this.pixiNode.addChild(terrain.pixiNode)
         }
@@ -320,7 +321,7 @@ class MapController {
     }
   }
 
-  // handle ws events from BE
+  // game comms
   handleComms(msg) {
     switch(msg.cmd) {
       case CMD_UNIT_MOVE:
@@ -349,6 +350,9 @@ class MapController {
       case CMD_CHAT:
       case CMD_ERROR:
         // do nothing
+        break
+      case CMD_TERRAIN_CLICK:
+        this.handleGridClick(msg.data.y, msg.data.x)
         break
       default:
         console.error(`map controller comms: unknown event: ${msg.cmd}`)

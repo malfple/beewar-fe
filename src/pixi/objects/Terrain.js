@@ -2,15 +2,19 @@ import * as PIXI from 'pixi.js'
 import {hexTexture} from '../textures'
 import {TERRAIN_STATUS_ATTACK_TARGET, TERRAIN_STATUS_MOVE_TARGET, TERRAIN_STATUS_NORMAL} from './terrainConstants'
 
+import {nullGameComms} from '../../modules/communication/GameComms'
+import {GROUP_MAP_CONTROLLER} from '../../modules/communication/groupConstants'
+import {CMD_TERRAIN_CLICK} from '../../modules/communication/messageConstants'
+
 class Terrain {
   /**
-   * @param type  map type
+   * @param type  terrain type
    * @param y     row
    * @param x     column
    * @param interactive: boolean, if true, create listeners
-   * @param callbackClick: function(y, x)
+   * @param {GameComms} comms
    */
-  constructor(type, y, x, interactive, callbackClick) {
+  constructor(type, y, x, interactive, comms=nullGameComms) {
     this.y = y
     this.x = x
     this.type = type
@@ -37,7 +41,13 @@ class Terrain {
         this.pixiNode.scale.set(1)
       })
       this.pixiNode.on('click', e => {
-        callbackClick(this.y, this.x)
+        comms.triggerMsg({
+          cmd: CMD_TERRAIN_CLICK,
+          data: {
+            y: this.y,
+            x: this.x,
+          },
+        }, GROUP_MAP_CONTROLLER)
       })
     }
   }
