@@ -4,8 +4,8 @@ import Terrain from './Terrain'
 import Unit from './Unit'
 import {
   UNIT_ATTACK_RANGE_INFANTRY,
-  UNIT_MOVE_STEPS_INFANTRY,
-  UNIT_MOVE_STEPS_YOU,
+  UNIT_MOVE_RANGE_INFANTRY,
+  UNIT_MOVE_RANGE_YOU,
   UNIT_TYPE_INFANTRY,
   UNIT_TYPE_YOU, UNIT_WEIGHT_INFANTRY,
   UNIT_WEIGHT_MAP, UNIT_WEIGHT_YOU,
@@ -176,10 +176,10 @@ class MapController {
     const unit = this.units[y][x]
     switch(unit.type) {
       case UNIT_TYPE_YOU:
-        this._bfs(y, x, UNIT_MOVE_STEPS_YOU, unit.owner, UNIT_WEIGHT_YOU)
+        this._bfs(y, x, UNIT_MOVE_RANGE_YOU, unit.owner, UNIT_WEIGHT_YOU)
         break
       case UNIT_TYPE_INFANTRY:
-        this._bfs(y, x, UNIT_MOVE_STEPS_INFANTRY, unit.owner, UNIT_WEIGHT_INFANTRY)
+        this._bfs(y, x, UNIT_MOVE_RANGE_INFANTRY, unit.owner, UNIT_WEIGHT_INFANTRY)
         break
       default:
         console.error('null or unknown unit')
