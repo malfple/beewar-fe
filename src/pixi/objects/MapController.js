@@ -13,7 +13,7 @@ import {
 import {
   CMD_CHAT,
   CMD_END_TURN,
-  CMD_ERROR, CMD_TERRAIN_CLICK,
+  CMD_ERROR, COMMS_TERRAIN_CLICK, CMD_UNIT_ATTACK,
   CMD_UNIT_MOVE,
   CMD_UNIT_MOVE_AND_ATTACK,
 } from '../../modules/communication/messageConstants'
@@ -325,24 +325,14 @@ class MapController {
   handleComms(msg) {
     switch(msg.cmd) {
       case CMD_UNIT_MOVE:
-        const unit = this.units[msg.data.y_1][msg.data.x_1]
-        this.units[msg.data.y_1][msg.data.x_1] = null
-        this.units[msg.data.y_2][msg.data.x_2] = unit
-        unit.moveTo(msg.data.y_2, msg.data.x_2)
+        this._unitMove(msg.data.y_1, msg.data.x_1, msg.data.y_2, msg.data.x_2)
+        break
+      case CMD_UNIT_ATTACK:
+        this._unitAttack(msg.data.y_1, msg.data.x_1, msg.data.hp_atk, msg.data.y_t, msg.data.x_t, msg.data.hp_def)
         break
       case CMD_UNIT_MOVE_AND_ATTACK:
-        const unit2 = this.units[msg.data.y_1][msg.data.x_1]
-        this.units[msg.data.y_1][msg.data.x_1] = null
-        this.units[msg.data.y_2][msg.data.x_2] = unit2
-        unit2.moveTo(msg.data.y_2, msg.data.x_2)
-        this.units[msg.data.y_2][msg.data.x_2].setHP(msg.data.hp_atk)
-        if(this.units[msg.data.y_2][msg.data.x_2].hp === 0) {
-          this.units[msg.data.y_2][msg.data.x_2] = null
-        }
-        this.units[msg.data.y_t][msg.data.x_t].setHP(msg.data.hp_def)
-        if(this.units[msg.data.y_t][msg.data.x_t].hp === 0) {
-          this.units[msg.data.y_t][msg.data.x_t] = null
-        }
+        this._unitMove(msg.data.y_1, msg.data.x_1, msg.data.y_2, msg.data.x_2)
+        this._unitAttack(msg.data.y_2, msg.data.x_2, msg.data.hp_atk, msg.data.y_t, msg.data.x_t, msg.data.hp_def)
         break
       case CMD_END_TURN:
         this._nextTurn()
@@ -351,11 +341,29 @@ class MapController {
       case CMD_ERROR:
         // do nothing
         break
-      case CMD_TERRAIN_CLICK:
+      case COMMS_TERRAIN_CLICK:
         this.handleGridClick(msg.data.y, msg.data.x)
         break
       default:
         console.error(`map controller comms: unknown event: ${msg.cmd}`)
+    }
+  }
+
+  // unit edit functions
+  _unitMove(y1, x1, y2, x2) {
+    const unit = this.units[y1][x1]
+    this.units[y2][x2] = null
+    this.units[y2][x2] = unit
+    unit.moveTo(y2, x2)
+  }
+  _unitAttack(y, x, hpAtk, yt, xt, hpDef) {
+    this.units[y][x].setHP(hpAtk)
+    if(this.units[y][x].hp === 0) {
+      this.units[y][x] = null
+    }
+    this.units[yt][xt].setHP(hpDef)
+    if(this.units[yt][xt].hp === 0) {
+      this.units[yt][xt] = null
     }
   }
 

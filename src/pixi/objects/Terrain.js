@@ -4,7 +4,7 @@ import {TERRAIN_STATUS_ATTACK_TARGET, TERRAIN_STATUS_MOVE_TARGET, TERRAIN_STATUS
 
 import {nullGameComms} from '../../modules/communication/GameComms'
 import {GROUP_MAP_CONTROLLER} from '../../modules/communication/groupConstants'
-import {CMD_TERRAIN_CLICK} from '../../modules/communication/messageConstants'
+import {COMMS_TERRAIN_CLICK} from '../../modules/communication/messageConstants'
 
 class Terrain {
   /**
@@ -42,7 +42,7 @@ class Terrain {
       })
       this.pixiNode.on('click', e => {
         comms.triggerMsg({
-          cmd: CMD_TERRAIN_CLICK,
+          cmd: COMMS_TERRAIN_CLICK,
           data: {
             y: this.y,
             x: this.x,
