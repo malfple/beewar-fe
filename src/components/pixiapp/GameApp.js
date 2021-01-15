@@ -5,10 +5,11 @@ import * as PIXI from 'pixi.js'
 
 import {renderer} from '../../pixi/renderer'
 import ViewPort from '../../pixi/objects/ViewPort'
-import MapController from '../../pixi/objects/MapController'
+import Map from '../../pixi/objects/Map'
 import {GROUP_MAP_CONTROLLER, GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/groupConstants'
 import {UserTokenContext} from '../../context'
 import InfoPanel from '../../pixi/objects/InfoPanel'
+import MapInteractionController from '../../pixi/objects/MapInteractionController'
 
 function GameApp(props) {
   const userToken = useContext(UserTokenContext)
@@ -23,10 +24,14 @@ function GameApp(props) {
   useEffect(() => {
     // setup app
     const stage = new PIXI.Container()
-    const mapController = new MapController(props.gameData.game, currentPlayer, true, props.comms)
-    props.comms.registerSubscriber(mapController, [GROUP_WEBSOCKET_LISTENERS, GROUP_MAP_CONTROLLER])
-    const viewport = ViewPort(mapController)
+
+    const map = new Map(props.gameData.game, currentPlayer, true, props.comms)
+    props.comms.registerSubscriber(map, [GROUP_WEBSOCKET_LISTENERS])
+    const viewport = ViewPort(map)
     stage.addChild(viewport)
+
+    const mapInteractionController = new MapInteractionController(map, currentPlayer, props.comms)
+    props.comms.registerSubscriber(mapInteractionController, [GROUP_WEBSOCKET_LISTENERS, GROUP_MAP_CONTROLLER], true)
 
     const infoPanel = new InfoPanel(props.gameData.game)
     props.comms.registerSubscriber(infoPanel, [GROUP_WEBSOCKET_LISTENERS])
@@ -42,7 +47,7 @@ function GameApp(props) {
     document.getElementById('game-app').appendChild(renderer.view)
 
     console.log(`stage has ${stage.children.length} instances`)
-    console.log(`mapController has ${mapController.pixiNode.children.length} instances`)
+    console.log(`map has ${map.pixiNode.children.length} instances`)
 
     return function cleanup() {
       console.log('map cleanup')

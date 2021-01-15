@@ -40,7 +40,7 @@ class InfoPanel {
     this.borderGraphics.tint = PLAYER_COLOR_TINT[this.turn_player]
   }
 
-  // similar to the one in MapController
+  // similar to the one in Map
   _nextTurn() {
     this.turn_player++
     if(this.turn_player > this.player_count) {

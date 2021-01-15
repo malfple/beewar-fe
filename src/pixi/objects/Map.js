@@ -13,11 +13,10 @@ import {
 import {
   CMD_CHAT,
   CMD_END_TURN,
-  CMD_ERROR, COMMS_TERRAIN_CLICK, CMD_UNIT_ATTACK,
+  CMD_ERROR, CMD_UNIT_ATTACK,
   CMD_UNIT_MOVE,
   CMD_UNIT_MOVE_AND_ATTACK,
 } from '../../modules/communication/messageConstants'
-import {GROUP_WEBSOCKET} from '../../modules/communication/groupConstants'
 import {hexDistance} from '../../utils/grid'
 import {nullGameComms} from '../../modules/communication/GameComms'
 
@@ -37,7 +36,7 @@ function getAdjList(y, x) {
 /**
  * this class is responsible for rendering the map and updating it
  */
-class MapController {
+class Map {
   /**
    * @param {Object}    mapData
    * @param {int}       currentPlayer   - the player of this client (not the current turn's player) This is not userID, but player number (1..n)
@@ -101,78 +100,10 @@ class MapController {
     }
   }
 
-  handleGridClick(y, x) {
-    if(this.terrains[y][x] === this.selectedTerrainToMove) { // confirm move
-      this.comms.triggerMsg({
-        cmd: CMD_UNIT_MOVE,
-        data: {
-          y_1: this.selectedUnit.y,
-          x_1: this.selectedUnit.x,
-          y_2: y,
-          x_2: x,
-        },
-      }, GROUP_WEBSOCKET)
-      this._clearSelection()
-    } else if(this.terrains[y][x].isAttackTarget()) { // attack
-      this.comms.triggerMsg({
-        cmd: CMD_UNIT_MOVE_AND_ATTACK,
-        data: {
-          y_1: this.selectedUnit.y,
-          x_1: this.selectedUnit.x,
-          y_2: this.selectedTerrainToMove.y,
-          x_2: this.selectedTerrainToMove.x,
-          y_t: y,
-          x_t: x,
-        },
-      }, GROUP_WEBSOCKET)
-      this._clearSelection()
-    } else if(this.units[y][x]) { // select unit
-      if(!this.units[y][x].isMoved()) { // only if not yet moved
-        this._selectUnit(y, x)
-      } else {
-        this._clearSelection()
-      }
-    } else if(this.terrains[y][x].dist === -1) { // select out of range cells, deselect
-      this._clearSelection()
-    } else { // move
-      // only go to move confirmation if selected unit is own unit and it is currently your turn
-      if(this.selectedUnit && this.selectedUnit.owner === this.currentPlayer && this.currentPlayer === this.turn_player) {
-        this.selectedTerrainToMove = this.terrains[y][x]
-        this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x) // deactivate, but don't deselect
-        this.selectedTerrainToMove.activateMoveTarget()
-        this._activateAttackTerrains(y, x)
-      } else {
-        this._clearSelection()
-      }
-    }
-  }
-
-  _selectUnit(y, x) {
-    const prevUnit = this.selectedUnit
-    this._clearSelection()
-    if(prevUnit === this.units[y][x]) { // deselect if select again
-      return
-    }
-    this.units[y][x].select()
-    this.selectedUnit = this.units[y][x]
-    this._activateMoveTerrains(y, x)
-  }
-  _clearSelection() {
-    // clears all selection
-    if(this.selectedTerrainToMove) {
-      this._deactivateAttackTerrains(this.selectedTerrainToMove.y, this.selectedTerrainToMove.x)
-      this.selectedTerrainToMove.deactivate()
-      this.selectedTerrainToMove = null
-    }
-    if(this.selectedUnit) {
-      this.selectedUnit.deselect()
-      this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x)
-      this.selectedUnit = null
-    }
-  }
-
-  // there needs to be a unit at (y, x)
-  _activateMoveTerrains(y, x) {
+  /**
+   * given a position with a unit, activate move terrains for that unit.
+   */
+  activateMoveTerrains(y, x) {
     const unit = this.units[y][x]
     switch(unit.type) {
       case UNIT_TYPE_YOU:
@@ -185,9 +116,31 @@ class MapController {
         console.error('null or unknown unit')
     }
   }
-  _activateAttackTerrains(y, x) {
+
+  /**
+   * return terrains to normal
+   */
+  deactivateMoveTerrains(y, x) {
+    const unit = this.units[y][x]
+    switch(unit.type) {
+      case UNIT_TYPE_YOU:
+      case UNIT_TYPE_INFANTRY:
+        this._bfsReset(y, x)
+        break
+      default:
+        console.error('null or unknown unit')
+    }
+  }
+
+  /**
+   * given a unit and position, paint attack terrains on that position
+   * @param {Unit} unit
+   * @param y
+   * @param x
+   */
+  activateAttackTerrains(unit, y, x) {
     let atkRange = 0
-    switch(this.selectedUnit.type) {
+    switch(unit.type) {
       case UNIT_TYPE_YOU:
         break
       case UNIT_TYPE_INFANTRY:
@@ -207,15 +160,22 @@ class MapController {
         if(hexDistance(y, x, i, j) > atkRange) {
           continue
         }
-        if(this.units[i][j] && this.units[i][j].owner !== this.selectedUnit.owner) {
+        if(this.units[i][j] && this.units[i][j].owner !== unit.owner) {
           this.terrains[i][j].activateAttackTarget()
         }
       }
     }
   }
-  _deactivateAttackTerrains(y, x) {
+
+  /**
+   * return terrains to normal. you should still give the attacking unit and position
+   * @param {Unit} unit
+   * @param y
+   * @param x
+   */
+  deactivateAttackTerrains(unit, y, x) {
     let atkRange = 0
-    switch(this.selectedUnit.type) {
+    switch(unit.type) {
       case UNIT_TYPE_YOU:
         break
       case UNIT_TYPE_INFANTRY:
@@ -237,16 +197,6 @@ class MapController {
         }
         this.terrains[i][j].deactivate()
       }
-    }
-  }
-  _deactivateTerrains(y, x) {
-    switch(this.units[y][x].type) {
-      case UNIT_TYPE_YOU:
-      case UNIT_TYPE_INFANTRY:
-        this._bfsReset(y, x)
-        break
-      default:
-        console.error('null or unknown unit')
     }
   }
 
@@ -341,11 +291,8 @@ class MapController {
       case CMD_ERROR:
         // do nothing
         break
-      case COMMS_TERRAIN_CLICK:
-        this.handleGridClick(msg.data.y, msg.data.x)
-        break
       default:
-        console.error(`map controller comms: unknown event: ${msg.cmd}`)
+        console.error(`map comms: unknown event: ${msg.cmd}`)
     }
   }
 
@@ -392,4 +339,4 @@ class MapController {
   }
 }
 
-export default MapController
+export default Map

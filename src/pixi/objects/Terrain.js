@@ -59,6 +59,9 @@ class Terrain {
       this.status = TERRAIN_STATUS_MOVE_TARGET
     }
   }
+  isMoveTarget() {
+    return this.status === TERRAIN_STATUS_MOVE_TARGET
+  }
   // triggered when the cell contains an attack target for the current selected unit
   activateAttackTarget() {
     if(this.pixiNode) {
@@ -71,7 +74,7 @@ class Terrain {
   }
   // return to normal
   deactivate() {
-    if(this.pixiNode) {
+    if(this.pixiNode && this.status !== TERRAIN_STATUS_NORMAL) {
       this.pixiNode.tint = 0xFFFFFF
       this.status = TERRAIN_STATUS_NORMAL
     }
