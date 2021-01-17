@@ -71,11 +71,7 @@ class MapInteractionController {
 
   _handleClickStateNormal(y, x) {
     if(this.map.units[y][x] && !this.map.units[y][x].isMoved()) { // select unit
-      this.selectedUnit = this.map.units[y][x]
-      this.selectedUnit.select()
-      this.map.activateMoveTerrains(y, x)
-      this.map.activateAttackTerrains(this.selectedUnit, y, x, false)
-      this.state = MAP_STATE_UNIT_SELECT
+      this._transitionStateNormalToStateUnitSelect(y, x)
     }
   }
 
@@ -88,12 +84,13 @@ class MapInteractionController {
       this.map.terrains[this.selectedUnit.y][this.selectedUnit.x].activateMoveTarget()
       this.map.terrains[y][x].activateAttackTarget()
       this.state = MAP_STATE_ATTACK_CONFIRM
-    } else if(this.map.units[y][x]) { // click on unit -> deselect
-      this.map.deactivateMoveTerrains(this.selectedUnit.y, this.selectedUnit.x)
-      this.map.deactivateAttackTerrains(this.selectedUnit, this.selectedUnit.y, this.selectedUnit.x, false)
-      this.selectedUnit.deselect()
-      this.selectedUnit = null
-      this.state = MAP_STATE_NORMAL
+    } else if(this.map.units[y][x]) { // click on unit
+      if(!this.map.units[y][x].isMoved() && this.map.units[y][x] !== this.selectedUnit) { // select another unit
+        this._transitionStateUnitSelectToStateNormal()
+        this._transitionStateNormalToStateUnitSelect(y, x)
+      } else { // select again = deselect
+        this._transitionStateUnitSelectToStateNormal()
+      }
     } else if(this.map.terrains[y][x].isMoveTarget() && this._checkUnitOwnedAndCurrentTurn(this.selectedUnit)) {
       // move here, only allowed if moving own unit and it's your turn
       this.map.deactivateMoveTerrains(this.selectedUnit.y, this.selectedUnit.x)
@@ -103,11 +100,7 @@ class MapInteractionController {
       this.map.activateAttackTerrains(this.selectedUnit, y, x, true)
       this.state = MAP_STATE_MOVE_CONFIRM
     } else { // clear selection
-      this.map.deactivateMoveTerrains(this.selectedUnit.y, this.selectedUnit.x)
-      this.map.deactivateAttackTerrains(this.selectedUnit, this.selectedUnit.y, this.selectedUnit.x, false)
-      this.selectedUnit.deselect()
-      this.selectedUnit = null
-      this.state = MAP_STATE_NORMAL
+      this._transitionStateUnitSelectToStateNormal()
     }
   }
 
@@ -160,6 +153,24 @@ class MapInteractionController {
     this.map.terrains[this.selectedUnit.y][this.selectedUnit.x].deactivate()
     this.map.terrains[this.selectedUnitToAttack.y][this.selectedUnitToAttack.x].deactivate()
     this.selectedUnitToAttack = null
+    this.selectedUnit.deselect()
+    this.selectedUnit = null
+    this.state = MAP_STATE_NORMAL
+  }
+
+  // repetitive transition functions
+
+  _transitionStateNormalToStateUnitSelect(y, x) {
+    this.selectedUnit = this.map.units[y][x]
+    this.selectedUnit.select()
+    this.map.activateMoveTerrains(y, x)
+    this.map.activateAttackTerrains(this.selectedUnit, y, x, false)
+    this.state = MAP_STATE_UNIT_SELECT
+  }
+
+  _transitionStateUnitSelectToStateNormal() {
+    this.map.deactivateMoveTerrains(this.selectedUnit.y, this.selectedUnit.x)
+    this.map.deactivateAttackTerrains(this.selectedUnit, this.selectedUnit.y, this.selectedUnit.x, false)
     this.selectedUnit.deselect()
     this.selectedUnit = null
     this.state = MAP_STATE_NORMAL
