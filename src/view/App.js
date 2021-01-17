@@ -28,10 +28,15 @@ function App(props) {
   })
 
   useEffect(() => {
-    refreshTheToken()
+    checkTokenAndRefresh()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  function refreshTheToken() {
+  function checkTokenAndRefresh() {
+    // only start request if token is '' or already expired
+    if(state.token !== '' && Date.now() + 10 < jwt(state.token).exp * 1000) {
+      return
+    }
     // check if there is refresh token and if it's valid
     api.axiosCustom({
       method: 'POST',
@@ -85,7 +90,7 @@ function App(props) {
         username: state.username,
         userID: state.userID,
         token: state.token,
-        refreshTheToken: refreshTheToken,
+        checkTokenAndRefresh: checkTokenAndRefresh,
       }}>
         <Navigation onLogout={onLogout} />
         <Switch>

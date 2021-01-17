@@ -19,6 +19,9 @@ function GameView() {
   const comms = useRef(null)
 
   useEffect(() => {
+    // check token
+    userToken.checkTokenAndRefresh()
+
     comms.current = new GameComms()
 
     ws.current = new WebsocketWrapper(id, userToken.token, comms.current)

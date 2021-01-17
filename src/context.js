@@ -6,7 +6,11 @@ const UserTokenContext = React.createContext({
   username: '',
   userID: 0,
   token: '',
-  refreshTheToken: () => {},
+  /**
+   * this function should implement refreshing the token.
+   * this function should check first if the token is not expired before requesting for a new one.
+   */
+  checkTokenAndRefresh: () => {},
 })
 
 export {

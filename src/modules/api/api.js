@@ -19,6 +19,11 @@ function requestLogin(username, password) {
   })
 }
 
+/*
+When trying to send a POST request with access token in payload, please check whether the token is expired.
+If it is, please refresh. You can use UserTokenContext > checkTokenAndRefresh
+ */
+
 export {
   axiosCustom,
   requestLogin,
