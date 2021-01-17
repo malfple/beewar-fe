@@ -81,6 +81,8 @@ class Unit {
 
   moveTo(y, x) {
     this._setPosition(y, x)
+  }
+  toggleMoved() {
     this.state |= UNIT_STATE_BIT_MOVED
     this._updateSpriteFromState()
   }

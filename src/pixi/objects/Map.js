@@ -137,8 +137,9 @@ class Map {
    * @param {Unit} unit
    * @param y
    * @param x
+   * @param {boolean} afterMove - a boolean indicating whether the attack is done after moving
    */
-  activateAttackTerrains(unit, y, x) {
+  activateAttackTerrains(unit, y, x, afterMove) {
     let atkRange = 0
     switch(unit.type) {
       case UNIT_TYPE_YOU:
@@ -172,8 +173,9 @@ class Map {
    * @param {Unit} unit
    * @param y
    * @param x
+   * @param {boolean} afterMove - a boolean indicating whether the attack is done after moving
    */
-  deactivateAttackTerrains(unit, y, x) {
+  deactivateAttackTerrains(unit, y, x, afterMove) {
     let atkRange = 0
     switch(unit.type) {
       case UNIT_TYPE_YOU:
@@ -276,13 +278,16 @@ class Map {
     switch(msg.cmd) {
       case CMD_UNIT_MOVE:
         this._unitMove(msg.data.y_1, msg.data.x_1, msg.data.y_2, msg.data.x_2)
+        this.units[msg.data.y_2][msg.data.x_2].toggleMoved()
         break
       case CMD_UNIT_ATTACK:
         this._unitAttack(msg.data.y_1, msg.data.x_1, msg.data.hp_atk, msg.data.y_t, msg.data.x_t, msg.data.hp_def)
+        this.units[msg.data.y_1][msg.data.x_1].toggleMoved()
         break
       case CMD_UNIT_MOVE_AND_ATTACK:
         this._unitMove(msg.data.y_1, msg.data.x_1, msg.data.y_2, msg.data.x_2)
         this._unitAttack(msg.data.y_2, msg.data.x_2, msg.data.hp_atk, msg.data.y_t, msg.data.x_t, msg.data.hp_def)
+        this.units[msg.data.y_2][msg.data.x_2].toggleMoved()
         break
       case CMD_END_TURN:
         this._nextTurn()
