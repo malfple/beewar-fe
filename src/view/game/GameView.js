@@ -7,7 +7,7 @@ import {CMD_END_TURN, CMD_GAME_DATA} from '../../modules/communication/messageCo
 import GameComms from '../../modules/communication/GameComms'
 import WebsocketWrapper from '../../modules/communication/WebsocketWrapper'
 import {GROUP_WEBSOCKET} from '../../modules/communication/groupConstants'
-import ChatBox from '../../game/ChatBox'
+import ChatBox from '../../components/game/ChatBox'
 
 function GameView() {
   const {id} = useParams()

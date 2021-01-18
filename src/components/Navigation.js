@@ -27,16 +27,28 @@ function Navigation(props) {
   if(userToken.username !== '') { // logged-in
     userButtons = (
       <div>
-        <div>Token: {userToken.token}</div>
-        <Link to={`/profile/${userToken.username}`}>Logged in user = {userToken.username}</Link>
-        <button onClick={logout}>Logout</button>
+        <div>
+          <Link to={`/profile/${userToken.username}`}>Logged in user = {userToken.username}</Link>
+        </div>
+        <div>
+          My Games
+        </div>
+        <div>
+          <button onClick={logout}>Logout</button>
+        </div>
       </div>
     )
   }
 
   return (
     <div>
-      This is navigation bar. <Link to="/">Home</Link>
+      This is navigation bar.
+      <div>
+        <Link to="/">Home</Link>
+      </div>
+      <div>
+        <Link to="/map/list">Maps</Link>
+      </div>
       {userButtons}
       <hr />
     </div>
