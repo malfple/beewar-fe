@@ -1,4 +1,4 @@
-.MapCard {
+.map-card, .game-card {
     border: solid;
     cursor: pointer;
 }

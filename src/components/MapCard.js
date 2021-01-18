@@ -2,17 +2,17 @@ import React from 'react'
 import {useHistory} from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import './MapCard.css'
+import './Card.css'
 
 function MapCard(props) {
   const history = useHistory()
 
-  function toMap(mapID) {
-    history.push(`/map/${mapID}`)
+  function toMap() {
+    history.push(`/map/${props.map.id}`)
   }
 
   return (
-    <div className="MapCard" onClick={() => toMap(props.map.id)}>
+    <div className="map-card" onClick={toMap}>
       <div>
         Name: {props.map.name}
       </div>
