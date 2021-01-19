@@ -147,16 +147,53 @@ function ServerStats() {
   const [state, setState] = useState({
     hub_count: 0,
     session_count: 0,
+    server_start_time: 0,
+    cnt: -1, // to trigger re-render
   })
 
   useEffect(() => {
+    let intervalClock = null
+
     axiosCustom.get('/api/server_stats').then(res => {
       setState({
         hub_count: res.data.hub_count,
         session_count: res.data.session_count,
+        server_start_time: res.data.server_start_time,
+        cnt: 0,
       })
+
+      intervalClock = setInterval(() => {
+        setState(prevState => ({
+            hub_count: prevState.hub_count,
+            session_count: prevState.session_count,
+            server_start_time: prevState.server_start_time,
+            cnt: prevState.cnt + 1,
+          }))
+      }, 1000)
     })
+
+    return function cleanup() {
+      if(intervalClock) {
+        clearInterval(intervalClock)
+      }
+    }
   }, [userToken.username])
+
+  if(state.cnt === -1) {
+    // server dead
+    return (
+      <div>
+        Server down
+      </div>
+    )
+  }
+
+  let epoch = Math.floor(Date.now() / 1000) - state.server_start_time
+  const seconds = epoch % 60
+  epoch = Math.floor(epoch / 60)
+  const minutes = epoch % 60
+  epoch = Math.floor(epoch / 60)
+  const hours = epoch
 
   return (
     <div>
@@ -165,6 +202,9 @@ function ServerStats() {
       </div>
       <div>
         Logged-in users: {state.session_count} users
+      </div>
+      <div>
+        Time since start: {hours} hour(s), {minutes} minute(s), {seconds} second(s)
       </div>
     </div>
   )
