@@ -2,18 +2,15 @@ import React, {useContext} from 'react'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 
-import * as api from '../modules/api/api'
 import {UserTokenContext} from '../context'
+import {apiAuthLogout} from '../modules/api/auth'
 
 function Navigation(props) {
   const userToken = useContext(UserTokenContext)
   console.log('re-render navigation bar ', userToken)
 
   function logout() {
-    api.axiosCustom({
-      method: 'POST',
-      url: '/api/auth/logout',
-    }).then(() => {
+    apiAuthLogout().then(() => {
       props.onLogout()
     })
   }

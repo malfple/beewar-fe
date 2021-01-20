@@ -5,7 +5,8 @@ import './App.css'
 
 import jwt from 'jwt-decode'
 
-import * as api from '../modules/api/api'
+import {apiPing, apiServerStats} from '../modules/api/api'
+import {apiAuthToken} from '../modules/api/auth'
 import {UserTokenContext} from '../context'
 
 import RouteWithoutLogin from '../components/route/RouteWithoutLogin'
@@ -16,7 +17,6 @@ import Profile from './Profile'
 import Map from './map/Map'
 import Game from './game/Game'
 import NotFound from './NotFound'
-import {axiosCustom} from '../modules/api/api'
 
 // App is the root router
 
@@ -38,10 +38,7 @@ function App(props) {
       return
     }
     // check if there is refresh token and if it's valid
-    api.axiosCustom({
-      method: 'POST',
-      url: '/api/auth/token',
-    }).then(res => {
+    apiAuthToken().then(res => {
       // refresh token is valid, and we get access token
       const tokenDecoded = jwt(res.data.token)
       setState({
@@ -154,7 +151,7 @@ function ServerStats() {
   useEffect(() => {
     let intervalClock = null
 
-    axiosCustom.get('/api/server_stats').then(res => {
+    apiServerStats().then(res => {
       setState({
         hub_count: res.data.hub_count,
         session_count: res.data.session_count,
@@ -214,7 +211,7 @@ function PingTest() {
   function handlePing(e) {
     e.preventDefault()
     console.log('ping!')
-    api.axiosCustom.get('/api/').then(() => {
+    apiPing().then(() => {
       console.log('pong!')
     }).catch(err => {
       console.log('be server ded!')

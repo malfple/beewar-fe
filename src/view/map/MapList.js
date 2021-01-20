@@ -1,18 +1,13 @@
 import React, {useEffect, useState} from 'react'
 
-import {axiosCustom} from '../../modules/api/api'
+import {apiMapList} from '../../modules/api/map'
 import MapCard from '../../components/MapCard'
 
 function MapList() {
   const [maps, setMaps] = useState([])
 
   useEffect(() => {
-    axiosCustom.get('/api/map/list', {
-      params: {
-        limit: 10,
-        offset: 0,
-      },
-    }).then(res => {
+    apiMapList().then(res => {
       setMaps(res.data.maps)
     })
   }, [])

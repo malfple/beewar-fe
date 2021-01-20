@@ -1,7 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react'
-import qs from 'querystring'
 
-import {axiosCustom} from '../../modules/api/api'
+import {apiGameList} from '../../modules/api/game'
 import {UserTokenContext} from '../../context'
 import GameCard from '../../components/GameCard'
 
@@ -10,13 +9,7 @@ function GameList() {
   const [games, setGames] = useState([])
 
   useEffect(() => {
-    axiosCustom({
-      method: 'POST',
-      url: '/api/game/list',
-      data: qs.stringify({
-        token: userToken.token,
-      }),
-    }).then(res => {
+    apiGameList(userToken.token).then(res => {
       setGames(res.data.game_users)
     })
   }, [userToken.token])
