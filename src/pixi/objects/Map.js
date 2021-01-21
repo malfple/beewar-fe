@@ -19,6 +19,7 @@ import {
 } from '../../modules/communication/messageConstants'
 import {hexDistance} from '../../utils/grid'
 import {nullGameComms} from '../../modules/communication/GameComms'
+import {TERRAIN_TYPE_PLAINS} from './terrainConstants'
 
 // MIRROR: for bfs
 const K = 6
@@ -226,7 +227,7 @@ class Map {
         if(this.terrains[ty][tx].dist !== -1) {
           continue
         }
-        if(this.terrains[ty][tx].type !== 1) {
+        if(this.terrains[ty][tx].type !== TERRAIN_TYPE_PLAINS) {
           continue
         }
         const currUnit = this.units[ty][tx]
