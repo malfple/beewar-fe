@@ -6,7 +6,11 @@ import * as PIXI from 'pixi.js'
 import {renderer} from '../../pixi/renderer'
 import ViewPort from '../../pixi/objects/ViewPort'
 import Map from '../../pixi/objects/Map'
-import {GROUP_MAP_CONTROLLER, GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/groupConstants'
+import {
+  GROUP_MAP_CONTROLLER,
+  GROUP_MAP_EVENT_LISTENERS,
+  GROUP_WEBSOCKET_LISTENERS,
+} from '../../modules/communication/groupConstants'
 import {UserTokenContext} from '../../context'
 import InfoPanel from '../../pixi/objects/InfoPanel'
 import MapInteractionController from '../../pixi/objects/MapInteractionController'
@@ -25,7 +29,7 @@ function GameApp(props) {
     // setup app
     const stage = new PIXI.Container()
 
-    const map = new Map(props.gameData.game, currentPlayer, true, props.comms)
+    const map = new Map(props.gameData.game, props.gameData.players, currentPlayer, true, props.comms)
     props.comms.registerSubscriber(map, [GROUP_WEBSOCKET_LISTENERS])
     const viewport = ViewPort(map)
     stage.addChild(viewport)
@@ -34,7 +38,7 @@ function GameApp(props) {
     props.comms.registerSubscriber(mapInteractionController, [GROUP_WEBSOCKET_LISTENERS, GROUP_MAP_CONTROLLER], true)
 
     const infoPanel = new InfoPanel(props.gameData.game)
-    props.comms.registerSubscriber(infoPanel, [GROUP_WEBSOCKET_LISTENERS])
+    props.comms.registerSubscriber(infoPanel, [GROUP_MAP_EVENT_LISTENERS])
     stage.addChild(infoPanel.pixiNode)
 
     const ticker = new PIXI.Ticker()

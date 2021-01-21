@@ -28,6 +28,7 @@ function GameView() {
 
     ws.current.addOnMessageListener(msg => {
       if(msg.cmd === CMD_GAME_DATA) {
+        console.log('game data', msg.data)
         setGameData(msg.data)
       }
     })

@@ -17,6 +17,7 @@ const CMD_END_TURN = 'END_TURN'
 FE specific commands
  */
 const COMMS_TERRAIN_CLICK = 'TERRAIN_CLICK'
+const COMMS_MAP_EVENT_END_TURN = 'MAP_END_TURN'
 
 export {
   CMD_CHAT,
@@ -31,4 +32,5 @@ export {
   CMD_END_TURN,
 
   COMMS_TERRAIN_CLICK,
+  COMMS_MAP_EVENT_END_TURN,
 }
