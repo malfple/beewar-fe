@@ -5,13 +5,13 @@ import * as PIXI from 'pixi.js'
 
 import {renderer} from '../../pixi/renderer'
 import ViewPort from '../../pixi/objects/ViewPort'
-import MapController from '../../pixi/objects/MapController'
+import Map from '../../pixi/objects/Map'
 
 function MapViewApp(props) {
   useEffect(() => {
     const stage = new PIXI.Container()
-    const mapController = new MapController(props.map)
-    const viewport = ViewPort(mapController)
+    const map = new Map(props.map)
+    const viewport = ViewPort(map)
 
     stage.addChild(viewport)
 

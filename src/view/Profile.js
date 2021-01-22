@@ -1,18 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from 'react-router-dom'
 
-import * as api from '../modules/api/api'
+import {apiUserGetByUsername} from '../modules/api/user'
 
 function Profile() {
   const [user, setUser] = useState(null)
   const {username} = useParams()
 
   useEffect(() => {
-    api.axiosCustom.get('/api/user/get_by_username', {
-      params: {
-        username: username,
-      },
-    }).then(res => {
+    apiUserGetByUsername(username).then(res => {
       console.log(res.data)
       if(res.data.user) {
         setUser({

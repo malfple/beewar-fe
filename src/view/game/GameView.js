@@ -7,7 +7,7 @@ import {CMD_END_TURN, CMD_GAME_DATA} from '../../modules/communication/messageCo
 import GameComms from '../../modules/communication/GameComms'
 import WebsocketWrapper from '../../modules/communication/WebsocketWrapper'
 import {GROUP_WEBSOCKET} from '../../modules/communication/groupConstants'
-import ChatBox from '../../game/ChatBox'
+import ChatBox from '../../components/game/ChatBox'
 
 function GameView() {
   const {id} = useParams()
@@ -19,12 +19,16 @@ function GameView() {
   const comms = useRef(null)
 
   useEffect(() => {
+    // check token
+    userToken.checkTokenAndRefresh()
+
     comms.current = new GameComms()
 
     ws.current = new WebsocketWrapper(id, userToken.token, comms.current)
 
     ws.current.addOnMessageListener(msg => {
       if(msg.cmd === CMD_GAME_DATA) {
+        console.log('game data', msg.data)
         setGameData(msg.data)
       }
     })

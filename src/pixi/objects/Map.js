@@ -4,21 +4,23 @@ import Terrain from './Terrain'
 import Unit from './Unit'
 import {
   UNIT_ATTACK_RANGE_INFANTRY,
-  UNIT_MOVE_STEPS_INFANTRY,
-  UNIT_MOVE_STEPS_YOU,
+  UNIT_MOVE_RANGE_INFANTRY,
+  UNIT_MOVE_RANGE_YOU,
   UNIT_TYPE_INFANTRY,
-  UNIT_TYPE_YOU,
-  UNIT_WEIGHT_MAP,
+  UNIT_TYPE_YOU, UNIT_WEIGHT_INFANTRY,
+  UNIT_WEIGHT_MAP, UNIT_WEIGHT_YOU,
 } from './unitConstants'
 import {
   CMD_CHAT,
   CMD_END_TURN,
-  CMD_ERROR,
+  CMD_ERROR, CMD_UNIT_ATTACK,
   CMD_UNIT_MOVE,
-  CMD_UNIT_MOVE_AND_ATTACK,
+  CMD_UNIT_MOVE_AND_ATTACK, COMMS_MAP_EVENT_END_TURN,
 } from '../../modules/communication/messageConstants'
-import {GROUP_WEBSOCKET} from '../../modules/communication/groupConstants'
 import {hexDistance} from '../../utils/grid'
+import {nullGameComms} from '../../modules/communication/GameComms'
+import {TERRAIN_TYPE_PLAINS} from './terrainConstants'
+import {GROUP_MAP_EVENT_LISTENERS} from '../../modules/communication/groupConstants'
 
 // MIRROR: for bfs
 const K = 6
@@ -36,14 +38,16 @@ function getAdjList(y, x) {
 /**
  * this class is responsible for rendering the map and updating it
  */
-class MapController {
+class Map {
   /**
    * @param {Object}    mapData
+   * @param {Array}     playerData
    * @param {int}       currentPlayer   - the player of this client (not the current turn's player) This is not userID, but player number (1..n)
    * @param {boolean}   interactive
    * @param {GameComms} comms
    */
-  constructor(mapData, currentPlayer, interactive=false, comms=null) {
+  constructor(mapData, playerData=[], currentPlayer, interactive=false, comms=nullGameComms) {
+    this.playerData = playerData
     this.currentPlayer = currentPlayer
     this.height = mapData.height
     this.width = mapData.width
@@ -66,7 +70,7 @@ class MapController {
       this.units.push([])
       for(let j = 0; j < mapData.width; j++) {
         const terrainType = terrainInfo.charCodeAt(i * mapData.width + j)
-        const terrain = new Terrain(terrainType, i, j, interactive, this.handleGridClick.bind(this))
+        const terrain = new Terrain(terrainType, i, j, interactive, this.comms)
         if(terrain.pixiNode) {
           this.pixiNode.addChild(terrain.pixiNode)
         }
@@ -100,92 +104,48 @@ class MapController {
     }
   }
 
-  handleGridClick(y, x) {
-    if(this.terrains[y][x] === this.selectedTerrainToMove) { // confirm move
-      this.comms.triggerMsg({
-        cmd: CMD_UNIT_MOVE,
-        data: {
-          y_1: this.selectedUnit.y,
-          x_1: this.selectedUnit.x,
-          y_2: y,
-          x_2: x,
-        },
-      }, GROUP_WEBSOCKET)
-      this._clearSelection()
-    } else if(this.terrains[y][x].isAttackTarget()) { // attack
-      this.comms.triggerMsg({
-        cmd: CMD_UNIT_MOVE_AND_ATTACK,
-        data: {
-          y_1: this.selectedUnit.y,
-          x_1: this.selectedUnit.x,
-          y_2: this.selectedTerrainToMove.y,
-          x_2: this.selectedTerrainToMove.x,
-          y_t: y,
-          x_t: x,
-        },
-      }, GROUP_WEBSOCKET)
-      this._clearSelection()
-    } else if(this.units[y][x]) { // select unit
-      if(!this.units[y][x].isMoved()) { // only if not yet moved
-        this._selectUnit(y, x)
-      } else {
-        this._clearSelection()
-      }
-    } else if(this.terrains[y][x].dist === -1) { // select out of range cells, deselect
-      this._clearSelection()
-    } else { // move
-      // only go to move confirmation if selected unit is own unit and it is currently your turn
-      if(this.selectedUnit && this.selectedUnit.owner === this.currentPlayer && this.currentPlayer === this.turn_player) {
-        this.selectedTerrainToMove = this.terrains[y][x]
-        this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x) // deactivate, but don't deselect
-        this.selectedTerrainToMove.activateMoveTarget()
-        this._activateAttackTerrains(y, x)
-      } else {
-        this._clearSelection()
-      }
-    }
-  }
-
-  _selectUnit(y, x) {
-    const prevUnit = this.selectedUnit
-    this._clearSelection()
-    if(prevUnit === this.units[y][x]) { // deselect if select again
-      return
-    }
-    this.units[y][x].select()
-    this.selectedUnit = this.units[y][x]
-    this._activateMoveTerrains(y, x)
-  }
-  _clearSelection() {
-    // clears all selection
-    if(this.selectedTerrainToMove) {
-      this._deactivateAttackTerrains(this.selectedTerrainToMove.y, this.selectedTerrainToMove.x)
-      this.selectedTerrainToMove.deactivate()
-      this.selectedTerrainToMove = null
-    }
-    if(this.selectedUnit) {
-      this.selectedUnit.deselect()
-      this._deactivateTerrains(this.selectedUnit.y, this.selectedUnit.x)
-      this.selectedUnit = null
-    }
-  }
-
-  // there needs to be a unit at (y, x)
-  _activateMoveTerrains(y, x) {
-    switch(this.units[y][x].type) {
+  /**
+   * given a position with a unit, activate move terrains for that unit.
+   */
+  activateMoveTerrains(y, x) {
+    const unit = this.units[y][x]
+    switch(unit.type) {
       case UNIT_TYPE_YOU:
-        this._bfs(y, x, UNIT_MOVE_STEPS_YOU)
+        this._bfs(y, x, UNIT_MOVE_RANGE_YOU, unit.owner, UNIT_WEIGHT_YOU)
         break
       case UNIT_TYPE_INFANTRY:
-        this._bfs(y, x, UNIT_MOVE_STEPS_INFANTRY)
+        this._bfs(y, x, UNIT_MOVE_RANGE_INFANTRY, unit.owner, UNIT_WEIGHT_INFANTRY)
         break
       default:
         console.error('null or unknown unit')
     }
   }
-  _activateAttackTerrains(y, x) {
+
+  /**
+   * return terrains to normal
+   */
+  deactivateMoveTerrains(y, x) {
+    const unit = this.units[y][x]
+    switch(unit.type) {
+      case UNIT_TYPE_YOU:
+      case UNIT_TYPE_INFANTRY:
+        this._bfsReset(y, x)
+        break
+      default:
+        console.error('null or unknown unit')
+    }
+  }
+
+  /**
+   * given a unit and position, paint attack terrains on that position
+   * @param {Unit} unit
+   * @param y
+   * @param x
+   * @param {boolean} afterMove - a boolean indicating whether the attack is done after moving
+   */
+  activateAttackTerrains(unit, y, x, afterMove) {
     let atkRange = 0
-    switch(this.selectedUnit.type) {
+    switch(unit.type) {
       case UNIT_TYPE_YOU:
         break
       case UNIT_TYPE_INFANTRY:
@@ -205,15 +165,23 @@ class MapController {
         if(hexDistance(y, x, i, j) > atkRange) {
           continue
         }
-        if(this.units[i][j] && this.units[i][j].owner !== this.selectedUnit.owner) {
+        if(this.units[i][j] && this.units[i][j].owner !== unit.owner) {
           this.terrains[i][j].activateAttackTarget()
         }
       }
     }
   }
-  _deactivateAttackTerrains(y, x) {
+
+  /**
+   * return terrains to normal. you should still give the attacking unit and position
+   * @param {Unit} unit
+   * @param y
+   * @param x
+   * @param {boolean} afterMove - a boolean indicating whether the attack is done after moving
+   */
+  deactivateAttackTerrains(unit, y, x, afterMove) {
     let atkRange = 0
-    switch(this.selectedUnit.type) {
+    switch(unit.type) {
       case UNIT_TYPE_YOU:
         break
       case UNIT_TYPE_INFANTRY:
@@ -237,23 +205,11 @@ class MapController {
       }
     }
   }
-  _deactivateTerrains(y, x) {
-    switch(this.units[y][x].type) {
-      case UNIT_TYPE_YOU:
-      case UNIT_TYPE_INFANTRY:
-        this._bfsReset(y, x)
-        break
-      default:
-        console.error('null or unknown unit')
-    }
-  }
 
   // MIRROR: bfs function from backend
-  // there needs to be a unit at (y, x)
-  _bfs(y, x, steps) {
+  _bfs(y, x, steps, owner, weight) {
     const queue = []
     let ptq = 0
-    const unit = this.units[y][x]
     this.terrains[y][x].dist = 0
     this.terrains[y][x].activateMoveTarget()
     queue.push({y: y, x: x})
@@ -274,15 +230,15 @@ class MapController {
         if(this.terrains[ty][tx].dist !== -1) {
           continue
         }
-        if(this.terrains[ty][tx].type !== 1) {
+        if(this.terrains[ty][tx].type !== TERRAIN_TYPE_PLAINS) {
           continue
         }
         const currUnit = this.units[ty][tx]
         if(currUnit) {
-          if(currUnit.owner !== unit.owner) {
+          if(currUnit.owner !== owner) {
             continue
           }
-          if(UNIT_WEIGHT_MAP[currUnit.type] + UNIT_WEIGHT_MAP[unit.type] > 1) {
+          if(UNIT_WEIGHT_MAP[currUnit.type] + weight > 1) {
             continue
           }
         }
@@ -321,49 +277,110 @@ class MapController {
     }
   }
 
-  // handle ws events from BE
+  // game comms
+  _sendCommsEndTurn() {
+    // trigger comms to other objects to notify end turn
+    this.comms.triggerMsg({
+      cmd: COMMS_MAP_EVENT_END_TURN,
+      data: {
+        turn_count: this.turn_count,
+        turn_player: this.turn_player,
+      },
+    }, GROUP_MAP_EVENT_LISTENERS)
+  }
   handleComms(msg) {
     switch(msg.cmd) {
       case CMD_UNIT_MOVE:
-        const unit = this.units[msg.data.y_1][msg.data.x_1]
-        this.units[msg.data.y_1][msg.data.x_1] = null
-        this.units[msg.data.y_2][msg.data.x_2] = unit
-        unit.moveTo(msg.data.y_2, msg.data.x_2)
+        this._unitMove(msg.data.y_1, msg.data.x_1, msg.data.y_2, msg.data.x_2)
+        this.units[msg.data.y_2][msg.data.x_2].toggleMoved()
+        break
+      case CMD_UNIT_ATTACK:
+        this._unitAttack(msg.data.y_1, msg.data.x_1, msg.data.hp_atk, msg.data.y_t, msg.data.x_t, msg.data.hp_def)
+        this.units[msg.data.y_1][msg.data.x_1].toggleMoved()
         break
       case CMD_UNIT_MOVE_AND_ATTACK:
-        const unit2 = this.units[msg.data.y_1][msg.data.x_1]
-        this.units[msg.data.y_1][msg.data.x_1] = null
-        this.units[msg.data.y_2][msg.data.x_2] = unit2
-        unit2.moveTo(msg.data.y_2, msg.data.x_2)
-        this.units[msg.data.y_2][msg.data.x_2].setHP(msg.data.hp_atk)
-        if(this.units[msg.data.y_2][msg.data.x_2].hp === 0) {
-          this.units[msg.data.y_2][msg.data.x_2] = null
-        }
-        this.units[msg.data.y_t][msg.data.x_t].setHP(msg.data.hp_def)
-        if(this.units[msg.data.y_t][msg.data.x_t].hp === 0) {
-          this.units[msg.data.y_t][msg.data.x_t] = null
-        }
+        this._unitMove(msg.data.y_1, msg.data.x_1, msg.data.y_2, msg.data.x_2)
+        this._unitAttack(msg.data.y_2, msg.data.x_2, msg.data.hp_atk, msg.data.y_t, msg.data.x_t, msg.data.hp_def)
+        this.units[msg.data.y_2][msg.data.x_2].toggleMoved()
         break
       case CMD_END_TURN:
         this._nextTurn()
+        this._sendCommsEndTurn()
         break
       case CMD_CHAT:
       case CMD_ERROR:
         // do nothing
         break
       default:
-        console.error(`map controller comms: unknown event: ${msg.cmd}`)
+        console.error(`map comms: unknown event: ${msg.cmd}`)
     }
+  }
+
+  // unit edit functions
+  _unitMove(y1, x1, y2, x2) {
+    const unit = this.units[y1][x1]
+    this.units[y1][x1] = null
+    this.units[y2][x2] = unit
+    unit.moveTo(y2, x2)
+  }
+  _unitAttack(y, x, hpAtk, yt, xt, hpDef) {
+    this.units[y][x].setHP(hpAtk)
+    this._checkUnitAlive(y, x)
+    this.units[yt][xt].setHP(hpDef)
+    this._checkUnitAlive(yt, xt)
+  }
+  // MIRROR: utils function from GameLoader BE
+  _checkGameEnd() {
+    let playersLeft = 0
+    for(let i = 0; i < this.playerData.length; i++) {
+      if(this.playerData[i].final_turns === 0) {
+        playersLeft++
+      }
+    }
+    if(playersLeft <= 1) {
+      for(let i = 0; i < this.playerData.length; i++) {
+        this._assignPlayerRank(i+1)
+      }
+      this.turn_player = 0
+      this._sendCommsEndTurn()
+    }
+  }
+  _checkUnitAlive(y, x) {
+    if(this.units[y][x].hp === 0) {
+      if(this.units[y][x].type === UNIT_TYPE_YOU) {
+        // player defeated
+        this._assignPlayerRank(this.units[y][x].owner)
+        this._checkGameEnd()
+      }
+      this.units[y][x] = null
+    }
+  }
+  _assignPlayerRank(player) {
+    // modifying player directly is dangerous but whatever
+    if(this.playerData[player-1].final_turns !== 0) {
+      return
+    }
+    for(let i = 0; i < this.playerData.length; i++) {
+      if(this.playerData[i].final_turns === 0) {
+        this.playerData[player-1].final_rank++
+      }
+    }
+    this.playerData[player-1].final_turns = this.turn_count
   }
 
   // ends current player turn and start next player turn
   // MIRROR: there is a similar backend function to this one
   _nextTurn() {
     const endTurnPlayer = this.turn_player
-    this.turn_player++
-    if(this.turn_player > this.player_count) {
-      this.turn_count++
-      this.turn_player = 1
+    while(true) {
+      this.turn_player++
+      if(this.turn_player > this.player_count) {
+        this.turn_count++
+        this.turn_player = 1
+      }
+      if(this.playerData[this.turn_player-1].final_turns === 0) { // player not defeated
+        break
+      }
     }
     // update units
     for(let i = 0; i < this.height; i++) {
@@ -378,7 +395,9 @@ class MapController {
         }
       }
     }
+    // just in case, also check if game ends
+    this._checkGameEnd()
   }
 }
 
-export default MapController
+export default Map

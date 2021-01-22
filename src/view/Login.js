@@ -1,14 +1,14 @@
 import React, {useState} from 'react'
 import PropTypes from 'prop-types'
 
-import * as api from '../modules/api/api'
+import {apiAuthLogin} from '../modules/api/auth'
 
 function Login(props) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
   function handleSubmit(e) {
-    api.requestLogin(username, password).then(res => {
+    apiAuthLogin(username, password).then(res => {
       props.onLogin(res.data.token)
     })
     e.preventDefault()

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from 'react-router-dom'
-import {axiosCustom} from '../../modules/api/api'
 
+import {apiMapGet} from '../../modules/api/map'
 import MapViewApp from '../../components/pixiapp/MapViewApp'
 
 function MapView() {
@@ -9,15 +9,12 @@ function MapView() {
   const {id} = useParams()
 
   useEffect(() => {
-    axiosCustom.get('/api/map/get', {
-      params: {
-        id: id,
-      },
-    }).then(res => {
+    apiMapGet(id).then(res => {
       if(res.data.map) {
         setMap(res.data.map)
       }
     })
+
   }, [id])
 
   if(!map) {

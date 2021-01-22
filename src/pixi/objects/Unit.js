@@ -41,6 +41,8 @@ class Unit {
     this.tintSprite.tint = PLAYER_COLOR_TINT[owner]
     this.maskSprite.anchor.set(0.5)
     this.tintSprite.anchor.set(0.5)
+    this.maskSprite.scale.set(0.5)
+    this.tintSprite.scale.set(0.5)
     this.pixiNode.addChild(this.maskSprite)
     this.pixiNode.addChild(this.tintSprite)
     this._updateSpriteFromState()
@@ -79,6 +81,8 @@ class Unit {
 
   moveTo(y, x) {
     this._setPosition(y, x)
+  }
+  toggleMoved() {
     this.state |= UNIT_STATE_BIT_MOVED
     this._updateSpriteFromState()
   }

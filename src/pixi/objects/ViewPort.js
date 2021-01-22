@@ -3,13 +3,13 @@ import {renderer} from '../renderer'
 
 /**
  * ViewPort controls the camera/view of the map
- * @param mapController: this should only be an instance of class MapController
+ * @param {Map} map: this should only be an instance of class Map
  * @returns {PIXI.Container}
  */
-function ViewPort(mapController) {
+function ViewPort(map) {
   const fixedFrame = new PIXI.Container()
   const movedFrame = new PIXI.Container()
-  const mapContainer = mapController.pixiNode
+  const mapContainer = map.pixiNode
   fixedFrame.addChild(movedFrame)
   movedFrame.addChild(mapContainer)
 

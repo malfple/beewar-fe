@@ -34,10 +34,7 @@ class WebsocketWrapper {
     }
 
     this.ws.onmessage = rawMsg => {
-      // console.log('ws msg: ', msg)
       const msg = JSON.parse(rawMsg.data)
-      // console.log(msg.data)
-      // console.log('ws msg: ', msg)
       for(let i = 0; i < this.onMessageListeners.length; i++) {
         this.onMessageListeners[i](msg)
       }
@@ -49,11 +46,6 @@ class WebsocketWrapper {
 
     this.ws.onerror = error => {
       console.log('ws error: ', error)
-      // reset access token if the token is expired
-      // if(Date.now() >= jwt(userToken.token).exp * 1000) {
-      //   console.log('expired')
-      //   userToken.refreshTheToken()
-      // }
     }
   }
 

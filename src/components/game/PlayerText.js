@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import {PLAYER_COLOR_TINT} from '../pixi/objects/unitConstants'
+import {PLAYER_COLOR_TINT} from '../../pixi/objects/unitConstants'
 
 function PlayerText(props) {
   const colorHex = PLAYER_COLOR_TINT[props.gameUser.player_order]

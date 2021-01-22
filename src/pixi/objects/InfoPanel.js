@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js'
 
 import {renderer} from '../renderer'
 import {PLAYER_COLOR_TINT} from './unitConstants'
-import {CMD_END_TURN} from '../../modules/communication/messageConstants'
+import {COMMS_MAP_EVENT_END_TURN} from '../../modules/communication/messageConstants'
 
 class InfoPanel {
   constructor(game) {
@@ -24,11 +24,12 @@ class InfoPanel {
     this.pixiNode.addChild(this.borderGraphics)
   }
 
-  // end turn event
+  // end turn event sent from Map object
   handleComms(msg) {
     switch(msg.cmd) {
-      case CMD_END_TURN:
-        this._nextTurn()
+      case COMMS_MAP_EVENT_END_TURN:
+        this.turn_count = msg.data.turn_count
+        this.turn_player = msg.data.turn_player
         this._updateBorder()
         break
       default:
@@ -38,15 +39,6 @@ class InfoPanel {
 
   _updateBorder() {
     this.borderGraphics.tint = PLAYER_COLOR_TINT[this.turn_player]
-  }
-
-  // similar to the one in MapController
-  _nextTurn() {
-    this.turn_player++
-    if(this.turn_player > this.player_count) {
-      this.turn_count++
-      this.turn_player = 1
-    }
   }
 }
 

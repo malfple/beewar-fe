@@ -1,4 +1,11 @@
 /*
+MIRROR: These constants are mirrored from backend
+ */
+
+const TERRAIN_TYPE_VOID = 0
+const TERRAIN_TYPE_PLAINS = 1
+
+/*
 Terrain status for rendering
  */
 
@@ -7,6 +14,9 @@ const TERRAIN_STATUS_MOVE_TARGET = 1
 const TERRAIN_STATUS_ATTACK_TARGET = 2
 
 export {
+  TERRAIN_TYPE_VOID,
+  TERRAIN_TYPE_PLAINS,
+
   TERRAIN_STATUS_NORMAL,
   TERRAIN_STATUS_MOVE_TARGET,
   TERRAIN_STATUS_ATTACK_TARGET,
