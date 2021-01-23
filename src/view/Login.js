@@ -10,6 +10,8 @@ function Login(props) {
   function handleSubmit(e) {
     apiAuthLogin(username, password).then(res => {
       props.onLogin(res.data.token)
+    }).catch(err => {
+      alert('error login. check your username and password again')
     })
     e.preventDefault()
   }
