@@ -11,6 +11,7 @@ before_script:
 pages:
   stage: deploy
   script:
+    - cp .env.heroku .env
     - CI=false npm run build
     - rm -rf public
     - cp build/index.html build/404.html
