@@ -214,7 +214,7 @@ function ServerStats() {
 function PingTest() {
   function handlePing(e) {
     e.preventDefault()
-    console.log('ping!')
+    console.log(`ping! to BE: ${process.env.REACT_APP_BE_SERVER_URL}`)
     apiPing().then(() => {
       console.log('pong!')
     }).catch(err => {
