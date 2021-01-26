@@ -17,6 +17,7 @@ import Profile from './Profile'
 import Map from './map/Map'
 import Game from './game/Game'
 import NotFound from './NotFound'
+import Register from './Register'
 
 // App is the root router
 
@@ -96,6 +97,9 @@ function App(props) {
           </Route>
           <RouteWithoutLogin path="/login">
             <Login onLogin={onLogin} />
+          </RouteWithoutLogin>
+          <RouteWithoutLogin path="/register">
+            <Register />
           </RouteWithoutLogin>
           <Route path="/profile/:username">
             <Profile />
