@@ -9,10 +9,13 @@ function GameList() {
   const [games, setGames] = useState([])
 
   useEffect(() => {
+    // check token
+    userToken.checkTokenAndRefresh()
+
     apiGameList(userToken.token).then(res => {
       setGames(res.data.game_users)
     })
-  }, [userToken.token])
+  }, [userToken])
 
   return (
     <div>

@@ -15,6 +15,21 @@ function apiAuthLogin(username, password) {
   })
 }
 
+function apiAuthRegister(email, username, password) {
+  return axiosCustom({
+    method: 'POST',
+    url: '/api/auth/register',
+    data: qs.stringify({
+      email:    email,
+      username: username,
+      password: password,
+    }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  })
+}
+
 function apiAuthToken() {
   return axiosCustom({
     method: 'POST',
@@ -31,6 +46,7 @@ function apiAuthLogout() {
 
 export {
   apiAuthLogin,
+  apiAuthRegister,
   apiAuthToken,
   apiAuthLogout,
 }
