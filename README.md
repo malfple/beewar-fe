@@ -28,5 +28,5 @@ You can see `package.json` to see other commands too (in the scripts section), b
 ## deploy to gitlab pages
 
 There is `gitlab-ci.yml`, read it.
-It is set to run a pipeline to deploy to gitlab pages, but only in master branch
+It is set to run a pipeline to deploy to gitlab pages, but only in master branch.
 So, you don't really have to do anything, really.
