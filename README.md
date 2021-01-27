@@ -6,6 +6,8 @@ And it's not yet ejected. Don't eject pls
 
 ## Quickstart
 
+Setup local config file: Copy contents of `.env.template` to `.env`
+
 Get npm
 
 ```text
