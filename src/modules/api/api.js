@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const axiosCustom = axios.create({
   timeout: 5000,
+  baseURL: '/beewar-fe',
 })
 
 function apiPing() {
