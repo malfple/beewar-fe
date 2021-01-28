@@ -1,1 +1,0 @@
-web: cp .env.heroku .env; bin/boot
