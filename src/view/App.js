@@ -18,6 +18,7 @@ import Map from './map/Map'
 import Game from './game/Game'
 import NotFound from './NotFound'
 import Register from './Register'
+import About from './About'
 
 // App is the root router
 
@@ -110,6 +111,9 @@ function App(props) {
           <RouteWithLogin path="/game">
             <Game />
           </RouteWithLogin>
+          <Route path="/about">
+            <About />
+          </Route>
           <Route path="*">
             <NotFound />
           </Route>

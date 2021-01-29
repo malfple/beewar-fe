@@ -52,6 +52,9 @@ function Navigation(props) {
         <Link to="/map/list">Maps</Link>
       </div>
       {userButtons}
+      <div>
+        <Link to="/about">About</Link>
+      </div>
       <hr />
     </div>
   )
