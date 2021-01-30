@@ -1,4 +1,4 @@
-import {CMD_CHAT} from './messageConstants'
+import {CMD_GAME_DATA} from './messageConstants'
 import {GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from './groupConstants'
 
 const BE_SERVER_WEBSOCKET_URL = process.env.REACT_APP_BE_SERVER_WEBSOCKET_URL
@@ -28,8 +28,7 @@ class WebsocketWrapper {
     this.ws.onopen = () => {
       console.log('Successfully Connected')
       this.ws.send(JSON.stringify({
-        cmd: CMD_CHAT,
-        data: 'hello',
+        cmd: CMD_GAME_DATA,
       }))
     }
 
