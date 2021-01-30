@@ -17,34 +17,49 @@ class WebsocketWrapper {
    * @param {GameComms} gameComms
    */
   constructor(gameID, token, gameComms) {
+    this.gameID = gameID
+    this.token = token
+    this.isClosed = false // this is to indicate whether to reopen the connection if not closed manually
     gameComms.registerSubscriber(this, [GROUP_WEBSOCKET], true)
 
     this.onMessageListeners = [msg => {
       gameComms.triggerMsg(msg, GROUP_WEBSOCKET_LISTENERS)
     }]
 
-    this.ws = new WebSocket(`${BE_SERVER_WEBSOCKET_URL}/api/game/ws?id=${gameID}`, ['game_room', token])
+    this.open(true)
+  }
 
-    this.ws.onopen = () => {
-      console.log('Successfully Connected')
-      this.ws.send(JSON.stringify({
-        cmd: CMD_GAME_DATA,
-      }))
-    }
+  /**
+   * Open the connection. This function is automatically called once in constructor
+   * @param {boolean} withGameData
+   */
+  open(withGameData) {
+    if(!this.isClosed) {
+      this.ws = new WebSocket(`${BE_SERVER_WEBSOCKET_URL}/api/game/ws?id=${this.gameID}`, ['game_room', this.token])
 
-    this.ws.onmessage = rawMsg => {
-      const msg = JSON.parse(rawMsg.data)
-      for(let i = 0; i < this.onMessageListeners.length; i++) {
-        this.onMessageListeners[i](msg)
+      this.ws.onopen = () => {
+        console.log('ws: Successfully Connected')
+        if(withGameData) {
+          this.ws.send(JSON.stringify({
+            cmd: CMD_GAME_DATA,
+          }))
+        }
       }
-    }
 
-    this.ws.onclose = event => {
-      console.log('ws close: ', event)
-    }
+      this.ws.onmessage = rawMsg => {
+        const msg = JSON.parse(rawMsg.data)
+        for(let i = 0; i < this.onMessageListeners.length; i++) {
+          this.onMessageListeners[i](msg)
+        }
+      }
 
-    this.ws.onerror = error => {
-      console.log('ws error: ', error)
+      this.ws.onclose = event => {
+        console.log('ws close: ', event)
+      }
+
+      this.ws.onerror = error => {
+        console.log('ws error: ', error)
+      }
     }
   }
 
@@ -57,10 +72,18 @@ class WebsocketWrapper {
 
   // required by GameComms
   handleComms(msg) {
-    this.ws.send(JSON.stringify(msg))
+    if(!this.isClosed) {
+      if(this.ws.readyState === WebSocket.OPEN) {
+        this.ws.send(JSON.stringify(msg))
+      } else {
+        alert('connection lost, reconnecting...')
+        this.open(false)
+      }
+    }
   }
 
   close() {
+    this.isClosed = true
     this.ws.close()
   }
 }
