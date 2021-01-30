@@ -10,11 +10,14 @@ function GameList() {
 
   useEffect(() => {
     // check token
-    userToken.checkTokenAndRefresh()
-
-    apiGameList(userToken.token).then(res => {
-      setGames(res.data.game_users)
+    userToken.checkTokenAndRefresh().then(() => {
+      apiGameList(userToken.token).then(res => {
+        setGames(res.data.game_users)
+      })
+    }).catch(() => {
+      // do nothing
     })
+
   }, [userToken])
 
   return (

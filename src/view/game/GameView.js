@@ -20,21 +20,25 @@ function GameView() {
 
   useEffect(() => {
     // check token
-    userToken.checkTokenAndRefresh()
+    userToken.checkTokenAndRefresh().then(() => {
+      comms.current = new GameComms()
 
-    comms.current = new GameComms()
+      ws.current = new WebsocketWrapper(id, userToken.token, comms.current)
 
-    ws.current = new WebsocketWrapper(id, userToken.token, comms.current)
-
-    ws.current.addOnMessageListener(msg => {
-      if(msg.cmd === CMD_GAME_DATA) {
-        console.log('game data', msg.data)
-        setGameData(msg.data)
-      }
+      ws.current.addOnMessageListener(msg => {
+        if(msg.cmd === CMD_GAME_DATA) {
+          console.log('game data', msg.data)
+          setGameData(msg.data)
+        }
+      })
+    }).catch(() => {
+      // do nothing
     })
 
     return function cleanup() {
-      ws.current.close()
+      if(ws.current) {
+        ws.current.close()
+      }
     }
   }, [id, userToken])
 
