@@ -30,30 +30,36 @@ function App(props) {
   })
 
   useEffect(() => {
-    checkTokenAndRefresh()
+    checkTokenAndRefresh().catch(() => {
+      // do nothing
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function checkTokenAndRefresh() {
-    // only start request if token is '' or already expired
-    if(state.token !== '' && Date.now() + 10 < jwt(state.token).exp * 1000) {
-      return
-    }
-    // check if there is refresh token and if it's valid
-    apiAuthToken().then(res => {
-      // refresh token is valid, and we get access token
-      const tokenDecoded = jwt(res.data.token)
-      setState({
-        username: tokenDecoded.sub,
-        userID: tokenDecoded.user_id,
-        token: res.data.token,
-      })
-    }).catch(err => {
-      // refresh token is invalid
-      setState({
-        username: '',
-        userID: 0,
-        token: '',
+    return new Promise((resolutionFunc, rejectionFunc) => {
+      // only start request if token is '' or already expired
+      if(state.token !== '' && Date.now() + 10 < jwt(state.token).exp * 1000) {
+        resolutionFunc()
+        return
+      }
+      rejectionFunc()
+      // check if there is refresh token and if it's valid
+      apiAuthToken().then(res => {
+        // refresh token is valid, and we get access token
+        const tokenDecoded = jwt(res.data.token)
+        setState({
+          username: tokenDecoded.sub,
+          userID: tokenDecoded.user_id,
+          token: res.data.token,
+        })
+      }).catch(err => {
+        // refresh token is invalid
+        setState({
+          username: '',
+          userID: 0,
+          token: '',
+        })
       })
     })
   }
