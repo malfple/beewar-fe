@@ -3,12 +3,14 @@ import * as PIXI from 'pixi.js'
 import Terrain from './Terrain'
 import Unit from './Unit'
 import {
-  UNIT_ATTACK_RANGE_INFANTRY,
-  UNIT_MOVE_RANGE_INFANTRY,
-  UNIT_MOVE_RANGE_YOU,
-  UNIT_TYPE_INFANTRY,
-  UNIT_TYPE_YOU, UNIT_WEIGHT_INFANTRY,
-  UNIT_WEIGHT_MAP, UNIT_WEIGHT_YOU,
+  ATTACK_TYPE_GROUND,
+  ATTACK_TYPE_NONE,
+  MOVE_TYPE_GROUND,
+  UNIT_ATTACK_RANGE_MAP, UNIT_ATTACK_TYPE_MAP,
+  UNIT_MOVE_RANGE_MAP,
+  UNIT_MOVE_TYPE_MAP,
+  UNIT_TYPE_YOU,
+  UNIT_WEIGHT_MAP,
 } from './unitConstants'
 import {
   CMD_CHAT,
@@ -109,15 +111,12 @@ class Map {
    */
   activateMoveTerrains(y, x) {
     const unit = this.units[y][x]
-    switch(unit.type) {
-      case UNIT_TYPE_YOU:
-        this._fillMoveGround(y, x, UNIT_MOVE_RANGE_YOU, unit.owner, UNIT_WEIGHT_YOU)
-        break
-      case UNIT_TYPE_INFANTRY:
-        this._fillMoveGround(y, x, UNIT_MOVE_RANGE_INFANTRY, unit.owner, UNIT_WEIGHT_INFANTRY)
+    switch(UNIT_MOVE_TYPE_MAP[unit.type]) {
+      case MOVE_TYPE_GROUND:
+        this._fillMoveGround(y, x, UNIT_MOVE_RANGE_MAP[unit.type], unit.owner, UNIT_WEIGHT_MAP[unit.type])
         break
       default:
-        console.error('null or unknown unit')
+        console.error('null or unknown move type')
     }
   }
 
@@ -126,13 +125,12 @@ class Map {
    */
   deactivateMoveTerrains(y, x) {
     const unit = this.units[y][x]
-    switch(unit.type) {
-      case UNIT_TYPE_YOU:
-      case UNIT_TYPE_INFANTRY:
+    switch(UNIT_MOVE_TYPE_MAP[unit.type]) {
+      case MOVE_TYPE_GROUND:
         this._fillMoveGroundReset(y, x)
         break
       default:
-        console.error('null or unknown unit')
+        console.error('null or unknown move type')
     }
   }
 
@@ -145,14 +143,14 @@ class Map {
    */
   activateAttackTerrains(unit, y, x, afterMove) {
     let atkRange = 0
-    switch(unit.type) {
-      case UNIT_TYPE_YOU:
+    switch(UNIT_ATTACK_TYPE_MAP[unit.type]) {
+      case ATTACK_TYPE_NONE:
         break
-      case UNIT_TYPE_INFANTRY:
-        atkRange = UNIT_ATTACK_RANGE_INFANTRY
+      case ATTACK_TYPE_GROUND:
+        atkRange = UNIT_ATTACK_RANGE_MAP[unit.type]
         break
       default:
-        console.error('null or unknown unit')
+        console.error('null or unknown attack type')
     }
     for(let i = y-atkRange; i <= y+atkRange; i++) {
       for(let j = x-atkRange; j <= x+atkRange; j++) {
@@ -181,14 +179,14 @@ class Map {
    */
   deactivateAttackTerrains(unit, y, x, afterMove) {
     let atkRange = 0
-    switch(unit.type) {
-      case UNIT_TYPE_YOU:
+    switch(UNIT_ATTACK_TYPE_MAP[unit.type]) {
+      case ATTACK_TYPE_NONE:
         break
-      case UNIT_TYPE_INFANTRY:
-        atkRange = UNIT_ATTACK_RANGE_INFANTRY
+      case ATTACK_TYPE_GROUND:
+        atkRange = UNIT_ATTACK_RANGE_MAP[unit.type]
         break
       default:
-        console.error('null or unknown unit')
+        console.error('null or unknown attack type')
     }
     for(let i = y-atkRange; i <= y+atkRange; i++) {
       for(let j = x-atkRange; j <= x+atkRange; j++) {
