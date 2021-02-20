@@ -111,10 +111,10 @@ class Map {
     const unit = this.units[y][x]
     switch(unit.type) {
       case UNIT_TYPE_YOU:
-        this._bfs(y, x, UNIT_MOVE_RANGE_YOU, unit.owner, UNIT_WEIGHT_YOU)
+        this._fillMoveGround(y, x, UNIT_MOVE_RANGE_YOU, unit.owner, UNIT_WEIGHT_YOU)
         break
       case UNIT_TYPE_INFANTRY:
-        this._bfs(y, x, UNIT_MOVE_RANGE_INFANTRY, unit.owner, UNIT_WEIGHT_INFANTRY)
+        this._fillMoveGround(y, x, UNIT_MOVE_RANGE_INFANTRY, unit.owner, UNIT_WEIGHT_INFANTRY)
         break
       default:
         console.error('null or unknown unit')
@@ -129,7 +129,7 @@ class Map {
     switch(unit.type) {
       case UNIT_TYPE_YOU:
       case UNIT_TYPE_INFANTRY:
-        this._bfsReset(y, x)
+        this._fillMoveGroundReset(y, x)
         break
       default:
         console.error('null or unknown unit')
@@ -206,8 +206,8 @@ class Map {
     }
   }
 
-  // MIRROR: bfs function from backend
-  _bfs(y, x, steps, owner, weight) {
+  // MIRROR: dijkstra function from backend
+  _fillMoveGround(y, x, steps, owner, weight) {
     const queue = []
     let ptq = 0
     this.terrains[y][x].dist = 0
@@ -250,7 +250,7 @@ class Map {
     }
   }
   // same thing as above but reverse
-  _bfsReset(y, x) {
+  _fillMoveGroundReset(y, x) {
     const queue = []
     let ptq = 0
     this.terrains[y][x].dist = -1
