@@ -23,6 +23,7 @@ import {hexDistance} from '../../utils/grid'
 import {nullGameComms} from '../../modules/communication/GameComms'
 import {TERRAIN_TYPE_PLAINS} from './terrainConstants'
 import {GROUP_MAP_EVENT_LISTENERS} from '../../modules/communication/groupConstants'
+import PriorityQueue from "../../utils/PriorityQueue";
 
 // MIRROR: for bfs
 const K = 6
@@ -206,15 +207,18 @@ class Map {
 
   // MIRROR: dijkstra function from backend
   _fillMoveGround(y, x, steps, owner, weight) {
-    const queue = []
-    let ptq = 0
-    this.terrains[y][x].dist = 0
-    this.terrains[y][x].activateMoveTarget()
-    queue.push({y: y, x: x})
-    while(ptq < queue.length) {
-      const now = queue[ptq++]
+    const pq = new PriorityQueue()
+    pq.push(0, {y: y, x: x})
+    while(!pq.empty()) {
+      const [d, now] = pq.top()
+      pq.pop()
 
-      if(this.terrains[now.y][now.x].dist >= steps) {
+      if(this.terrains[now.y][now.x].dist !== -1) {
+        continue
+      }
+      this.terrains[now.y][now.x].dist = d
+      this.terrains[now.y][now.x].activateMoveTarget()
+      if(d === steps) {
         continue
       }
 
@@ -241,9 +245,9 @@ class Map {
           }
         }
 
-        this.terrains[ty][tx].dist = this.terrains[now.y][now.x].dist + 1
-        this.terrains[ty][tx].activateMoveTarget()
-        queue.push({y: ty, x: tx})
+        if(d+1 <= steps) {
+          pq.push(d+1, {y: ty, x: tx})
+        }
       }
     }
   }
