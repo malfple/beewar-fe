@@ -40,10 +40,12 @@ Please keep the environment variables in heroku settings and in `.env.heroku` fi
 
 In `origin/master` branch,
 ```text
+// add remote
+heroku git:remote -a beewar
 // deploy
 git push heroku master
 // see logs
-heroku logs --tail
+heroku logs --tail -a beewar
 ```
 
 ### Production Proxy
