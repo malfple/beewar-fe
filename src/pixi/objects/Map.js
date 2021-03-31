@@ -23,7 +23,7 @@ import {hexDistance} from '../../utils/grid'
 import {nullGameComms} from '../../modules/communication/GameComms'
 import {TERRAIN_TYPE_PLAINS} from './terrainConstants'
 import {GROUP_MAP_EVENT_LISTENERS} from '../../modules/communication/groupConstants'
-import PriorityQueue from "../../utils/PriorityQueue";
+import PriorityQueue from '../../utils/PriorityQueue'
 
 // MIRROR: for bfs
 const K = 6
