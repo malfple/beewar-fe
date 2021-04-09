@@ -1,7 +1,7 @@
 import {axiosCustom} from './api'
 
-function apiGameList(token) {
-  return axiosCustom.get('/api/game/list', {
+function apiGameMyGames(token) {
+  return axiosCustom.get('/api/game/my_games', {
     headers: {
       'Beewar-A-Token': token,
     },
@@ -9,5 +9,5 @@ function apiGameList(token) {
 }
 
 export {
-  apiGameList,
+  apiGameMyGames,
 }

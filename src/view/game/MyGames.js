@@ -1,17 +1,17 @@
 import React, {useContext, useEffect, useState} from 'react'
 
-import {apiGameList} from '../../modules/api/game'
+import {apiGameMyGames} from '../../modules/api/game'
 import {UserTokenContext} from '../../context'
 import GameCard from '../../components/GameCard'
 
-function GameList() {
+function MyGames() {
   const userToken = useContext(UserTokenContext)
   const [games, setGames] = useState([])
 
   useEffect(() => {
     // check token
     userToken.checkTokenAndRefresh().then(() => {
-      apiGameList(userToken.token).then(res => {
+      apiGameMyGames(userToken.token).then(res => {
         setGames(res.data.game_users)
       })
     }).catch(() => {
@@ -30,4 +30,4 @@ function GameList() {
   )
 }
 
-export default GameList
+export default MyGames

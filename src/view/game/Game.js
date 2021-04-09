@@ -2,7 +2,7 @@ import React from 'react'
 import {Route, Switch, useRouteMatch} from 'react-router-dom'
 
 import GameView from './GameView'
-import GameList from './GameList'
+import MyGames from './MyGames'
 
 function Game() {
   const {path} = useRouteMatch()
@@ -10,8 +10,8 @@ function Game() {
   return (
     <div>
       <Switch>
-        <Route path={`${path}/list`} >
-          <GameList />
+        <Route path={`${path}/my_games`} >
+          <MyGames />
         </Route>
         <Route path={`${path}/:id`} >
           <GameView />
