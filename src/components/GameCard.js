@@ -8,14 +8,18 @@ function GameCard(props) {
   const history = useHistory()
 
   console.log(props.game)
+  let game_id = props.game.game_id
+  if(!game_id) {
+    game_id = props.game.id
+  }
 
   function toGame() {
-    history.push(`/game/${props.game.game_id}`)
+    history.push(`/game/${game_id}`)
   }
 
   return (
     <div className="game-card" onClick={toGame}>
-      Game {props.game.game_id}
+      Game {game_id}
     </div>
   )
 }

@@ -8,6 +8,15 @@ function apiGameMyGames(token) {
   })
 }
 
+function apiGameList(token) {
+  return axiosCustom.get('/api/game/list', {
+    headers: {
+      'Beewar-A-Token': token,
+    },
+  })
+}
+
 export {
   apiGameMyGames,
+  apiGameList,
 }
