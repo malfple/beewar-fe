@@ -4,6 +4,7 @@ import {Route, Switch, useRouteMatch} from 'react-router-dom'
 import GameView from './GameView'
 import MyGames from './MyGames'
 import GameList from './GameList'
+import GameCreate from './GameCreate'
 
 function Game() {
   const {path} = useRouteMatch()
@@ -16,6 +17,9 @@ function Game() {
         </Route>
         <Route path={`${path}/list`} >
           <GameList />
+        </Route>
+        <Route path={`${path}/create/:map_id`} >
+          <GameCreate />
         </Route>
         <Route path={`${path}/:id`} >
           <GameView />

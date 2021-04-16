@@ -1,12 +1,15 @@
-import React, {useEffect, useState} from 'react'
-import {useParams} from 'react-router-dom'
+import React, {useContext, useEffect, useState} from 'react'
+import {useHistory, useParams} from 'react-router-dom'
 
 import {apiMapGet} from '../../modules/api/map'
 import MapViewApp from '../../components/pixiapp/MapViewApp'
+import {UserTokenContext} from '../../context'
 
 function MapView() {
   const [map, setMap] = useState(null)
   const {id} = useParams()
+  const userToken = useContext(UserTokenContext)
+  const history = useHistory()
 
   useEffect(() => {
     apiMapGet(id).then(res => {
@@ -16,6 +19,15 @@ function MapView() {
     })
 
   }, [id])
+
+  let createGameButton = null
+  if(userToken.username !== '') {
+    createGameButton = (
+      <button onClick={() => {
+        history.push(`/game/create/${id}`)
+      }}>Create Game</button>
+    )
+  }
 
   if(!map) {
     return (
@@ -33,6 +45,9 @@ function MapView() {
       <div>
         Terrain
         <MapViewApp map={map} />
+      </div>
+      <div>
+        {createGameButton}
       </div>
     </div>
   )
