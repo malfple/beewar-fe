@@ -9,8 +9,13 @@ function PlayerText(props) {
     backgroundColor: `#${colorHex.toString(16)}`,
   }
 
+  let username = 'no player'
+  if(props.gameUser.user) {
+    username = props.gameUser.user.username
+  }
+
   return (
-    <div style={style}>{props.gameUser.user.username}</div>
+    <div style={style}>{username}</div>
   )
 }
 
