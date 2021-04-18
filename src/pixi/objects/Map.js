@@ -15,7 +15,7 @@ import {
 import {
   CMD_CHAT,
   CMD_END_TURN,
-  CMD_ERROR, CMD_UNIT_ATTACK,
+  CMD_ERROR, CMD_JOIN, CMD_UNIT_ATTACK,
   CMD_UNIT_MOVE,
   CMD_UNIT_MOVE_AND_ATTACK, COMMS_MAP_EVENT_END_TURN,
 } from '../../modules/communication/messageConstants'
@@ -24,6 +24,7 @@ import {nullGameComms} from '../../modules/communication/GameComms'
 import {TERRAIN_TYPE_PLAINS} from './terrainConstants'
 import {GROUP_MAP_EVENT_LISTENERS} from '../../modules/communication/groupConstants'
 import PriorityQueue from '../../utils/PriorityQueue'
+import {GAME_STATUS_ENDED, GAME_STATUS_ONGOING, GAME_STATUS_PICKING} from './gameConstants'
 
 // MIRROR: for bfs
 const K = 6
@@ -57,11 +58,10 @@ class Map {
     this.terrains = []
     this.units = []
     this.player_count = mapData.player_count
+    this.status = mapData.status
     this.turn_count = mapData.turn_count
     this.turn_player = mapData.turn_player
     this.pixiNode = new PIXI.Container()
-    this.selectedUnit = null
-    this.selectedTerrainToMove = null
     this.comms = comms
 
     const terrainInfo = atob(mapData.terrain_info)
@@ -309,6 +309,11 @@ class Map {
         this._nextTurn()
         this._sendCommsEndTurn()
         break
+      case CMD_JOIN:
+        const player = msg.data.player
+        this.playerData[player.player_order-1] = player
+        this._checkGameStart()
+        break
       case CMD_CHAT:
       case CMD_ERROR:
         // do nothing
@@ -332,7 +337,24 @@ class Map {
     this._checkUnitAlive(yt, xt)
   }
   // MIRROR: utils function from GameLoader BE
+  _checkGameStart() {
+    if(this.status !== GAME_STATUS_PICKING) {
+      return
+    }
+    for(let i = 0; i < this.playerData.length; i++) {
+      if(this.playerData[i].user_id === 0) {
+        // empty slot
+        return
+      }
+    }
+    this.status = GAME_STATUS_ONGOING
+    this.turn_player = 1
+    this._sendCommsEndTurn() // just to update the turn indicator / border
+  }
   _checkGameEnd() {
+    if(this.status !== GAME_STATUS_ONGOING) {
+      return
+    }
     let playersLeft = 0
     for(let i = 0; i < this.playerData.length; i++) {
       if(this.playerData[i].final_turns === 0) {
@@ -343,6 +365,7 @@ class Map {
       for(let i = 0; i < this.playerData.length; i++) {
         this._assignPlayerRank(i+1)
       }
+      this.status = GAME_STATUS_ENDED
       this.turn_player = 0
       this._sendCommsEndTurn()
     }

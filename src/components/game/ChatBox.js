@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 
-import {CMD_CHAT} from '../../modules/communication/messageConstants'
+import {CMD_CHAT, CMD_JOIN} from '../../modules/communication/messageConstants'
 import {GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/groupConstants'
 
 import PlayerText from './PlayerText'
@@ -9,6 +9,7 @@ import PlayerText from './PlayerText'
 function ChatBox(props) {
   const [msg, setMsg] = useState('')
   const [messages, setMessages] = useState(['start of chat'])
+  const [players, setPlayers] = useState(props.players)
 
   // send chat message to backend server
   function sendChat() {
@@ -24,13 +25,20 @@ function ChatBox(props) {
       handleComms(msg) {
         if(msg.cmd === CMD_CHAT) {
           let username = ''
-          for(const player of props.players) {
+          for(const player of players) {
             if(player.user_id === msg.sender) {
               username = player.user.username
               break
             }
           }
           setMessages(prevMessages => [...prevMessages, `${username}: ${msg.data}`])
+        } else if(msg.cmd === CMD_JOIN) {
+          const player = msg.data.player
+          setPlayers(prevPlayers => {
+            const newPlayers = prevPlayers.slice()
+            newPlayers[player.player_order-1] = player
+            return newPlayers
+          })
         }
       },
     }
@@ -40,14 +48,14 @@ function ChatBox(props) {
     return function cleanup() {
       props.comms.unregisterSubscriber(dummy, [GROUP_WEBSOCKET_LISTENERS])
     }
-  }, [props.comms, props.players])
+  }, [props.comms, players])
 
   return (
     <div>
       <div>
         Players:
         <div>
-          {props.players.map((player, i) => <PlayerText key={i} gameUser={player} />)}
+          {players.map((player, i) => <PlayerText key={i} comms={props.comms} gameUser={player} />)}
         </div>
       </div>
       <div>
