@@ -46,13 +46,15 @@ class Map {
   /**
    * @param {Object}    mapData
    * @param {Array}     playerData
-   * @param {int}       currentPlayer   - the player of this client (not the current turn's player) This is not userID, but player number (1..n)
+   * @param {int}       userID       - the current logged in user
    * @param {boolean}   interactive
    * @param {GameComms} comms
    */
-  constructor(mapData, playerData=[], currentPlayer, interactive=false, comms=nullGameComms) {
+  constructor(mapData, playerData=[], userID, interactive=false, comms=nullGameComms) {
     this.playerData = playerData
-    this.currentPlayer = currentPlayer
+    this.userID = userID
+    this.currentPlayer = 0
+    this.calcCurrentPlayer()
     this.height = mapData.height
     this.width = mapData.width
     this.terrains = []
@@ -103,6 +105,15 @@ class Map {
       if(unit) {
         this.pixiNode.addChild(unit.pixiNode)
         this.units[cy][cx] = unit
+      }
+    }
+  }
+
+  calcCurrentPlayer() {
+    this.currentPlayer = 0
+    for(let i = 0; i < this.playerData.length; i++) {
+      if(this.userID === this.playerData[i].user_id) {
+        this.currentPlayer = this.playerData[i].player_order
       }
     }
   }
@@ -312,6 +323,7 @@ class Map {
       case CMD_JOIN:
         const player = msg.data.player
         this.playerData[player.player_order-1] = player
+        this.calcCurrentPlayer()
         this._checkGameStart()
         break
       case CMD_CHAT:

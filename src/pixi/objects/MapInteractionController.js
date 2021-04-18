@@ -19,12 +19,10 @@ const MAP_STATE_ATTACK_CONFIRM = 3
 class MapInteractionController {
   /**
    * @param {Map}       map
-   * @param {int}       currentPlayer - the player of this client (not the current turn's player) This is not userID, but player number (1..n)
    * @param {GameComms} comms
    */
-  constructor(map, currentPlayer, comms=nullGameComms) {
+  constructor(map, comms=nullGameComms) {
     this.map = map
-    this.currentPlayer = currentPlayer
     this.comms = comms
 
     this.state = MAP_STATE_NORMAL
@@ -185,7 +183,7 @@ class MapInteractionController {
    * @private
    */
   _checkUnitOwnedAndCurrentTurn(unit) {
-    return unit.owner === this.currentPlayer && this.currentPlayer === this.map.turn_player
+    return unit.owner === this.map.currentPlayer && this.map.currentPlayer === this.map.turn_player
   }
 }
 
