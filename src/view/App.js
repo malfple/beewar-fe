@@ -132,22 +132,13 @@ function App(props) {
 function Home() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>BeeWar</h1>
+      <h2>
+        Check the navigation bar haha
+      </h2>
       <ServerStats />
       <PingTest />
+      <ReactHome show={false} />
     </div>
   )
 }
@@ -236,6 +227,30 @@ function PingTest() {
     <button onClick={handlePing}>
       ping the server
     </button>
+  )
+}
+
+// the included react home page. no longer used
+function ReactHome(props) {
+  if(!props.show) {
+    return null
+  }
+
+  return (
+    <header className="App-header">
+      <img src={logo} className="App-logo" alt="logo" />
+      <p>
+        Edit <code>src/App.js</code> and save to reload.
+      </p>
+      <a
+        className="App-link"
+        href="https://reactjs.org"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Learn React
+      </a>
+    </header>
   )
 }
 
