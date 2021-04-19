@@ -213,20 +213,28 @@ function ServerStats() {
 }
 
 function PingTest() {
+  const [pings, setPings] = useState('')
+
   function handlePing(e) {
     e.preventDefault()
     console.log(`ping! to BE: ${process.env.REACT_APP_BE_SERVER_URL}`)
     apiPing().then(() => {
       console.log('pong!')
+      setPings(prevPings => prevPings + ' pong!')
     }).catch(err => {
       console.log('be server ded!')
     })
   }
 
   return (
-    <button onClick={handlePing}>
-      ping the server
-    </button>
+    <div>
+      <button onClick={handlePing}>
+        ping the server
+      </button>
+      <div>
+        {pings}
+      </div>
+    </div>
   )
 }
 
