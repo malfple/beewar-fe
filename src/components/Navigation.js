@@ -33,7 +33,7 @@ function Navigation(props) {
           <Link to={`/profile/${userToken.username}`}>Logged in user = {userToken.username}</Link>
         </div>
         <div>
-          <Link to="/game/list">My Games</Link>
+          <Link to="/game/my_games">My Games</Link>
         </div>
         <div>
           <button onClick={logout}>Logout</button>

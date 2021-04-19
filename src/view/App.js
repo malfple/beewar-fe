@@ -132,22 +132,13 @@ function App(props) {
 function Home() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>BeeWar</h1>
+      <h2>
+        Check the navigation bar haha
+      </h2>
       <ServerStats />
       <PingTest />
+      <ReactHome show={false} />
     </div>
   )
 }
@@ -222,20 +213,52 @@ function ServerStats() {
 }
 
 function PingTest() {
+  const [pings, setPings] = useState('')
+
   function handlePing(e) {
     e.preventDefault()
     console.log(`ping! to BE: ${process.env.REACT_APP_BE_SERVER_URL}`)
     apiPing().then(() => {
       console.log('pong!')
+      setPings(prevPings => prevPings + ' pong!')
     }).catch(err => {
       console.log('be server ded!')
     })
   }
 
   return (
-    <button onClick={handlePing}>
-      ping the server
-    </button>
+    <div>
+      <button onClick={handlePing}>
+        ping the server
+      </button>
+      <div>
+        {pings}
+      </div>
+    </div>
+  )
+}
+
+// the included react home page. no longer used
+function ReactHome(props) {
+  if(!props.show) {
+    return null
+  }
+
+  return (
+    <header className="App-header">
+      <img src={logo} className="App-logo" alt="logo" />
+      <p>
+        Edit <code>src/App.js</code> and save to reload.
+      </p>
+      <a
+        className="App-link"
+        href="https://reactjs.org"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Learn React
+      </a>
+    </header>
   )
 }
 

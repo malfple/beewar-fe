@@ -18,23 +18,16 @@ import MapInteractionController from '../../pixi/objects/MapInteractionControlle
 function GameApp(props) {
   const userToken = useContext(UserTokenContext)
 
-  let currentPlayer = 0
-  for(let i = 0; i < props.gameData.players.length; i++) {
-    if(userToken.userID === props.gameData.players[i].user_id) {
-      currentPlayer = props.gameData.players[i].player_order
-    }
-  }
-
   useEffect(() => {
     // setup app
     const stage = new PIXI.Container()
 
-    const map = new Map(props.gameData.game, props.gameData.players, currentPlayer, true, props.comms)
+    const map = new Map(props.gameData.game, props.gameData.players, userToken.userID, true, props.comms)
     props.comms.registerSubscriber(map, [GROUP_WEBSOCKET_LISTENERS])
     const viewport = ViewPort(map)
     stage.addChild(viewport)
 
-    const mapInteractionController = new MapInteractionController(map, currentPlayer, props.comms)
+    const mapInteractionController = new MapInteractionController(map, props.comms)
     props.comms.registerSubscriber(mapInteractionController, [GROUP_WEBSOCKET_LISTENERS, GROUP_MAP_CONTROLLER], true)
 
     const infoPanel = new InfoPanel(props.gameData.game)

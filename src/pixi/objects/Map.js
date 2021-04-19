@@ -3,17 +3,19 @@ import * as PIXI from 'pixi.js'
 import Terrain from './Terrain'
 import Unit from './Unit'
 import {
-  UNIT_ATTACK_RANGE_INFANTRY,
-  UNIT_MOVE_RANGE_INFANTRY,
-  UNIT_MOVE_RANGE_YOU,
-  UNIT_TYPE_INFANTRY,
-  UNIT_TYPE_YOU, UNIT_WEIGHT_INFANTRY,
-  UNIT_WEIGHT_MAP, UNIT_WEIGHT_YOU,
+  ATTACK_TYPE_GROUND,
+  ATTACK_TYPE_NONE,
+  MOVE_TYPE_GROUND,
+  UNIT_ATTACK_RANGE_MAP, UNIT_ATTACK_TYPE_MAP,
+  UNIT_MOVE_RANGE_MAP,
+  UNIT_MOVE_TYPE_MAP,
+  UNIT_TYPE_YOU,
+  UNIT_WEIGHT_MAP,
 } from './unitConstants'
 import {
   CMD_CHAT,
   CMD_END_TURN,
-  CMD_ERROR, CMD_UNIT_ATTACK,
+  CMD_ERROR, CMD_JOIN, CMD_UNIT_ATTACK,
   CMD_UNIT_MOVE,
   CMD_UNIT_MOVE_AND_ATTACK, COMMS_MAP_EVENT_END_TURN,
 } from '../../modules/communication/messageConstants'
@@ -21,6 +23,8 @@ import {hexDistance} from '../../utils/grid'
 import {nullGameComms} from '../../modules/communication/GameComms'
 import {TERRAIN_TYPE_PLAINS} from './terrainConstants'
 import {GROUP_MAP_EVENT_LISTENERS} from '../../modules/communication/groupConstants'
+import PriorityQueue from '../../utils/PriorityQueue'
+import {GAME_STATUS_ENDED, GAME_STATUS_ONGOING, GAME_STATUS_PICKING} from './gameConstants'
 
 // MIRROR: for bfs
 const K = 6
@@ -42,23 +46,24 @@ class Map {
   /**
    * @param {Object}    mapData
    * @param {Array}     playerData
-   * @param {int}       currentPlayer   - the player of this client (not the current turn's player) This is not userID, but player number (1..n)
+   * @param {int}       userID       - the current logged in user
    * @param {boolean}   interactive
    * @param {GameComms} comms
    */
-  constructor(mapData, playerData=[], currentPlayer, interactive=false, comms=nullGameComms) {
+  constructor(mapData, playerData=[], userID, interactive=false, comms=nullGameComms) {
     this.playerData = playerData
-    this.currentPlayer = currentPlayer
+    this.userID = userID
+    this.currentPlayer = 0
+    this.calcCurrentPlayer()
     this.height = mapData.height
     this.width = mapData.width
     this.terrains = []
     this.units = []
     this.player_count = mapData.player_count
+    this.status = mapData.status
     this.turn_count = mapData.turn_count
     this.turn_player = mapData.turn_player
     this.pixiNode = new PIXI.Container()
-    this.selectedUnit = null
-    this.selectedTerrainToMove = null
     this.comms = comms
 
     const terrainInfo = atob(mapData.terrain_info)
@@ -104,20 +109,26 @@ class Map {
     }
   }
 
+  calcCurrentPlayer() {
+    this.currentPlayer = 0
+    for(let i = 0; i < this.playerData.length; i++) {
+      if(this.userID === this.playerData[i].user_id) {
+        this.currentPlayer = this.playerData[i].player_order
+      }
+    }
+  }
+
   /**
    * given a position with a unit, activate move terrains for that unit.
    */
   activateMoveTerrains(y, x) {
     const unit = this.units[y][x]
-    switch(unit.type) {
-      case UNIT_TYPE_YOU:
-        this._bfs(y, x, UNIT_MOVE_RANGE_YOU, unit.owner, UNIT_WEIGHT_YOU)
-        break
-      case UNIT_TYPE_INFANTRY:
-        this._bfs(y, x, UNIT_MOVE_RANGE_INFANTRY, unit.owner, UNIT_WEIGHT_INFANTRY)
+    switch(UNIT_MOVE_TYPE_MAP[unit.type]) {
+      case MOVE_TYPE_GROUND:
+        this._fillMoveGround(y, x, UNIT_MOVE_RANGE_MAP[unit.type], unit.owner, UNIT_WEIGHT_MAP[unit.type])
         break
       default:
-        console.error('null or unknown unit')
+        console.error('null or unknown move type')
     }
   }
 
@@ -126,13 +137,12 @@ class Map {
    */
   deactivateMoveTerrains(y, x) {
     const unit = this.units[y][x]
-    switch(unit.type) {
-      case UNIT_TYPE_YOU:
-      case UNIT_TYPE_INFANTRY:
-        this._bfsReset(y, x)
+    switch(UNIT_MOVE_TYPE_MAP[unit.type]) {
+      case MOVE_TYPE_GROUND:
+        this._fillMoveGroundReset(y, x)
         break
       default:
-        console.error('null or unknown unit')
+        console.error('null or unknown move type')
     }
   }
 
@@ -145,14 +155,14 @@ class Map {
    */
   activateAttackTerrains(unit, y, x, afterMove) {
     let atkRange = 0
-    switch(unit.type) {
-      case UNIT_TYPE_YOU:
+    switch(UNIT_ATTACK_TYPE_MAP[unit.type]) {
+      case ATTACK_TYPE_NONE:
         break
-      case UNIT_TYPE_INFANTRY:
-        atkRange = UNIT_ATTACK_RANGE_INFANTRY
+      case ATTACK_TYPE_GROUND:
+        atkRange = UNIT_ATTACK_RANGE_MAP[unit.type]
         break
       default:
-        console.error('null or unknown unit')
+        console.error('null or unknown attack type')
     }
     for(let i = y-atkRange; i <= y+atkRange; i++) {
       for(let j = x-atkRange; j <= x+atkRange; j++) {
@@ -181,14 +191,14 @@ class Map {
    */
   deactivateAttackTerrains(unit, y, x, afterMove) {
     let atkRange = 0
-    switch(unit.type) {
-      case UNIT_TYPE_YOU:
+    switch(UNIT_ATTACK_TYPE_MAP[unit.type]) {
+      case ATTACK_TYPE_NONE:
         break
-      case UNIT_TYPE_INFANTRY:
-        atkRange = UNIT_ATTACK_RANGE_INFANTRY
+      case ATTACK_TYPE_GROUND:
+        atkRange = UNIT_ATTACK_RANGE_MAP[unit.type]
         break
       default:
-        console.error('null or unknown unit')
+        console.error('null or unknown attack type')
     }
     for(let i = y-atkRange; i <= y+atkRange; i++) {
       for(let j = x-atkRange; j <= x+atkRange; j++) {
@@ -206,17 +216,20 @@ class Map {
     }
   }
 
-  // MIRROR: bfs function from backend
-  _bfs(y, x, steps, owner, weight) {
-    const queue = []
-    let ptq = 0
-    this.terrains[y][x].dist = 0
-    this.terrains[y][x].activateMoveTarget()
-    queue.push({y: y, x: x})
-    while(ptq < queue.length) {
-      const now = queue[ptq++]
+  // MIRROR: dijkstra function from backend
+  _fillMoveGround(y, x, steps, owner, weight) {
+    const pq = new PriorityQueue()
+    pq.push(0, {y: y, x: x})
+    while(!pq.empty()) {
+      const [d, now] = pq.top()
+      pq.pop()
 
-      if(this.terrains[now.y][now.x].dist >= steps) {
+      if(this.terrains[now.y][now.x].dist !== -1) {
+        continue
+      }
+      this.terrains[now.y][now.x].dist = d
+      this.terrains[now.y][now.x].activateMoveTarget()
+      if(d === steps) {
         continue
       }
 
@@ -243,14 +256,14 @@ class Map {
           }
         }
 
-        this.terrains[ty][tx].dist = this.terrains[now.y][now.x].dist + 1
-        this.terrains[ty][tx].activateMoveTarget()
-        queue.push({y: ty, x: tx})
+        if(d+1 <= steps) {
+          pq.push(d+1, {y: ty, x: tx})
+        }
       }
     }
   }
   // same thing as above but reverse
-  _bfsReset(y, x) {
+  _fillMoveGroundReset(y, x) {
     const queue = []
     let ptq = 0
     this.terrains[y][x].dist = -1
@@ -307,6 +320,12 @@ class Map {
         this._nextTurn()
         this._sendCommsEndTurn()
         break
+      case CMD_JOIN:
+        const player = msg.data.player
+        this.playerData[player.player_order-1] = player
+        this.calcCurrentPlayer()
+        this._checkGameStart()
+        break
       case CMD_CHAT:
       case CMD_ERROR:
         // do nothing
@@ -330,7 +349,24 @@ class Map {
     this._checkUnitAlive(yt, xt)
   }
   // MIRROR: utils function from GameLoader BE
+  _checkGameStart() {
+    if(this.status !== GAME_STATUS_PICKING) {
+      return
+    }
+    for(let i = 0; i < this.playerData.length; i++) {
+      if(this.playerData[i].user_id === 0) {
+        // empty slot
+        return
+      }
+    }
+    this.status = GAME_STATUS_ONGOING
+    this.turn_player = 1
+    this._sendCommsEndTurn() // just to update the turn indicator / border
+  }
   _checkGameEnd() {
+    if(this.status !== GAME_STATUS_ONGOING) {
+      return
+    }
     let playersLeft = 0
     for(let i = 0; i < this.playerData.length; i++) {
       if(this.playerData[i].final_turns === 0) {
@@ -341,6 +377,7 @@ class Map {
       for(let i = 0; i < this.playerData.length; i++) {
         this._assignPlayerRank(i+1)
       }
+      this.status = GAME_STATUS_ENDED
       this.turn_player = 0
       this._sendCommsEndTurn()
     }
