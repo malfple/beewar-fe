@@ -19,6 +19,7 @@ import Game from './game/Game'
 import NotFound from './NotFound'
 import Register from './Register'
 import About from './About'
+import How2Play from './How2Play'
 
 // App is the root router
 
@@ -120,6 +121,9 @@ function App(props) {
           <Route path="/about">
             <About />
           </Route>
+          <Route path="/how2play">
+            <How2Play />
+          </Route>
           <Route path="*">
             <NotFound />
           </Route>
@@ -220,7 +224,7 @@ function PingTest() {
     console.log(`ping! to BE: ${process.env.REACT_APP_BE_SERVER_URL}`)
     apiPing().then(() => {
       console.log('pong!')
-      setPings(prevPings => prevPings + ' pong!')
+      setPings(prevPings => `${prevPings} pong!`)
     }).catch(err => {
       console.log('be server ded!')
     })

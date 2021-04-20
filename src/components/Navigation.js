@@ -58,6 +58,9 @@ function Navigation(props) {
       <div>
         <Link to="/about">About</Link>
       </div>
+      <div>
+        <Link to="/how2play">How to Play</Link>
+      </div>
       <hr />
     </div>
   )
