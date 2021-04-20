@@ -36,6 +36,9 @@ function Navigation(props) {
           <Link to="/game/my_games">My Games</Link>
         </div>
         <div>
+          <Link to="/game/list">Open Games</Link>
+        </div>
+        <div>
           <button onClick={logout}>Logout</button>
         </div>
       </div>
