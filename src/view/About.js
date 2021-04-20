@@ -2,7 +2,7 @@ import React from 'react'
 
 function About() {
   return (
-    <div>
+    <div style={{margin: '10px'}}>
       <h1>About</h1>
       <p>
         Beewar is a turn based strategy game where players can move pieces and attack other pieces.
