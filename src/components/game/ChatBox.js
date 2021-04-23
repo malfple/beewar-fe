@@ -55,7 +55,7 @@ function ChatBox(props) {
       <div>
         Players:
         <div>
-          {players.map((player, i) => <PlayerText key={i} comms={props.comms} gameUser={player} />)}
+          {players.map((player, i) => <PlayerText key={i} comms={props.comms} gameUser={player} gameHasPassword={props.gameHasPassword} />)}
         </div>
       </div>
       <div>
@@ -73,6 +73,7 @@ function ChatBox(props) {
 ChatBox.propTypes = {
   comms: PropTypes.object.isRequired,
   players: PropTypes.array.isRequired,
+  gameHasPassword: PropTypes.bool.isRequired,
 }
 
 export default ChatBox

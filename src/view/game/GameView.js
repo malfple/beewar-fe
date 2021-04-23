@@ -60,7 +60,7 @@ function GameView() {
 
   return (
     <div>
-      <ChatBox comms={comms.current} players={gameData.players} />
+      <ChatBox comms={comms.current} players={gameData.players} gameHasPassword={gameData.game.password !== ''} />
       <button onClick={endTurn}>end turn</button> <br />
       <GameApp gameData={gameData} comms={comms.current} />
     </div>
