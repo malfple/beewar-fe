@@ -218,10 +218,12 @@ function ServerStats() {
 
 function PingTest() {
   const [pings, setPings] = useState('')
+  const [counter, setCounter] = useState(0)
 
   function handlePing(e) {
     e.preventDefault()
     console.log(`ping! to BE: ${process.env.REACT_APP_BE_SERVER_URL}`)
+    setCounter(prevCounter => prevCounter + 1)
     apiPing().then(() => {
       console.log('pong!')
       setPings(prevPings => `${prevPings} pong!`)
@@ -233,7 +235,7 @@ function PingTest() {
   return (
     <div>
       <button onClick={handlePing}>
-        ping the server
+        {counter < 10 ? 'ping the server' : 'ping the server, but dont spam pls'}
       </button>
       <div>
         {pings}
