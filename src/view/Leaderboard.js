@@ -13,7 +13,7 @@ function Leaderboard() {
   return (
     <div>
       <h1>Leaderboard</h1>
-      {users.map((user, i) => <div key={i}>{user.username}, {user.email}</div>)}
+      {users.map((user, i) => <div key={i}>{user.username}</div>)}
     </div>
   )
 }
