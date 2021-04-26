@@ -20,6 +20,7 @@ import NotFound from './NotFound'
 import Register from './Register'
 import About from './About'
 import How2Play from './How2Play'
+import Leaderboard from './Leaderboard'
 
 // App is the root router
 
@@ -111,6 +112,9 @@ function App(props) {
           </RouteWithoutLogin>
           <Route path="/profile/:username">
             <Profile />
+          </Route>
+          <Route path="/leaderboard">
+            <Leaderboard />
           </Route>
           <Route path="/map">
             <Map />
