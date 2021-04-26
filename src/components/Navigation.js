@@ -56,6 +56,9 @@ function Navigation(props) {
       </div>
       {userButtons}
       <div>
+        <Link to="/leaderboard">Leaderboard</Link>
+      </div>
+      <div>
         <Link to="/about">About</Link>
       </div>
       <div>

@@ -9,10 +9,20 @@ function PlayerText(props) {
   function joinGame() {
     // joins the game at current player_order / slot
     console.log(`join game pos ${props.gameUser.player_order}`)
+
+    let password = ''
+    if(props.gameHasPassword) {
+      password = prompt('Input this game\'s password')
+      if(password == null) {
+        return
+      }
+    }
+
     props.comms.triggerMsg({
       cmd: CMD_JOIN,
       data: {
         player_order: props.gameUser.player_order,
+        password: password,
       },
     }, GROUP_WEBSOCKET)
   }
@@ -37,6 +47,7 @@ function PlayerText(props) {
 PlayerText.propTypes = {
   comms: PropTypes.object.isRequired,
   gameUser: PropTypes.object.isRequired,
+  gameHasPassword: PropTypes.bool.isRequired,
 }
 
 export default PlayerText

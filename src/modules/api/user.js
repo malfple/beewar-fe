@@ -8,6 +8,16 @@ function apiUserGetByUsername(username) {
   })
 }
 
+function apiUserList() {
+  return axiosCustom.get('/api/user/list', {
+    params: {
+      limit: 100,
+      offset: 0,
+    },
+  })
+}
+
 export {
   apiUserGetByUsername,
+  apiUserList,
 }
