@@ -1,0 +1,37 @@
+header {
+    background-color: white;
+}
+
+.Navbar {
+    margin: 0 auto;
+    background-color: lightgrey;
+    position: relative;
+}
+
+.Navs {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.Navs2 {
+    display: block;
+    text-align: center;
+}
+
+.Nav {
+    display: inline-block;
+    border-bottom: 3px solid darkgrey;
+}
+
+.Nav:hover {
+    cursor: pointer;
+    background-color: darkgrey;
+}
+
+.Nav a, .Nav div {
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    color: black;
+}
