@@ -21,21 +21,21 @@ function Navigation(props) {
 
   return (
     <header>
-      <div className="Navbar">
+      <div className="navbar">
         <Nav show={true}>
           <Link to="/">
             <img src={logo} alt="logo" />
           </Link>
         </Nav>
-        <div className="Navs">
+        <div className="navbar__navs">
           <Nav show={!userLoggedIn}><Link to="/login">Login</Link></Nav>
           <Nav show={!userLoggedIn}><Link to="/register">Register</Link></Nav>
           <Nav show={userLoggedIn}><Link to={`/profile/${userToken.username}`}>{userToken.username} (My Profile)</Link></Nav>
           <Nav show={userLoggedIn}><div onClick={logout}>Logout</div></Nav>
         </div>
       </div>
-      <div className="Navbar">
-        <div className="Navs2">
+      <div className="navbar">
+        <div className="navbar__navs--centered">
           <Nav show={true}><Link to="/">Home</Link></Nav>
           <Nav show={true}><Link to="/map/list">Maps</Link></Nav>
           <Nav show={userLoggedIn}><Link to="/game/list">Open Games</Link></Nav>

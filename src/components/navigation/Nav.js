@@ -8,7 +8,7 @@ function Nav(props) {
   }
 
   return (
-    <div className="Nav">
+    <div className="navbar__navs__nav">
       {props.children}
     </div>
   )
