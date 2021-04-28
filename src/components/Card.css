@@ -1,4 +1,20 @@
-.map-card, .game-card {
-    border: solid;
+.card {
+    background-color: lightgrey;
+    border: 2px solid darkgrey;
+    width: 90%;
+    height: 100px;
+    margin: 10px auto;
+}
+
+.card:hover {
     cursor: pointer;
+    background-color: darkgrey;
+}
+
+.card--green {
+    background-color: darkseagreen;
+}
+
+.card--green:hover {
+    background-color: lightgreen;
 }

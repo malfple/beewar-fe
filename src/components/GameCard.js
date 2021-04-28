@@ -18,7 +18,7 @@ function GameCard(props) {
   }
 
   return (
-    <div className="game-card" onClick={toGame}>
+    <div className="card" onClick={toGame}>
       Game {game_id}
     </div>
   )

@@ -12,7 +12,7 @@ function MapCard(props) {
   }
 
   return (
-    <div className="map-card" onClick={toMap}>
+    <div className="card" onClick={toMap}>
       <div>
         Name: {props.map.name}
       </div>
