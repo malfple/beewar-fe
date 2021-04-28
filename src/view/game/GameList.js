@@ -12,7 +12,6 @@ function GameList() {
     // check token
     userToken.checkTokenAndRefresh().then(() => {
       apiGameList(userToken.token).then(res => {
-        console.log(res.data)
         setGames(res.data.games)
       })
     }).catch(() => {
