@@ -36,7 +36,6 @@ function Navigation(props) {
       </div>
       <div className="navbar">
         <div className="navbar__navs--centered">
-          <Nav show={true}><Link to="/">Home</Link></Nav>
           <Nav show={true}><Link to="/map/list">Maps</Link></Nav>
           <Nav show={userLoggedIn}><Link to="/game/list">Open Games</Link></Nav>
           <Nav show={userLoggedIn}><Link to="/game/my_games">My Games</Link></Nav>
