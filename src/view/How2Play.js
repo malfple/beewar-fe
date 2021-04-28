@@ -1,8 +1,9 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 function How2Play() {
   return (
-    <div style={{margin: '10px'}}>
+    <div className="main-container">
       <h1>How to Play</h1>
       <h2>Login and Register</h2>
       <p>
@@ -26,6 +27,10 @@ function How2Play() {
       </p>
       <p>
         You can hold right click to navigate the map.
+      </p>
+      <h2>Wiki</h2>
+      <p>
+        Check out the wiki <Link to="/wiki">here</Link>
       </p>
     </div>
   )

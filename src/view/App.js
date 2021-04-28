@@ -21,6 +21,7 @@ import Register from './Register'
 import About from './About'
 import How2Play from './How2Play'
 import Leaderboard from './Leaderboard'
+import Wiki from './wiki/Wiki'
 
 // App is the root router
 
@@ -127,6 +128,9 @@ function App(props) {
           </Route>
           <Route path="/how2play">
             <How2Play />
+          </Route>
+          <Route path="/wiki">
+            <Wiki />
           </Route>
           <Route path="*">
             <NotFound />
