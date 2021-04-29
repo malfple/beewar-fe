@@ -41,8 +41,8 @@ class Unit {
     this.tintSprite.tint = PLAYER_COLOR_TINT[owner]
     this.maskSprite.anchor.set(0.5)
     this.tintSprite.anchor.set(0.5)
-    this.maskSprite.scale.set(0.5)
-    this.tintSprite.scale.set(0.5)
+    // this.maskSprite.scale.set(0.5)
+    // this.tintSprite.scale.set(0.5)
     this.pixiNode.addChild(this.maskSprite)
     this.pixiNode.addChild(this.tintSprite)
     this._updateSpriteFromState()
@@ -65,8 +65,8 @@ class Unit {
   _setPosition(y, x) {
     this.y = y
     this.x = x
-    const py = 40 * y + 20
-    const px = 50 * x + (y % 2 === 0 ? 50 : 25)
+    const py = 75 * y + 50
+    const px = 90 * x + (y % 2 === 0 ? 95 : 50)
     this.pixiNode.position.set(px, py)
   }
 

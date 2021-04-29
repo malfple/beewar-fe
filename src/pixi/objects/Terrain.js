@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import {hexTexture} from '../textures'
+import {plainsTexture} from '../textures'
 import {TERRAIN_STATUS_ATTACK_TARGET, TERRAIN_STATUS_MOVE_TARGET, TERRAIN_STATUS_NORMAL} from './terrainConstants'
 
 import {nullGameComms} from '../../modules/communication/GameComms'
@@ -25,20 +25,20 @@ class Terrain {
     if(type === 0) {
       return
     }
-    this.pixiNode = new PIXI.Sprite(hexTexture)
+    this.pixiNode = new PIXI.Sprite(plainsTexture)
     this.pixiNode.anchor.set(0.5, 0.5)
-    const py = 40 * y + 20
-    const px = 50 * x + (y % 2 === 0 ? 50 : 25)
+    const py = 75 * y + 50
+    const px = 90 * x + (y % 2 === 0 ? 95 : 50)
     this.pixiNode.position.set(px, py)
 
     // events
     if(interactive) {
       this.pixiNode.interactive = true
       this.pixiNode.on('pointerover', () => {
-        this.pixiNode.scale.set(1.2)
+        this.pixiNode.alpha = 0.5
       })
       this.pixiNode.on('pointerout', () => {
-        this.pixiNode.scale.set(1)
+        this.pixiNode.alpha = 1
       })
       this.pixiNode.on('click', e => {
         comms.triggerMsg({
