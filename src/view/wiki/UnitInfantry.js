@@ -1,11 +1,11 @@
 import React from 'react'
-import infantryMaskPNG from '../../pixi/assets/infantry-mask.png'
+import infantryPNG from '../../pixi/assets/infantry.png'
 
 function UnitInfantry() {
   return (
     <div>
       <h1>Infantry</h1>
-      <img src={infantryMaskPNG} alt="you" />
+      <img src={infantryPNG} alt="you" />
       <p>
         A weak unit that carries a handgun.
       </p>

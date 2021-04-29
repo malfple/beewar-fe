@@ -1,11 +1,11 @@
 import React from 'react'
-import youMaskPNG from '../../pixi/assets/you-mask.png'
+import youPNG from '../../pixi/assets/you.png'
 
 function UnitYou() {
   return (
     <div>
       <h1>You</h1>
-      <img src={youMaskPNG} alt="you" />
+      <img src={youPNG} alt="you" />
       <p>
         This is you. If you die (in-game) then you lose immediately.
       </p>
