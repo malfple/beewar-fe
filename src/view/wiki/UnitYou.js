@@ -1,5 +1,5 @@
 import React from 'react'
-import youPNG from '../../pixi/assets/you.png'
+import youPNG from '../../pixi/assets/unit-you.png'
 
 function UnitYou() {
   return (

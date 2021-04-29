@@ -1,5 +1,5 @@
 import React from 'react'
-import infantryPNG from '../../pixi/assets/infantry.png'
+import infantryPNG from '../../pixi/assets/unit-infantry.png'
 
 function UnitInfantry() {
   return (

@@ -1,10 +1,10 @@
 import * as PIXI from 'pixi.js'
 import {renderer} from './renderer'
 
-import youMaskPNG from './assets/you-mask.png'
-import youTintPNG from './assets/you-tint.png'
-import infantryMaskPNG from './assets/infantry-mask.png'
-import infantryTintPNG from './assets/infantry-tint.png'
+import youMaskPNG from './assets/unit-you-mask.png'
+import youTintPNG from './assets/unit-you-tint.png'
+import infantryMaskPNG from './assets/unit-infantry-mask.png'
+import infantryTintPNG from './assets/unit-infantry-tint.png'
 
 const hexGraphics = new PIXI.Graphics()
 hexGraphics.lineStyle(2, 0xffffff, 1)
