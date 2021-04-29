@@ -31,7 +31,10 @@
       "no-var": "warn",
       "func-style": [
         "warn",
-        "declaration"
+        "declaration",
+        {
+          "allowArrowFunctions": true
+        }
       ],
       "no-param-reassign": "warn",
       "prefer-template": "error",

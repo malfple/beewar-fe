@@ -1,48 +1,91 @@
 import * as PIXI from 'pixi.js'
 import {renderer} from '../renderer'
+import {btnZoomInTexture, btnZoomOutTexture} from '../textures'
 
 /**
- * ViewPort controls the camera/view of the map
- * @param {Map} map: this should only be an instance of class Map
- * @returns {PIXI.Container}
+ * ViewPort controls the camera/view of the map and also zoom
  */
-function ViewPort(map) {
-  const fixedFrame = new PIXI.Container()
-  const movedFrame = new PIXI.Container()
-  const mapContainer = map.pixiNode
-  fixedFrame.addChild(movedFrame)
-  movedFrame.addChild(mapContainer)
+class ViewPort {
+  /**
+   * @param {Map} map: this should only be an instance of class Map
+   * @returns {PIXI.Container}
+   */
+  constructor(map) {
+    this.pixiNode = new PIXI.Container()
 
-  fixedFrame.hitArea = new PIXI.Rectangle(0, 0, renderer.width, renderer.height)
-  fixedFrame.interactive = true
+    this.fixedFrame = new PIXI.Container()
+    this.movedFrame = new PIXI.Container()
+    this.fixedFrame.addChild(this.movedFrame)
+    this.movedFrame.addChild(map.pixiNode)
 
-  // dragging the screen
-  let drag = false
-  let dragPosition = null
+    this.fixedFrame.hitArea = new PIXI.Rectangle(0, 0, renderer.width, renderer.height)
+    this.fixedFrame.interactive = true
 
-  function onDragStart(e) {
-    dragPosition = e.data.getLocalPosition(movedFrame)
-    drag = true
+    this._setupDragInteraction()
+
+    this.btnZoomIn = new PIXI.Sprite(btnZoomInTexture)
+    this.btnZoomOut = new PIXI.Sprite(btnZoomOutTexture)
+    this.fixedFrame.addChild(this.btnZoomIn)
+    this.fixedFrame.addChild(this.btnZoomOut)
+
+    this._setupZoomInteraction(map)
   }
-  fixedFrame.on('rightdown', onDragStart)
 
-  function onDragStop() {
-    dragPosition = null
-    drag = false
-  }
-  fixedFrame.on('rightup', onDragStop)
-  fixedFrame.on('rightupoutside', onDragStop)
+  _setupDragInteraction() {
+    let drag = false
+    let dragPosition = null
 
-  function onDragMove(e) {
-    if(drag) {
-      const newPosition = e.data.getLocalPosition(fixedFrame)
-      movedFrame.x = newPosition.x - dragPosition.x
-      movedFrame.y = newPosition.y - dragPosition.y
+    const onDragStart = e => {
+      dragPosition = e.data.getLocalPosition(this.movedFrame)
+      drag = true
     }
-  }
-  fixedFrame.on('pointermove', onDragMove)
+    this.fixedFrame.on('rightdown', onDragStart)
 
-  return fixedFrame
+    const onDragStop = () => {
+      dragPosition = null
+      drag = false
+    }
+    this.fixedFrame.on('rightup', onDragStop)
+    this.fixedFrame.on('rightupoutside', onDragStop)
+
+    const onDragMove = e => {
+      if(drag) {
+        const newPosition = e.data.getLocalPosition(this.fixedFrame)
+        this.movedFrame.x = newPosition.x - dragPosition.x
+        this.movedFrame.y = newPosition.y - dragPosition.y
+      }
+    }
+    this.fixedFrame.on('pointermove', onDragMove)
+  }
+
+  /**
+   * @param {Map} map
+   * @private
+   */
+  _setupZoomInteraction(map) {
+    // button position
+    this.btnZoomIn.position.set(renderer.width - this.btnZoomIn.width - 10, 10)
+    this.btnZoomOut.position.set(renderer.width - this.btnZoomOut.width - 10,
+      this.btnZoomIn.y + this.btnZoomIn.height + 10)
+
+    this.btnZoomIn.interactive = true
+    this.btnZoomIn.on('click', () => {
+      let newScale = map.pixiNode.scale.x + 0.1
+      if(newScale > 2) {
+        newScale = 2
+      }
+      map.pixiNode.scale.set(newScale)
+    })
+
+    this.btnZoomOut.interactive = true
+    this.btnZoomOut.on('click', () => {
+      let newScale = map.pixiNode.scale.x - 0.1
+      if(newScale < 0.2) {
+        newScale = 0.2
+      }
+      map.pixiNode.scale.set(newScale)
+    })
+  }
 }
 
 export default ViewPort

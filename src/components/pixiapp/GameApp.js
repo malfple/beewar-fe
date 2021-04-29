@@ -24,8 +24,8 @@ function GameApp(props) {
 
     const map = new Map(props.gameData.game, props.gameData.players, userToken.userID, true, props.comms)
     props.comms.registerSubscriber(map, [GROUP_WEBSOCKET_LISTENERS])
-    const viewport = ViewPort(map)
-    stage.addChild(viewport)
+    const viewport = new ViewPort(map)
+    stage.addChild(viewport.fixedFrame)
 
     const mapInteractionController = new MapInteractionController(map, props.comms)
     props.comms.registerSubscriber(mapInteractionController, [GROUP_WEBSOCKET_LISTENERS, GROUP_MAP_CONTROLLER], true)

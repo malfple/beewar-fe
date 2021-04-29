@@ -11,9 +11,9 @@ function MapViewApp(props) {
   useEffect(() => {
     const stage = new PIXI.Container()
     const map = new Map(props.map)
-    const viewport = ViewPort(map)
+    const viewport = new ViewPort(map)
 
-    stage.addChild(viewport)
+    stage.addChild(viewport.fixedFrame)
 
     const ticker = new PIXI.Ticker()
     ticker.add(() => {
