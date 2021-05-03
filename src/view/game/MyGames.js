@@ -6,13 +6,19 @@ import GameCard from '../../components/GameCard'
 
 function MyGames() {
   const userToken = useContext(UserTokenContext)
-  const [games, setGames] = useState([])
+  const [state, setState] = useState({
+    games: [],
+    gameUsers: [],
+  })
 
   useEffect(() => {
     // check token
     userToken.checkTokenAndRefresh().then(() => {
       apiGameMyGames(userToken.token).then(res => {
-        setGames(res.data.game_users)
+        setState({
+          games: res.data.games,
+          gameUsers: res.data.game_users,
+        })
       })
     }).catch(() => {
       // do nothing
@@ -24,7 +30,7 @@ function MyGames() {
     <div>
       <h1>Games</h1>
       <div>
-        {games.map((game, i) => <GameCard key={i} game={game} />)}
+        {state.games.map((game, i) => <GameCard key={i} game={game} gameUser={state.gameUsers[i]} />)}
       </div>
     </div>
   )

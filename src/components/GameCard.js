@@ -7,25 +7,22 @@ import './Card.css'
 function GameCard(props) {
   const history = useHistory()
 
-  console.log(props.game)
-  let game_id = props.game.game_id
-  if(!game_id) {
-    game_id = props.game.id
-  }
+  console.log(props.game, props.gameUser)
 
   function toGame() {
-    history.push(`/game/${game_id}`)
+    history.push(`/game/${props.game.id}`)
   }
 
   return (
     <div className="card" onClick={toGame}>
-      Game {game_id}
+      Game {props.game.id}
     </div>
   )
 }
 
 GameCard.propTypes = {
   game: PropTypes.object.isRequired,
+  gameUser: PropTypes.object,
 }
 
 export default GameCard
