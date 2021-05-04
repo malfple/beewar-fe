@@ -5,12 +5,9 @@ function apiAuthLogin(username, password) {
   return axiosCustom({
     method: 'POST',
     url: '/api/auth/login',
-    data: qs.stringify({
+    data: {
       username: username,
       password: password,
-    }),
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
     },
   })
 }
