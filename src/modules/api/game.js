@@ -1,5 +1,4 @@
 import {axiosCustom} from './api'
-import qs from 'querystring'
 
 function apiGameMyGames(token) {
   return axiosCustom.get('/api/game/my_games', {
@@ -19,19 +18,18 @@ function apiGameList(token) {
 
 /**
  * @param {string} token
- * @param {int}    mapID
+ * @param {number} mapID
  * @param {string} password
  */
 function apiGameCreate(token, mapID, password) {
   return axiosCustom({
     method: 'POST',
     url: '/api/game/create',
-    data: qs.stringify({
+    data: {
       map_id: mapID,
       password: password,
-    }),
+    },
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
       'Beewar-A-Token': token,
     },
   })

@@ -1,4 +1,3 @@
-import qs from 'querystring'
 import {axiosCustom} from './api'
 
 function apiAuthLogin(username, password) {
@@ -16,13 +15,10 @@ function apiAuthRegister(email, username, password) {
   return axiosCustom({
     method: 'POST',
     url: '/api/auth/register',
-    data: qs.stringify({
+    data: {
       email:    email,
       username: username,
       password: password,
-    }),
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
     },
   })
 }
