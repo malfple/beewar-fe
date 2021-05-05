@@ -5,6 +5,7 @@ import {TERRAIN_STATUS_ATTACK_TARGET, TERRAIN_STATUS_MOVE_TARGET, TERRAIN_STATUS
 import {nullGameComms} from '../../modules/communication/GameComms'
 import {GROUP_MAP_CONTROLLER} from '../../modules/communication/groupConstants'
 import {COMMS_TERRAIN_CLICK} from '../../modules/communication/messageConstants'
+import {dimFilter} from '../filters'
 
 class Terrain {
   /**
@@ -78,6 +79,13 @@ class Terrain {
       this.pixiNode.tint = 0xFFFFFF
       this.status = TERRAIN_STATUS_NORMAL
     }
+  }
+
+  setUnitIsMoved() {
+    this.pixiNode.filters = [dimFilter]
+  }
+  unsetUnitIsMoved() {
+    this.pixiNode.filters = null
   }
 }
 

@@ -105,6 +105,9 @@ class Map {
       if(unit) {
         this.pixiNode.addChild(unit.pixiNode)
         this.units[cy][cx] = unit
+        if(unit.isMoved()) {
+          this.terrains[cy][cx].setUnitIsMoved()
+        }
       }
     }
   }
@@ -306,15 +309,18 @@ class Map {
       case CMD_UNIT_MOVE:
         this._unitMove(msg.data.y_1, msg.data.x_1, msg.data.y_2, msg.data.x_2)
         this.units[msg.data.y_2][msg.data.x_2].toggleMoved()
+        this.terrains[msg.data.y_2][msg.data.x_2].setUnitIsMoved()
         break
       case CMD_UNIT_ATTACK:
         this._unitAttack(msg.data.y_1, msg.data.x_1, msg.data.hp_atk, msg.data.y_t, msg.data.x_t, msg.data.hp_def)
         this.units[msg.data.y_1][msg.data.x_1].toggleMoved()
+        this.terrains[msg.data.y_1][msg.data.x_1].setUnitIsMoved()
         break
       case CMD_UNIT_MOVE_AND_ATTACK:
         this._unitMove(msg.data.y_1, msg.data.x_1, msg.data.y_2, msg.data.x_2)
         this._unitAttack(msg.data.y_2, msg.data.x_2, msg.data.hp_atk, msg.data.y_t, msg.data.x_t, msg.data.hp_def)
         this.units[msg.data.y_2][msg.data.x_2].toggleMoved()
+        this.terrains[msg.data.y_2][msg.data.x_2].setUnitIsMoved()
         break
       case CMD_END_TURN:
         this._nextTurn()
@@ -419,7 +425,7 @@ class Map {
         break
       }
     }
-    // update units
+    // update units and terrains
     for(let i = 0; i < this.height; i++) {
       for(let j = 0; j < this.width; j++) {
         if(!this.units[i][j]) {
@@ -430,6 +436,7 @@ class Map {
         }else if(this.units[i][j].owner === this.turn_player) {
           this.units[i][j].startTurn()
         }
+        this.terrains[i][j].unsetUnitIsMoved()
       }
     }
     // just in case, also check if game ends
