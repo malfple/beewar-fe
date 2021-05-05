@@ -8,9 +8,12 @@ function Register() {
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
 
   function handleSubmit(e) {
+    setLoading(true)
     apiAuthRegister(email, username, password).then(res => {
+      setLoading(false)
       const errMsg = res.data.err_msg
       if(errMsg === '') {
         alert('register successful, you can login now')
@@ -28,17 +31,17 @@ function Register() {
       <form onSubmit={handleSubmit}>
         <label>
           Email:
-          <input type="text" name="email" onChange={e => setEmail(e.target.value)} />
+          <input type="text" name="email" disabled={loading} onChange={e => setEmail(e.target.value)} />
         </label>
         <label>
           Username:
-          <input type="text" name="username" onChange={e => setUsername(e.target.value)} />
+          <input type="text" name="username" disabled={loading} onChange={e => setUsername(e.target.value)} />
         </label>
         <label>
           Password:
-          <input type="password" name="password" onChange={e => setPassword(e.target.value)} />
+          <input type="password" name="password" disabled={loading} onChange={e => setPassword(e.target.value)} />
         </label>
-        <input type="submit" value="Register" />
+        <input type="submit" value="Register" disabled={loading} />
       </form>
     </div>
   )

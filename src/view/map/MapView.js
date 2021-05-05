@@ -4,6 +4,7 @@ import {useHistory, useParams} from 'react-router-dom'
 import {apiMapGet} from '../../modules/api/map'
 import MapViewApp from '../../components/pixiapp/MapViewApp'
 import {UserTokenContext} from '../../context'
+import NormalLoadingSpinner from '../../components/loading/NormalLoadingSpinner'
 
 function MapView() {
   const [map, setMap] = useState(null)
@@ -32,7 +33,7 @@ function MapView() {
   if(!map) {
     return (
       <div>
-        Map not found!
+        <NormalLoadingSpinner />
       </div>
     )
   }

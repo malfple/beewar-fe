@@ -1,19 +1,27 @@
 import React, {useEffect, useState} from 'react'
 import {apiUserList} from '../modules/api/user'
+import NormalLoadingSpinner from '../components/loading/NormalLoadingSpinner'
 
 function Leaderboard() {
-  const [users, setUsers] = useState([])
+  const [state, setState] = useState({
+    loading: true,
+    users: [],
+  })
 
   useEffect(() => {
     apiUserList().then(res => {
-      setUsers(res.data.users)
+      setState({
+        loading: false,
+        users: res.data.users,
+      })
     })
   }, [])
 
   return (
     <div>
       <h1>Leaderboard</h1>
-      {users.map((user, i) => <div key={i}>{user.username}</div>)}
+      {state.loading ? <NormalLoadingSpinner /> : null}
+      {state.users.map((user, i) => <div key={i}>{user.username}</div>)}
     </div>
   )
 }

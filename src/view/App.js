@@ -22,6 +22,7 @@ import About from './About'
 import How2Play from './How2Play'
 import Leaderboard from './Leaderboard'
 import Wiki from './wiki/Wiki'
+import NormalLoadingSpinner from '../components/loading/NormalLoadingSpinner'
 
 // App is the root router
 
@@ -196,9 +197,7 @@ function ServerStats() {
   if(state.cnt === -1) {
     // server dead
     return (
-      <div>
-        Server down
-      </div>
+      <NormalLoadingSpinner />
     )
   }
 

@@ -2,21 +2,29 @@ import React, {useEffect, useState} from 'react'
 
 import {apiMapList} from '../../modules/api/map'
 import MapCard from '../../components/MapCard'
+import NormalLoadingSpinner from '../../components/loading/NormalLoadingSpinner'
 
 function MapList() {
-  const [maps, setMaps] = useState([])
+  const [state, setState] = useState({
+    loading: true,
+    maps: [],
+  })
 
   useEffect(() => {
     apiMapList().then(res => {
-      setMaps(res.data.maps)
+      setState({
+        loading: false,
+        maps: res.data.maps,
+      })
     })
   }, [])
 
   return (
     <div>
       <h1>Maps</h1>
+      {state.loading ? <NormalLoadingSpinner /> : null}
       <div>
-        {maps.map((map, i) => <MapCard key={i} map={map} />)}
+        {state.maps.map((map, i) => <MapCard key={i} map={map} />)}
       </div>
     </div>
   )

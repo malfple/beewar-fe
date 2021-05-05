@@ -8,6 +8,7 @@ import GameComms from '../../modules/communication/GameComms'
 import WebsocketWrapper from '../../modules/communication/WebsocketWrapper'
 import {GROUP_WEBSOCKET} from '../../modules/communication/groupConstants'
 import ChatBox from '../../components/game/ChatBox'
+import NormalLoadingSpinner from '../../components/loading/NormalLoadingSpinner'
 
 function GameView() {
   const {id} = useParams()
@@ -53,7 +54,7 @@ function GameView() {
   if(!gameData) {
     return (
       <div>
-        Game Loading...
+        <NormalLoadingSpinner />
       </div>
     )
   }

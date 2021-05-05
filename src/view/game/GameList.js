@@ -3,16 +3,23 @@ import React, {useContext, useEffect, useState} from 'react'
 import {apiGameList} from '../../modules/api/game'
 import {UserTokenContext} from '../../context'
 import GameCard from '../../components/GameCard'
+import NormalLoadingSpinner from '../../components/loading/NormalLoadingSpinner'
 
 function GameList() {
   const userToken = useContext(UserTokenContext)
-  const [games, setGames] = useState([])
+  const [state, setState] = useState({
+    loading: true,
+    games: [],
+  })
 
   useEffect(() => {
     // check token
     userToken.checkTokenAndRefresh().then(() => {
       apiGameList(userToken.token).then(res => {
-        setGames(res.data.games)
+        setState({
+          loading: false,
+          games: res.data.games,
+        })
       })
     }).catch(() => {
       // do nothing
@@ -24,7 +31,8 @@ function GameList() {
     <div>
       <h1>Games</h1>
       <div>
-        {games.map((game, i) => <GameCard key={i} game={game} />)}
+        {state.loading ? <NormalLoadingSpinner /> : null}
+        {state.games.map((game, i) => <GameCard key={i} game={game} />)}
       </div>
     </div>
   )
