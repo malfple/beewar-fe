@@ -50,13 +50,13 @@ class Unit {
     // hp text
     this.hpText = new PIXI.Text(this.hp, {
       fontFamily: 'Arial',
-      fontSize: 12,
+      fontSize: 24,
       align: 'left',
       fill: 'white',
       stroke: 'black',
-      strokeThickness: 4,
+      strokeThickness: 8,
     })
-    this.hpText.position.set(-20, -5)
+    this.hpText.position.set(-40, 0)
     this.pixiNode.addChild(this.hpText)
 
     this._setPosition(y, x)
