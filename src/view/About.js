@@ -24,9 +24,9 @@ function About() {
           I can totally <a href="https://www.google.com/search?q=anime+bee+girl&safe=strict&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiJn62Rt8HuAhVDfH0KHeCjB4sQ_AUoAXoECA4QAw&biw=1728&bih=1018" target="_blank" rel="noopener noreferrer">do</a> it.
           There's even another intense game on steam with the same name. ( ͡° ͜ʖ ͡°)</li>
       </ol>
-      <p>
-        Btw, join our discord server <a href="https://discord.gg/7KqvfHEeu9" target="_blank" rel="noopener noreferrer">here</a>.
-      </p>
+      {/*<p>*/}
+      {/*  Btw, join our discord server <a href="https://discord.gg/7KqvfHEeu9" target="_blank" rel="noopener noreferrer">here</a>.*/}
+      {/*</p>*/}
     </div>
   )
 }
