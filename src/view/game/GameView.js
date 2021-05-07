@@ -6,7 +6,7 @@ import GameApp from '../../components/pixiapp/GameApp'
 import {CMD_END_TURN, CMD_ERROR, CMD_GAME_DATA} from '../../modules/communication/messageConstants'
 import GameComms from '../../modules/communication/GameComms'
 import WebsocketWrapper from '../../modules/communication/WebsocketWrapper'
-import {GROUP_WEBSOCKET} from '../../modules/communication/groupConstants'
+import {GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/groupConstants'
 import ChatBox from '../../components/game/ChatBox'
 import NormalLoadingSpinner from '../../components/loading/NormalLoadingSpinner'
 
@@ -20,20 +20,25 @@ function GameView() {
   const comms = useRef(null)
 
   useEffect(() => {
-    // check token
-    userToken.checkTokenAndRefresh().then(() => {
-      comms.current = new GameComms()
-
-      ws.current = new WebsocketWrapper(id, userToken.token, comms.current)
-
-      ws.current.addOnMessageListener(msg => {
+    // dummy object
+    const dummy = {
+      handleComms(msg) {
         if(msg.cmd === CMD_GAME_DATA) {
           console.log('game data', msg.data)
           setGameData(msg.data)
         } else if(msg.cmd === CMD_ERROR) {
           alert(msg.data)
         }
-      })
+      },
+    }
+
+    // check token
+    userToken.checkTokenAndRefresh().then(() => {
+      comms.current = new GameComms()
+
+      comms.current.registerSubscriber(dummy, [GROUP_WEBSOCKET_LISTENERS])
+
+      ws.current = new WebsocketWrapper(id, userToken.token, comms.current)
     }).catch(() => {
       // do nothing
     })
@@ -42,6 +47,8 @@ function GameView() {
       if(ws.current) {
         ws.current.close()
       }
+
+      comms.current.unregisterSubscriber(dummy, [GROUP_WEBSOCKET_LISTENERS])
     }
   }, [id, userToken])
 

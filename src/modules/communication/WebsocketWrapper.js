@@ -14,17 +14,14 @@ class WebsocketWrapper {
   /**
    * @param {int}       gameID
    * @param {string}    token     - access token
-   * @param {GameComms} gameComms
+   * @param {GameComms} comms
    */
-  constructor(gameID, token, gameComms) {
+  constructor(gameID, token, comms) {
     this.gameID = gameID
     this.token = token
+    this.comms = comms
     this.isClosed = false // this is to indicate whether to reopen the connection if not closed manually
-    gameComms.registerSubscriber(this, [GROUP_WEBSOCKET], true)
-
-    this.onMessageListeners = [msg => {
-      gameComms.triggerMsg(msg, GROUP_WEBSOCKET_LISTENERS)
-    }]
+    comms.registerSubscriber(this, [GROUP_WEBSOCKET], true)
 
     this.open(true)
   }
@@ -48,9 +45,7 @@ class WebsocketWrapper {
 
       this.ws.onmessage = rawMsg => {
         const msg = JSON.parse(rawMsg.data)
-        for(let i = 0; i < this.onMessageListeners.length; i++) {
-          this.onMessageListeners[i](msg)
-        }
+        this.comms.triggerMsg(msg, GROUP_WEBSOCKET_LISTENERS)
       }
 
       this.ws.onclose = event => {
@@ -61,13 +56,6 @@ class WebsocketWrapper {
         console.log('ws error: ', error)
       }
     }
-  }
-
-  /**
-   * @param {function} listener   - function(msg), msg is an object in the form of {cmd, data}
-   */
-  addOnMessageListener(listener) {
-    this.onMessageListeners.push(listener)
   }
 
   // required by GameComms

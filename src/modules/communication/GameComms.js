@@ -54,12 +54,12 @@ class GameComms {
    */
   triggerMsg(msg, group=GROUP_NONE) {
     if(group === GROUP_NONE) {
-      console.log(`COMMS: trigger msg to all ${this.allSubscribers.size} subscribers`, msg, group)
+      console.log(`COMMS: trigger msg to all ${this.allSubscribers.size} subscribers`, msg)
       this.allSubscribers.forEach(subscriber => {
         subscriber.handleComms(msg)
       })
     } else if(group in this.groupedSubscribers) {
-      console.log(`COMMS: trigger msg to ${this.groupedSubscribers[group].size} subscribers`, msg, group)
+      console.log(`COMMS: trigger msg to ${group}: ${this.groupedSubscribers[group].size} subscribers`, msg)
       this.groupedSubscribers[group].forEach(subscriber => {
         subscriber.handleComms(msg)
       })
