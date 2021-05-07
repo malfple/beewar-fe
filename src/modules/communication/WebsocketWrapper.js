@@ -76,9 +76,10 @@ class WebsocketWrapper {
       if(this.ws.readyState === WebSocket.OPEN) {
         this.ws.send(JSON.stringify(msg))
       } else {
-        alert('connection lost, reconnecting...')
-        this.open(false)
+        alert('connection lost')
       }
+    } else {
+      console.error('websocket already closed')
     }
   }
 
