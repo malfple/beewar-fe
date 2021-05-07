@@ -6,6 +6,7 @@ const CMD_CHAT = 'CHAT'
 
 const CMD_GAME_DATA = 'GAME_DATA'
 const CMD_JOIN = 'JOIN'
+const CMD_PING = 'PING'
 const CMD_ERROR = 'ERROR'
 
 const CMD_UNIT_MOVE = 'UNIT_MOVE'
@@ -25,6 +26,7 @@ export {
 
   CMD_GAME_DATA,
   CMD_JOIN,
+  CMD_PING,
   CMD_ERROR,
 
   CMD_UNIT_MOVE,

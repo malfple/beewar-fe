@@ -15,7 +15,7 @@ import {
 import {
   CMD_CHAT,
   CMD_END_TURN,
-  CMD_ERROR, CMD_JOIN, CMD_UNIT_ATTACK,
+  CMD_ERROR, CMD_JOIN, CMD_PING, CMD_UNIT_ATTACK,
   CMD_UNIT_MOVE,
   CMD_UNIT_MOVE_AND_ATTACK, COMMS_MAP_EVENT_END_TURN,
 } from '../../modules/communication/messageConstants'
@@ -333,6 +333,7 @@ class Map {
         this._checkGameStart()
         break
       case CMD_CHAT:
+      case CMD_PING:
       case CMD_ERROR:
         // do nothing
         break
