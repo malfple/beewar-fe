@@ -9,7 +9,7 @@ import {
   UNIT_ATTACK_RANGE_MAP, UNIT_ATTACK_TYPE_MAP,
   UNIT_MOVE_RANGE_MAP,
   UNIT_MOVE_TYPE_MAP,
-  UNIT_TYPE_YOU,
+  UNIT_TYPE_QUEEN,
   UNIT_WEIGHT_MAP,
 } from './unitConstants'
 import {
@@ -391,7 +391,7 @@ class Map {
   }
   _checkUnitAlive(y, x) {
     if(this.units[y][x].hp === 0) {
-      if(this.units[y][x].type === UNIT_TYPE_YOU) {
+      if(this.units[y][x].type === UNIT_TYPE_QUEEN) {
         // player defeated
         this._assignPlayerRank(this.units[y][x].owner)
         this._checkGameEnd()

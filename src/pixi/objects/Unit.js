@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
-import {infantryMaskTexture, infantryTintTexture, youMaskTexture, youTintTexture} from '../textures'
-import {PLAYER_COLOR_TINT, UNIT_STATE_BIT_MOVED, UNIT_TYPE_INFANTRY, UNIT_TYPE_YOU} from './unitConstants'
+import {infantryMaskTexture, infantryTintTexture, queenMaskTexture, queenTintTexture} from '../textures'
+import {PLAYER_COLOR_TINT, UNIT_STATE_BIT_MOVED, UNIT_TYPE_INFANTRY, UNIT_TYPE_QUEEN} from './unitConstants'
 import {dimFilter} from '../filters'
 
 class Unit {
@@ -25,9 +25,9 @@ class Unit {
     let maskTexture = null
     let tintTexture = null
     switch (type) {
-      case UNIT_TYPE_YOU:
-        maskTexture = youMaskTexture
-        tintTexture = youTintTexture
+      case UNIT_TYPE_QUEEN:
+        maskTexture = queenMaskTexture
+        tintTexture = queenTintTexture
         break
       case UNIT_TYPE_INFANTRY:
         maskTexture = infantryMaskTexture

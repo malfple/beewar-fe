@@ -5,7 +5,7 @@ function UnitInfantry() {
   return (
     <div>
       <h1>Infantry</h1>
-      <img src={infantryPNG} alt="you" />
+      <img src={infantryPNG} alt="infantry" />
       <p>
         A weak unit that carries a handgun.
       </p>

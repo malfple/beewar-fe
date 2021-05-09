@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link, Route, Switch, useRouteMatch} from 'react-router-dom'
 import NotFound from '../NotFound'
-import UnitYou from './UnitYou'
+import UnitQueen from './UnitQueen'
 import UnitInfantry from './UnitInfantry'
 
 function Units() {
@@ -12,7 +12,7 @@ function Units() {
       <h1>Units</h1>
       List of units:
       <ol>
-        <li><Link to={`${path}/you`}>You</Link></li>
+        <li><Link to={`${path}/queen`}>Queen</Link></li>
         <li><Link to={`${path}/infantry`}>Infantry</Link></li>
       </ol>
     </div>
@@ -23,8 +23,8 @@ function Units() {
       <Route exact path={`${path}/`}>
         {content}
       </Route>
-      <Route path={`${path}/you`}>
-        <UnitYou />
+      <Route path={`${path}/queen`}>
+        <UnitQueen />
       </Route>
       <Route path={`${path}/infantry`}>
         <UnitInfantry />

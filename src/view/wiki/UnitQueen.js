@@ -1,11 +1,11 @@
 import React from 'react'
-import youPNG from '../../pixi/assets/unit-you.png'
+import queenPNG from '../../pixi/assets/unit-queen.png'
 
-function UnitYou() {
+function UnitQueen() {
   return (
     <div>
-      <h1>You</h1>
-      <img src={youPNG} alt="you" />
+      <h1>Queen (you)</h1>
+      <img src={queenPNG} alt="queen" />
       <p>
         This is you. If you die (in-game) then you lose immediately.
       </p>
@@ -16,4 +16,4 @@ function UnitYou() {
   )
 }
 
-export default UnitYou
+export default UnitQueen
