@@ -313,13 +313,17 @@ class Map {
         break
       case CMD_UNIT_ATTACK:
         this._unitAttack(msg.data.y_1, msg.data.x_1, msg.data.hp_atk, msg.data.y_t, msg.data.x_t, msg.data.hp_def)
-        this.units[msg.data.y_1][msg.data.x_1].toggleMoved()
+        if(this.units[msg.data.y_1][msg.data.x_1]) {
+          this.units[msg.data.y_1][msg.data.x_1].toggleMoved()
+        }
         this.terrains[msg.data.y_1][msg.data.x_1].setUnitIsMoved()
         break
       case CMD_UNIT_MOVE_AND_ATTACK:
         this._unitMove(msg.data.y_1, msg.data.x_1, msg.data.y_2, msg.data.x_2)
         this._unitAttack(msg.data.y_2, msg.data.x_2, msg.data.hp_atk, msg.data.y_t, msg.data.x_t, msg.data.hp_def)
-        this.units[msg.data.y_2][msg.data.x_2].toggleMoved()
+        if(this.units[msg.data.y_2][msg.data.x_2]) {
+          this.units[msg.data.y_2][msg.data.x_2].toggleMoved()
+        }
         this.terrains[msg.data.y_2][msg.data.x_2].setUnitIsMoved()
         break
       case CMD_END_TURN:
