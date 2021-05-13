@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 function About() {
   return (
@@ -27,6 +28,9 @@ function About() {
       {/*<p>*/}
       {/*  Btw, join our discord server <a href="https://discord.gg/7KqvfHEeu9" target="_blank" rel="noopener noreferrer">here</a>.*/}
       {/*</p>*/}
+      <div>
+        <Link to="/changelog">Changelog</Link>
+      </div>
     </div>
   )
 }
