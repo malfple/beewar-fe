@@ -11,7 +11,7 @@ function GameCreate() {
   const [password, setPassword] = useState('')
 
   function createGame(e) {
-    apiGameCreate(userToken.token, parseInt(map_id), password).then(res => {
+    apiGameCreate(userToken.token, map_id, password).then(res => {
       alert(`create game with map id: ${map_id}, game id: ${res.data.game_id}`)
       history.push(`/game/${res.data.game_id}`)
     })

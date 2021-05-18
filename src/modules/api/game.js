@@ -26,7 +26,28 @@ function apiGameCreate(token, mapID, password) {
     method: 'POST',
     url: '/api/game/create',
     data: {
-      map_id: mapID,
+      map_id: parseInt(mapID),
+      password: password,
+    },
+    headers: {
+      'Beewar-A-Token': token,
+    },
+  })
+}
+
+/**
+ * @param {string} token
+ * @param {number} gameID
+ * @param {number} playerOrder
+ * @param {string} password
+ */
+function apiGameBeebotJoin(token, gameID, playerOrder, password) {
+  return axiosCustom({
+    method: 'POST',
+    url: '/api/game/beebot_join',
+    data: {
+      game_id: parseInt(gameID),
+      player_order: parseInt(playerOrder),
       password: password,
     },
     headers: {
@@ -39,4 +60,5 @@ export {
   apiGameMyGames,
   apiGameList,
   apiGameCreate,
+  apiGameBeebotJoin,
 }
