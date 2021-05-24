@@ -17,7 +17,7 @@ import {
   CMD_END_TURN,
   CMD_ERROR, CMD_JOIN, CMD_PING, CMD_UNIT_ATTACK,
   CMD_UNIT_MOVE,
-  CMD_UNIT_MOVE_AND_ATTACK, COMMS_MAP_EVENT_END_TURN,
+  CMD_UNIT_MOVE_AND_ATTACK, CMD_UNIT_STAY, COMMS_MAP_EVENT_END_TURN,
 } from '../../modules/communication/messageConstants'
 import {hexDistance} from '../../utils/grid'
 import {nullGameComms} from '../../modules/communication/GameComms'
@@ -306,6 +306,10 @@ class Map {
   }
   handleComms(msg) {
     switch(msg.cmd) {
+      case CMD_UNIT_STAY:
+        this.units[msg.data.y_1][msg.data.x_1].toggleMoved()
+        this.terrains[msg.data.y_1][msg.data.x_1].setUnitIsMoved()
+        break
       case CMD_UNIT_MOVE:
         this._unitMove(msg.data.y_1, msg.data.x_1, msg.data.y_2, msg.data.x_2)
         this.units[msg.data.y_2][msg.data.x_2].toggleMoved()
