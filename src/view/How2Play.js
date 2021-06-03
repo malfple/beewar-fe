@@ -15,7 +15,11 @@ function How2Play() {
         You can browse open games from the navbar.
         Otherwise, you can also create a new one by going to the map view from the navbar,
         select any map, and then click the create game button at the bottom of the map.
+      </p>
+      <p>
         You can join a game and the game will automatically start once all player slots are filled.
+        You can also invite beebot, well.. a bot, to join the game. Note that beebot can only join a game once, so he
+        cannot play two colors at once.
       </p>
       <h2>The game</h2>
       <p>
