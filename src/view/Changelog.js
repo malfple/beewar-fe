@@ -5,6 +5,11 @@ function Changelog() {
     <div className="main-container">
       <h1>Changelog</h1>
       <p>Only user-facing updates are shown.</p>
+      <h2>v0.4.0 - Beebot Update</h2>
+      <ul>
+        <li>You can now play against beebot! Just invite him to your game before the game starts.</li>
+        <li>Improve turn information. It is now clear whose turn is it and how many turns have passed.</li>
+      </ul>
       <h2>v0.3.1</h2>
       <ul>
         <li>Add regular ping to websocket, fixing idle disconnection issue.</li>
