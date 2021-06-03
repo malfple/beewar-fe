@@ -63,6 +63,14 @@ const PLAYER_COLOR_TINT = [
   0x8800CC,
 ]
 
+const PLAYER_COLOR_NAME = [
+  '',
+  'Red',
+  'Blue',
+  'Green',
+  'Purple',
+]
+
 export {
   UNIT_TYPE_QUEEN,
   UNIT_TYPE_INFANTRY,
@@ -90,4 +98,5 @@ export {
   UNIT_STATE_BIT_MOVED,
 
   PLAYER_COLOR_TINT,
+  PLAYER_COLOR_NAME,
 }
