@@ -54,8 +54,13 @@ class InfoPanel {
   }
 
   _updateInfoText() {
-    this.turnInfoText.text = `Cycle ${this.turn_count}\nIt's ${PLAYER_COLOR_NAME[this.turn_player]}'s turn!`
-    this.turnInfoText.style.fill = PLAYER_COLOR_TINT[this.turn_player]
+    if(this.turn_player === 0) {
+      this.turnInfoText.visible = false
+    } else {
+      this.turnInfoText.visible = true
+      this.turnInfoText.text = `Cycle ${this.turn_count}\nIt's ${PLAYER_COLOR_NAME[this.turn_player]}'s turn!`
+      this.turnInfoText.style.fill = PLAYER_COLOR_TINT[this.turn_player]
+    }
   }
 }
 
