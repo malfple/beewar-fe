@@ -299,6 +299,7 @@ class Map {
     this.comms.triggerMsg({
       cmd: COMMS_MAP_EVENT_END_TURN,
       data: {
+        status: this.status,
         turn_count: this.turn_count,
         turn_player: this.turn_player,
       },

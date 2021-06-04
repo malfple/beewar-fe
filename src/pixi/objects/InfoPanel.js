@@ -3,9 +3,11 @@ import * as PIXI from 'pixi.js'
 import {renderer} from '../renderer'
 import {PLAYER_COLOR_NAME, PLAYER_COLOR_TINT} from './unitConstants'
 import {COMMS_MAP_EVENT_END_TURN} from '../../modules/communication/messageConstants'
+import {GAME_STATUS_ONGOING, GAME_STATUS_PICKING} from './gameConstants'
 
 class InfoPanel {
   constructor(game) {
+    this.status = game.status
     this.player_count = game.player_count
     this.turn_count = game.turn_count
     this.turn_player = game.turn_player
@@ -39,6 +41,7 @@ class InfoPanel {
   handleComms(msg) {
     switch(msg.cmd) {
       case COMMS_MAP_EVENT_END_TURN:
+        this.status = msg.data.status
         this.turn_count = msg.data.turn_count
         this.turn_player = msg.data.turn_player
         this._updateBorder()
@@ -54,12 +57,17 @@ class InfoPanel {
   }
 
   _updateInfoText() {
-    if(this.turn_player === 0) {
+    if(this.status === GAME_STATUS_PICKING) {
       this.turnInfoText.visible = false
     } else {
       this.turnInfoText.visible = true
-      this.turnInfoText.text = `Cycle ${this.turn_count}\nIt's ${PLAYER_COLOR_NAME[this.turn_player]}'s turn!`
-      this.turnInfoText.style.fill = PLAYER_COLOR_TINT[this.turn_player]
+      if(this.status === GAME_STATUS_ONGOING) {
+        this.turnInfoText.text = `Cycle ${this.turn_count}\nIt's ${PLAYER_COLOR_NAME[this.turn_player]}'s turn!`
+        this.turnInfoText.style.fill = PLAYER_COLOR_TINT[this.turn_player]
+      } else {
+        this.turnInfoText.text = `Cycle ${this.turn_count}\nGame ended!`
+        this.turnInfoText.style.fill = 0xFFFFFF
+      }
     }
   }
 }
