@@ -34,6 +34,7 @@ function MyGames() {
       <h1>Games</h1>
       <div>
         {state.loading ? <NormalLoadingSpinner /> : null}
+        {state.games.length === 0 ? 'No Games' : null}
         {state.games.map((game, i) => <GameCard key={i} game={game} gameUser={state.gameUsers[i]} />)}
       </div>
     </div>
