@@ -21,10 +21,11 @@ import {
 } from '../../modules/communication/messageConstants'
 import {hexDistance} from '../../utils/grid'
 import {nullGameComms} from '../../modules/communication/GameComms'
-import {TERRAIN_TYPE_PLAINS} from './terrainConstants'
 import {GROUP_MAP_EVENT_LISTENERS} from '../../modules/communication/groupConstants'
 import PriorityQueue from '../../utils/PriorityQueue'
 import {GAME_STATUS_ENDED, GAME_STATUS_ONGOING, GAME_STATUS_PICKING} from './gameConstants'
+import {calcMoveCost} from '../../utils/moveCost'
+import {TERRAIN_TYPE_ICE_FIELD} from './terrainConstants'
 
 // MIRROR: for bfs
 const K = 6
@@ -246,9 +247,6 @@ class Map {
         if(this.terrains[ty][tx].dist !== -1) {
           continue
         }
-        if(this.terrains[ty][tx].type !== TERRAIN_TYPE_PLAINS) {
-          continue
-        }
         const currUnit = this.units[ty][tx]
         if(currUnit) {
           if(currUnit.owner !== owner) {
@@ -259,8 +257,9 @@ class Map {
           }
         }
 
-        if(d+1 <= steps) {
-          pq.push(d+1, {y: ty, x: tx})
+        const dnext = d + calcMoveCost(this.terrains[ty][tx].type, weight)
+        if(dnext <= steps) {
+          pq.push(dnext, {y: ty, x: tx})
         }
       }
     }
@@ -406,6 +405,7 @@ class Map {
         this._checkGameEnd()
       }
       this.units[y][x] = null
+      this.terrains[y][x].unsetUnitIsMoved() // just in case a unit suicide-attacks
     }
   }
   _assignPlayerRank(player) {
@@ -445,6 +445,12 @@ class Map {
           this.units[i][j].endTurn()
         }else if(this.units[i][j].owner === this.turn_player) {
           this.units[i][j].startTurn()
+          // ice field terrain effect
+          if(this.terrains[i][j].type === TERRAIN_TYPE_ICE_FIELD) {
+            const dmg = 1 + UNIT_WEIGHT_MAP[this.units[i][j].type]
+            this.units[i][j].setHP(Math.max(0, this.units[i][j].hp - dmg))
+            this._checkUnitAlive(i, j)
+          }
         }
         this.terrains[i][j].unsetUnitIsMoved()
       }

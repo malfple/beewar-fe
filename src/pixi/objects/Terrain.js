@@ -1,6 +1,11 @@
 import * as PIXI from 'pixi.js'
-import {plainsTexture} from '../textures'
-import {TERRAIN_STATUS_ATTACK_TARGET, TERRAIN_STATUS_MOVE_TARGET, TERRAIN_STATUS_NORMAL} from './terrainConstants'
+import {honeyFieldTexture, iceFieldTexture, plainsTexture, wallsTexture, wastelandTexture} from '../textures'
+import {
+  TERRAIN_STATUS_ATTACK_TARGET,
+  TERRAIN_STATUS_MOVE_TARGET,
+  TERRAIN_STATUS_NORMAL, TERRAIN_TYPE_HONEY_FIELD, TERRAIN_TYPE_ICE_FIELD,
+  TERRAIN_TYPE_PLAINS, TERRAIN_TYPE_WALLS, TERRAIN_TYPE_WASTELAND,
+} from './terrainConstants'
 
 import {nullGameComms} from '../../modules/communication/GameComms'
 import {GROUP_MAP_CONTROLLER} from '../../modules/communication/groupConstants'
@@ -26,7 +31,26 @@ class Terrain {
     if(type === 0) {
       return
     }
-    this.pixiNode = new PIXI.Sprite(plainsTexture)
+    switch (type) {
+      case TERRAIN_TYPE_PLAINS:
+        this.pixiNode = new PIXI.Sprite(plainsTexture)
+        break
+      case TERRAIN_TYPE_WALLS:
+        this.pixiNode = new PIXI.Sprite(wallsTexture)
+        break
+      case TERRAIN_TYPE_HONEY_FIELD:
+        this.pixiNode = new PIXI.Sprite(honeyFieldTexture)
+        break
+      case TERRAIN_TYPE_WASTELAND:
+        this.pixiNode = new PIXI.Sprite(wastelandTexture)
+        break
+      case TERRAIN_TYPE_ICE_FIELD:
+        this.pixiNode = new PIXI.Sprite(iceFieldTexture)
+        break
+      default:
+        console.error('unknown terrain type')
+        return
+    }
     this.pixiNode.anchor.set(0.5, 0.5)
     const py = 75 * y + 50
     const px = 90 * x + (y % 2 === 0 ? 95 : 50)

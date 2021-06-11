@@ -32,6 +32,7 @@ function GameList() {
       <h1>Games</h1>
       <div>
         {state.loading ? <NormalLoadingSpinner /> : null}
+        {state.games.length === 0 ? 'No Open Games' : null}
         {state.games.map((game, i) => <GameCard key={i} game={game} />)}
       </div>
     </div>
