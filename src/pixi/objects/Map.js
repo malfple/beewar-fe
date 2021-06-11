@@ -405,6 +405,7 @@ class Map {
         this._checkGameEnd()
       }
       this.units[y][x] = null
+      this.terrains[y][x].unsetUnitIsMoved() // just in case a unit suicide-attacks
     }
   }
   _assignPlayerRank(player) {
