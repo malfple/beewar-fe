@@ -1,5 +1,12 @@
 import * as PIXI from 'pixi.js'
-import {honeyFieldTexture, iceFieldTexture, plainsTexture, wallsTexture, wastelandTexture} from '../textures'
+import {
+  honeyFieldTexture,
+  iceFieldTexture,
+  plainsTexture,
+  terrainHitArea,
+  wallsTexture,
+  wastelandTexture,
+} from '../textures'
 import {
   TERRAIN_STATUS_ATTACK_TARGET,
   TERRAIN_STATUS_MOVE_TARGET,
@@ -55,6 +62,7 @@ class Terrain {
     const py = 75 * y + 50
     const px = 90 * x + (y % 2 === 0 ? 95 : 50)
     this.pixiNode.position.set(px, py)
+    this.pixiNode.hitArea = terrainHitArea
 
     // events
     if(interactive) {

@@ -20,6 +20,15 @@ const honeyFieldTexture = PIXI.Texture.from(honeyFieldPNG)
 const wastelandTexture = PIXI.Texture.from(wastelandPNG)
 const iceFieldTexture = PIXI.Texture.from(iceFieldPNG)
 
+const terrainHitArea = new PIXI.Polygon([
+  -45, -25,
+  -45, 25,
+  0, 50,
+  45, 25,
+  45, -25,
+  0, -50,
+])
+
 const queenMaskTexture = PIXI.Texture.from(queenMaskPNG)
 const queenTintTexture = PIXI.Texture.from(queenTintPNG)
 
@@ -35,6 +44,8 @@ export {
   honeyFieldTexture,
   wastelandTexture,
   iceFieldTexture,
+
+  terrainHitArea,
 
   queenMaskTexture,
   queenTintTexture,
