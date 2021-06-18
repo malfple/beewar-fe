@@ -103,44 +103,46 @@ function App(props) {
         checkTokenAndRefresh: checkTokenAndRefresh,
       }}>
         <Navigation onLogout={onLogout} />
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <RouteWithoutLogin path="/login">
-            <Login onLogin={onLogin} />
-          </RouteWithoutLogin>
-          <RouteWithoutLogin path="/register">
-            <Register />
-          </RouteWithoutLogin>
-          <Route path="/profile/:username">
-            <Profile />
-          </Route>
-          <Route path="/leaderboard">
-            <Leaderboard />
-          </Route>
-          <Route path="/map">
-            <Map />
-          </Route>
-          <RouteWithLogin path="/game">
-            <Game />
-          </RouteWithLogin>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/changelog">
-            <Changelog />
-          </Route>
-          <Route path="/how2play">
-            <How2Play />
-          </Route>
-          <Route path="/wiki">
-            <Wiki />
-          </Route>
-          <Route path="*">
-            <NotFound />
-          </Route>
-        </Switch>
+        <div className="main__content">
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <RouteWithoutLogin path="/login">
+              <Login onLogin={onLogin} />
+            </RouteWithoutLogin>
+            <RouteWithoutLogin path="/register">
+              <Register />
+            </RouteWithoutLogin>
+            <Route path="/profile/:username">
+              <Profile />
+            </Route>
+            <Route path="/leaderboard">
+              <Leaderboard />
+            </Route>
+            <Route path="/map">
+              <Map />
+            </Route>
+            <RouteWithLogin path="/game">
+              <Game />
+            </RouteWithLogin>
+            <Route path="/about">
+              <About />
+            </Route>
+            <Route path="/changelog">
+              <Changelog />
+            </Route>
+            <Route path="/how2play">
+              <How2Play />
+            </Route>
+            <Route path="/wiki">
+              <Wiki />
+            </Route>
+            <Route path="*">
+              <NotFound />
+            </Route>
+          </Switch>
+        </div>
       </UserTokenContext.Provider>
     </div>
   )

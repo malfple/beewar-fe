@@ -4,34 +4,39 @@ header {
 
 .navbar {
     margin: 0 auto;
-    background-color: lightgrey;
-    position: relative;
+    background-color: #222222;
+    position: fixed;
+    height: 100%;
+    width: 150px;
+    top: 0;
 }
 
 .navbar__navs {
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    display: block;
 }
 
-.navbar__navs--centered {
-    display: block;
-    text-align: center;
+.navbar__navs--bottom {
+    position: absolute;
+    bottom: 20px;
 }
 
 .navbar__navs__nav {
     display: inline-block;
-    border-bottom: 3px solid darkgrey;
+    width: 150px;
 }
 
 .navbar__navs__nav:hover {
     cursor: pointer;
-    background-color: darkgrey;
+    background-color: #373737;
 }
 
 .navbar__navs__nav a, .navbar__navs__nav div {
     text-decoration: none;
     display: block;
     padding: 10px;
-    color: black;
+    color: white;
+}
+
+.navbar__navs__nav a:hover, .navbar__navs__nav div:hover {
+    color: #ffdd55;
 }
