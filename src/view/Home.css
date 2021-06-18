@@ -1,0 +1,10 @@
+.Home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.Home__Content {
+    text-align: center;
+}

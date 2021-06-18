@@ -1,0 +1,39 @@
+.Button {
+    display: inline-block;
+    height: 40px;
+    width: 400px;
+    margin: 20px;
+    border: 2px solid #ffdd55;
+    border-radius: 20px;
+}
+
+.Button--fill {
+    color: black;
+    background-color: #ffdd55;
+}
+
+.Button--hollow {
+    background-color: #373737;
+}
+
+.Button a {
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.Button--fill a {
+    color: black;
+}
+
+.Button--fill:hover {
+    background-color: #ffeeaa;
+    border-color: #ffeeaa;
+}
+
+.Button--hollow:hover {
+    background-color: #444444;
+}
