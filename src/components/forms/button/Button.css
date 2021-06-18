@@ -4,7 +4,7 @@
     width: 400px;
     margin: 20px;
     border: 2px solid #ffdd55;
-    border-radius: 20px;
+    border-radius: 22px;
 }
 
 .Button--fill {
@@ -16,13 +16,19 @@
     background-color: #373737;
 }
 
-.Button a {
+.Button a, .Button input {
     text-decoration: none;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
     width: 100%;
+    font-size: 18px;
+}
+
+.Button input {
+    border: none;
+    background-color: transparent;
 }
 
 .Button--fill a {

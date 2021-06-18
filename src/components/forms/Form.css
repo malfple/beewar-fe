@@ -1,0 +1,57 @@
+/*
+CSS Standalone file
+
+Make your own form and use this manually lol.
+ */
+
+.FormContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.Form {
+    display: inline-block;
+    text-align: center;
+    width: 700px;
+}
+
+.Form__InputBox {
+    background-color: transparent;
+    height: 60px;
+    width: 400px;
+    margin: 20px;
+    border: 2px solid lightgrey;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    padding: 0 20px;
+}
+
+.Form__InputBox::placeholder {
+    color: lightgrey;
+}
+
+.Form__InputBox:focus {
+    outline: none;
+    border: 2px solid #ffdd55;
+    background-color: black;
+}
+
+/* for autocomplete */
+.Form__InputBox:-webkit-autofill,
+.Form__InputBox:-webkit-autofill:hover,
+.Form__InputBox:-webkit-autofill:focus,
+.Form__InputBox:-webkit-autofill:active
+{
+    -webkit-box-shadow: 0 0 0 30px #222222 inset !important;
+    -webkit-text-fill-color: white;
+}
+
+.Form__Note {
+    color: #ffdd55;
+    width: 400px;
+    margin: auto auto 20px;
+    text-align: left;
+    opacity: 0.6;
+}
