@@ -15,7 +15,15 @@ function GameCard(props) {
 
   return (
     <div className="card" onClick={toGame}>
-      Game {props.game.id}
+      <div>
+        Game {props.game.id}
+      </div>
+      <div>
+        Name: {props.game.name}
+      </div>
+      <div>
+        Players: {props.game.player_count}
+      </div>
     </div>
   )
 }

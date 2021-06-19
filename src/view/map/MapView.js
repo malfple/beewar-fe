@@ -1,16 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {useHistory, useParams} from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 
 import {apiMapGet} from '../../modules/api/map'
 import MapViewApp from '../../components/pixiapp/MapViewApp'
 import {UserTokenContext} from '../../context'
 import NormalLoadingSpinner from '../../components/loading/NormalLoadingSpinner'
+import Button from '../../components/forms/button/Button'
 
 function MapView() {
   const [map, setMap] = useState(null)
   const {id} = useParams()
   const userToken = useContext(UserTokenContext)
-  const history = useHistory()
 
   useEffect(() => {
     apiMapGet(id).then(res => {
@@ -24,9 +24,11 @@ function MapView() {
   let createGameButton = null
   if(userToken.username !== '') {
     createGameButton = (
-      <button onClick={() => {
-        history.push(`/game/create/${id}`)
-      }}>Create Game</button>
+      <Button theme="hollow">
+        <Link to={`/game/create/${id}`}>
+          Create a game using this map
+        </Link>
+      </Button>
     )
   }
 
@@ -40,11 +42,9 @@ function MapView() {
 
   return (
     <div>
-      {id}
-      <div>size (w * h): {map.width} x {map.height}</div>
-      <div>name: {map.name}</div>
+      <h1>{map.name}</h1>
+      <div>Size (width x height): {map.width} x {map.height}</div>
       <div>
-        Terrain
         <MapViewApp map={map} />
       </div>
       <div>

@@ -19,14 +19,16 @@ function apiGameList(token) {
 /**
  * @param {string} token
  * @param {number} mapID
+ * @param {string} name
  * @param {string} password
  */
-function apiGameCreate(token, mapID, password) {
+function apiGameCreate(token, mapID, name, password) {
   return axiosCustom({
     method: 'POST',
     url: '/api/game/create',
     data: {
       map_id: parseInt(mapID),
+      name: name,
       password: password,
     },
     headers: {
