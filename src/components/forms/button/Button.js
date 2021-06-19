@@ -3,13 +3,13 @@ import PropTypes from 'prop-types'
 import './Button.css'
 
 function Button(props) {
-  let className = 'Button '
+  let className = 'button '
   switch (props.theme) {
     case 'fill':
-      className += 'Button--fill'
+      className += 'button--fill'
       break
     case 'hollow':
-      className += 'Button--hollow'
+      className += 'button--hollow'
       break
     default:
       // impossible lol

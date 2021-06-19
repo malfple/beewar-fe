@@ -4,19 +4,19 @@ CSS Standalone file
 Make your own form and use this manually lol.
  */
 
-.FormContainer {
+.form-container {
     display: flex;
     justify-content: center;
     width: 100%;
 }
 
-.Form {
+.form {
     display: inline-block;
     text-align: center;
     width: 700px;
 }
 
-.Form__InputBox {
+.form__input-box {
     background-color: transparent;
     height: 60px;
     width: 400px;
@@ -28,27 +28,27 @@ Make your own form and use this manually lol.
     padding: 0 20px;
 }
 
-.Form__InputBox::placeholder {
+.form__input-box::placeholder {
     color: lightgrey;
 }
 
-.Form__InputBox:focus {
+.form__input-box:focus {
     outline: none;
     border: 2px solid #ffdd55;
     background-color: black;
 }
 
 /* for autocomplete */
-.Form__InputBox:-webkit-autofill,
-.Form__InputBox:-webkit-autofill:hover,
-.Form__InputBox:-webkit-autofill:focus,
-.Form__InputBox:-webkit-autofill:active
+.form__input-box:-webkit-autofill,
+.form__input-box:-webkit-autofill:hover,
+.form__input-box:-webkit-autofill:focus,
+.form__input-box:-webkit-autofill:active
 {
     -webkit-box-shadow: 0 0 0 30px #222222 inset !important;
     -webkit-text-fill-color: white;
 }
 
-.Form__Note {
+.form__note {
     color: #ffdd55;
     width: 400px;
     margin: auto auto 20px;

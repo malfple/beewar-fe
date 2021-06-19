@@ -28,13 +28,13 @@ function Register() {
   }
 
   return (
-    <div className="FormContainer">
-      <form className="Form" onSubmit={handleSubmit}>
+    <div className="form-container">
+      <form className="form" onSubmit={handleSubmit}>
         <h1>Register</h1>
         <h2>Create your new account</h2>
         <div>
           <input
-            className="Form__InputBox"
+            className="form__input-box"
             type="text"
             name="email"
             placeholder="Email"
@@ -42,11 +42,11 @@ function Register() {
             onChange={e => setEmail(e.target.value)}
             required={true}
           />
-          <div className="Form__Note">As this is still in testing phase, the email isn't even verified lmao. You can input any random string :D</div>
+          <div className="form__note">As this is still in testing phase, the email isn't even verified lmao. You can input any random string :D</div>
         </div>
         <div>
           <input
-            className="Form__InputBox"
+            className="form__input-box"
             type="text"
             name="username"
             placeholder="Username"
@@ -54,11 +54,11 @@ function Register() {
             onChange={e => setUsername(e.target.value)}
             required={true}
           />
-          <div className="Form__Note">Choose a unique username</div>
+          <div className="form__note">Choose a unique username</div>
         </div>
         <div>
           <input
-            className="Form__InputBox"
+            className="form__input-box"
             type="password"
             name="password"
             placeholder="Password"

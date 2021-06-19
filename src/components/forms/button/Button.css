@@ -1,4 +1,4 @@
-.Button {
+.button {
     display: inline-block;
     height: 40px;
     width: 400px;
@@ -7,16 +7,16 @@
     border-radius: 22px;
 }
 
-.Button--fill {
+.button--fill {
     color: black;
     background-color: #ffdd55;
 }
 
-.Button--hollow {
+.button--hollow {
     background-color: #373737;
 }
 
-.Button a, .Button input {
+.button a, .button input {
     text-decoration: none;
     display: flex;
     justify-content: center;
@@ -26,20 +26,20 @@
     font-size: 18px;
 }
 
-.Button input {
+.button input {
     border: none;
     background-color: transparent;
 }
 
-.Button--fill a {
+.button--fill a {
     color: black;
 }
 
-.Button--fill:hover {
+.button--fill:hover {
     background-color: #ffeeaa;
     border-color: #ffeeaa;
 }
 
-.Button--hollow:hover {
+.button--hollow:hover {
     background-color: #444444;
 }

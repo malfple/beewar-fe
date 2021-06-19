@@ -23,12 +23,12 @@ function Login(props) {
   }
 
   return (
-    <div class="FormContainer">
-      <form className="Form" onSubmit={handleSubmit}>
+    <div className="form-container">
+      <form className="form" onSubmit={handleSubmit}>
         <h1>Log in to BeeWar</h1>
         <div>
           <input
-            className="Form__InputBox"
+            className="form__input-box"
             type="text"
             name="username"
             placeholder="Username"
@@ -39,7 +39,7 @@ function Login(props) {
         </div>
         <div>
           <input
-            className="Form__InputBox"
+            className="form__input-box"
             type="password"
             name="password"
             placeholder="Password"

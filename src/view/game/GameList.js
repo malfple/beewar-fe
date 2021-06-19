@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 
 import {apiGameList} from '../../modules/api/game'
 import {UserTokenContext} from '../../context'
-import GameCard from '../../components/GameCard'
+import GameCard from '../../components/cards/GameCard'
 import NormalLoadingSpinner from '../../components/loading/NormalLoadingSpinner'
 
 function GameList() {
