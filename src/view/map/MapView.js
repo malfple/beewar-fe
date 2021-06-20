@@ -24,7 +24,7 @@ function MapView() {
   let createGameButton = null
   if(userToken.username !== '') {
     createGameButton = (
-      <Button theme="hollow">
+      <Button theme="hollow" small={true}>
         <Link to={`/game/create/${id}`}>
           Create a game using this map
         </Link>
@@ -41,14 +41,18 @@ function MapView() {
   }
 
   return (
-    <div>
-      <h1>{map.name}</h1>
-      <div>Size (width x height): {map.width} x {map.height}</div>
-      <div>
-        <MapViewApp map={map} />
+    <div className="map-game-view">
+      <div className="map-game-view__column-left">
+        <h1>{map.name}</h1>
+        <div>Size (width x height): {map.width} x {map.height}</div>
+        <div>
+          {createGameButton}
+        </div>
       </div>
-      <div>
-        {createGameButton}
+      <div className="map-game-view__column-right">
+        <div>
+          <MapViewApp map={map} />
+        </div>
       </div>
     </div>
   )

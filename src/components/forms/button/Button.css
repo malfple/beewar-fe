@@ -16,6 +16,11 @@
     background-color: #373737;
 }
 
+.button--small {
+    height: 30px;
+    width: 300px;
+}
+
 .button a, .button input {
     text-decoration: none;
     display: flex;
@@ -24,6 +29,10 @@
     height: 100%;
     width: 100%;
     font-size: 18px;
+}
+
+.button--small a {
+    font-size: 15px;
 }
 
 .button input {

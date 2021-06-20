@@ -14,6 +14,11 @@ function Button(props) {
     default:
       // impossible lol
   }
+
+  if(props.small) {
+    className += ' button--small'
+  }
+
   return (
     <div className={className}>
       {props.children}
@@ -23,6 +28,7 @@ function Button(props) {
 
 Button.propTypes = {
   theme: PropTypes.oneOf(['fill', 'hollow']).isRequired,
+  small: PropTypes.bool,
 }
 
 export default Button
