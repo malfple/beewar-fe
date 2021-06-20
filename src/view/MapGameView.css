@@ -3,18 +3,19 @@ This file is placed in root folder of view because it's used by both map view an
  */
 
 .map-game-view {
+    display: flex;
+    align-items: stretch;
     overflow: auto;
 }
 
 .map-game-view__column-left {
-    float: left;
-    width: 20%;
-    height: 100%;
     padding: 10px;
-    word-wrap: break-word;
 }
 
 .map-game-view__column-right {
-    text-align: center;
+    display: inline-block;
+    width: auto;
     padding: 10px;
+    word-wrap: break-word;
+    flex: 1;
 }

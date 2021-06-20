@@ -43,15 +43,15 @@ function MapView() {
   return (
     <div className="map-game-view">
       <div className="map-game-view__column-left">
+        <div>
+          <MapViewApp map={map} />
+        </div>
+      </div>
+      <div className="map-game-view__column-right">
         <h1>{map.name}</h1>
         <div>Size (width x height): {map.width} x {map.height}</div>
         <div>
           {createGameButton}
-        </div>
-      </div>
-      <div className="map-game-view__column-right">
-        <div>
-          <MapViewApp map={map} />
         </div>
       </div>
     </div>
