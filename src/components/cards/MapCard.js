@@ -11,13 +11,18 @@ function MapCard(props) {
     history.push(`/map/${props.map.id}`)
   }
 
+  console.log(props.map)
+
   return (
     <div className="card" onClick={toMap}>
       <div>
         Name: {props.map.name}
       </div>
       <div>
-        H x W : {props.map.height} x {props.map.width}
+        Size (height x width) : {props.map.height} x {props.map.width}
+      </div>
+      <div>
+        Players: {props.map.player_count}
       </div>
     </div>
   )

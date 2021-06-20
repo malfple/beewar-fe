@@ -1,7 +1,9 @@
 import React, {useState} from 'react'
 import PropTypes from 'prop-types'
+import './../components/forms/Form.css'
 
 import {apiAuthLogin} from '../modules/api/auth'
+import Button from '../components/forms/button/Button'
 
 function Login(props) {
   const [username, setUsername] = useState('')
@@ -21,18 +23,36 @@ function Login(props) {
   }
 
   return (
-    <div>
-      login
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username:
-          <input type="text" name="username" disabled={loading} onChange={e => setUsername(e.target.value)} />
-        </label>
-        <label>
-          Password:
-          <input type="password" name="password" disabled={loading} onChange={e => setPassword(e.target.value)} />
-        </label>
-        <input type="submit" value="Login" disabled={loading} />
+    <div className="form-container">
+      <form className="form" onSubmit={handleSubmit}>
+        <h1>Log in to BeeWar</h1>
+        <div>
+          <input
+            className="form__input-box"
+            type="text"
+            name="username"
+            placeholder="Username"
+            disabled={loading}
+            onChange={e => setUsername(e.target.value)}
+            required={true}
+          />
+        </div>
+        <div>
+          <input
+            className="form__input-box"
+            type="password"
+            name="password"
+            placeholder="Password"
+            disabled={loading}
+            onChange={e => setPassword(e.target.value)}
+            required={true}
+          />
+        </div>
+        <div>
+          <Button theme="fill">
+            <input type="submit" value="Login" disabled={loading} />
+          </Button>
+        </div>
       </form>
     </div>
   )

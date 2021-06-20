@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 
 import {apiGameList} from '../../modules/api/game'
 import {UserTokenContext} from '../../context'
-import GameCard from '../../components/GameCard'
+import GameCard from '../../components/cards/GameCard'
 import NormalLoadingSpinner from '../../components/loading/NormalLoadingSpinner'
 
 function GameList() {
@@ -29,8 +29,8 @@ function GameList() {
 
   return (
     <div>
-      <h1>Games</h1>
-      <div>
+      <h1>Open Games</h1>
+      <div className="card-deck">
         {state.loading ? <NormalLoadingSpinner /> : null}
         {state.games.length === 0 ? 'No Open Games' : null}
         {state.games.map((game, i) => <GameCard key={i} game={game} />)}

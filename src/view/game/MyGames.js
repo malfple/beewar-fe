@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 
 import {apiGameMyGames} from '../../modules/api/game'
 import {UserTokenContext} from '../../context'
-import GameCard from '../../components/GameCard'
+import GameCard from '../../components/cards/GameCard'
 import NormalLoadingSpinner from '../../components/loading/NormalLoadingSpinner'
 
 function MyGames() {
@@ -31,8 +31,8 @@ function MyGames() {
 
   return (
     <div>
-      <h1>Games</h1>
-      <div>
+      <h1>My Games</h1>
+      <div className="card-deck">
         {state.loading ? <NormalLoadingSpinner /> : null}
         {state.games.length === 0 ? 'No Games' : null}
         {state.games.map((game, i) => <GameCard key={i} game={game} gameUser={state.gameUsers[i]} />)}

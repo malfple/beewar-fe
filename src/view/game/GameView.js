@@ -67,10 +67,14 @@ function GameView() {
   }
 
   return (
-    <div>
-      <ChatBox comms={comms.current} gameID={gameData.game.id} players={gameData.players} gameHasPassword={gameData.game.password !== ''} />
-      <button onClick={endTurn}>end turn</button> <br />
-      <GameApp gameData={gameData} comms={comms.current} />
+    <div className="map-game-view">
+      <div className="map-game-view__column-left">
+        <ChatBox comms={comms.current} gameID={gameData.game.id} players={gameData.players} gameHasPassword={gameData.game.password !== ''} />
+        <button onClick={endTurn}>end turn</button> <br />
+      </div>
+      <div className="map-game-view__column-right">
+        <GameApp gameData={gameData} comms={comms.current} />
+      </div>
     </div>
   )
 }

@@ -1,7 +1,9 @@
 import React, {useState} from 'react'
 import {useHistory} from 'react-router-dom'
+import './../components/forms/Form.css'
 
 import {apiAuthRegister} from '../modules/api/auth'
+import Button from '../components/forms/button/Button'
 
 function Register() {
   const history = useHistory()
@@ -26,22 +28,48 @@ function Register() {
   }
 
   return (
-    <div>
-      register
-      <form onSubmit={handleSubmit}>
-        <label>
-          Email:
-          <input type="text" name="email" disabled={loading} onChange={e => setEmail(e.target.value)} />
-        </label>
-        <label>
-          Username:
-          <input type="text" name="username" disabled={loading} onChange={e => setUsername(e.target.value)} />
-        </label>
-        <label>
-          Password:
-          <input type="password" name="password" disabled={loading} onChange={e => setPassword(e.target.value)} />
-        </label>
-        <input type="submit" value="Register" disabled={loading} />
+    <div className="form-container">
+      <form className="form" onSubmit={handleSubmit}>
+        <h1>Register</h1>
+        <h2>Create your new account</h2>
+        <div>
+          <input
+            className="form__input-box"
+            type="text"
+            name="email"
+            placeholder="Email"
+            disabled={loading}
+            onChange={e => setEmail(e.target.value)}
+            required={true}
+          />
+          <div className="form__note">As this is still in testing phase, the email isn't even verified lmao. You can input any random string :D</div>
+        </div>
+        <div>
+          <input
+            className="form__input-box"
+            type="text"
+            name="username"
+            placeholder="Username"
+            disabled={loading}
+            onChange={e => setUsername(e.target.value)}
+            required={true}
+          />
+          <div className="form__note">Choose a unique username</div>
+        </div>
+        <div>
+          <input
+            className="form__input-box"
+            type="password"
+            name="password"
+            placeholder="Password"
+            disabled={loading}
+            onChange={e => setPassword(e.target.value)}
+            required={true}
+          />
+        </div>
+        <Button theme="fill">
+          <input type="submit" value="Register" disabled={loading} />
+        </Button>
       </form>
     </div>
   )

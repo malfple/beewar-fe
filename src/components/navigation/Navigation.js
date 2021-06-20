@@ -22,26 +22,24 @@ function Navigation(props) {
   return (
     <header>
       <div className="navbar">
-        <Nav show={true}>
-          <Link to="/">
-            <img src={logo} alt="logo" />
-          </Link>
-        </Nav>
         <div className="navbar__navs">
-          <Nav show={!userLoggedIn}><Link to="/login">Login</Link></Nav>
-          <Nav show={!userLoggedIn}><Link to="/register">Register</Link></Nav>
-          <Nav show={userLoggedIn}><Link to={`/profile/${userToken.username}`}>{userToken.username} (My Profile)</Link></Nav>
-          <Nav show={userLoggedIn}><div onClick={logout}>Logout</div></Nav>
-        </div>
-      </div>
-      <div className="navbar">
-        <div className="navbar__navs--centered">
+          <Nav show={true}>
+            <Link to="/">
+              <img src={logo} alt="logo" />
+            </Link>
+          </Nav>
           <Nav show={true}><Link to="/map/list">Maps</Link></Nav>
           <Nav show={userLoggedIn}><Link to="/game/list">Open Games</Link></Nav>
           <Nav show={userLoggedIn}><Link to="/game/my_games">My Games</Link></Nav>
           <Nav show={true}><Link to="/leaderboard">Leaderboard</Link></Nav>
           <Nav show={true}><Link to="/about">About</Link></Nav>
           <Nav show={true}><Link to="/how2play">How to Play</Link></Nav>
+        </div>
+        <div className="navbar__navs--bottom">
+          <Nav show={!userLoggedIn}><Link to="/login">Login</Link></Nav>
+          <Nav show={!userLoggedIn}><Link to="/register">Register</Link></Nav>
+          <Nav show={userLoggedIn}><Link to={`/profile/${userToken.username}`}>{userToken.username} (My Profile)</Link></Nav>
+          <Nav show={userLoggedIn}><div onClick={logout}>Logout</div></Nav>
         </div>
       </div>
     </header>
