@@ -34,7 +34,7 @@ function MyGames() {
       <h1>My Games</h1>
       <div className="card-deck">
         {state.loading ? <NormalLoadingSpinner /> : null}
-        {state.games.length === 0 ? 'No Games' : null}
+        {!state.loading && state.games.length === 0 ? 'No Games' : null}
         {state.games.map((game, i) => <GameCard key={i} game={game} gameUser={state.gameUsers[i]} />)}
       </div>
     </div>
