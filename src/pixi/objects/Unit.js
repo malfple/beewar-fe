@@ -1,6 +1,18 @@
 import * as PIXI from 'pixi.js'
-import {infantryMaskTexture, infantryTintTexture, queenMaskTexture, queenTintTexture} from '../textures'
-import {PLAYER_COLOR_TINT, UNIT_STATE_BIT_MOVED, UNIT_TYPE_INFANTRY, UNIT_TYPE_QUEEN} from './unitConstants'
+import {
+  infantryMaskTexture,
+  infantryTintTexture,
+  jetCrewMaskTexture, jetCrewTintTexture, mortarMaskTexture, mortarTintTexture,
+  queenMaskTexture,
+  queenTintTexture, tankMaskTexture, tankTintTexture, wizardMaskTexture, wizardTintTexture,
+} from '../textures'
+import {
+  PLAYER_COLOR_TINT, UNIT_MAX_HP_TANK,
+  UNIT_STATE_BIT_MOVED,
+  UNIT_TYPE_INFANTRY,
+  UNIT_TYPE_JET_CREW, UNIT_TYPE_MORTAR,
+  UNIT_TYPE_QUEEN, UNIT_TYPE_TANK, UNIT_TYPE_WIZARD,
+} from './unitConstants'
 import {dimFilter} from '../filters'
 
 class Unit {
@@ -32,6 +44,22 @@ class Unit {
       case UNIT_TYPE_INFANTRY:
         maskTexture = infantryMaskTexture
         tintTexture = infantryTintTexture
+        break
+      case UNIT_TYPE_JET_CREW:
+        maskTexture = jetCrewMaskTexture
+        tintTexture = jetCrewTintTexture
+        break
+      case UNIT_TYPE_WIZARD:
+        maskTexture = wizardMaskTexture
+        tintTexture = wizardTintTexture
+        break
+      case UNIT_TYPE_TANK:
+        maskTexture = tankMaskTexture
+        tintTexture = tankTintTexture
+        break
+      case UNIT_TYPE_MORTAR:
+        maskTexture = mortarMaskTexture
+        tintTexture = mortarTintTexture
         break
       default:
         console.error('load unit: unknown unit type')
@@ -117,6 +145,10 @@ class Unit {
   endTurn() {
     this.state &= ~UNIT_STATE_BIT_MOVED
     this._updateSpriteFromState()
+    // tank heal
+    if(this.type === UNIT_TYPE_TANK) {
+      this.setHP(Math.min(this.hp + 2, UNIT_MAX_HP_TANK))
+    }
   }
 }
 

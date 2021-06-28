@@ -77,7 +77,7 @@ class MapInteractionController {
     if(this.map.terrains[y][x].isAttackTarget() && this._checkUnitOwnedAndCurrentTurn(this.selectedUnit)) {
       // attack confirmation, only allowed if moving own unit and it's your turn
       this.map.deactivateMoveTerrains(this.selectedUnit.y, this.selectedUnit.x)
-      this.map.deactivateAttackTerrains(this.selectedUnit, this.selectedUnit.y, this.selectedUnit.x, false)
+      this.map.deactivateAttackTerrains(this.selectedUnit, this.selectedUnit.y, this.selectedUnit.x)
       this.selectedUnitToAttack = this.map.units[y][x]
       this.map.terrains[this.selectedUnit.y][this.selectedUnit.x].activateMoveTarget()
       this.map.terrains[y][x].activateAttackTarget()
@@ -92,7 +92,7 @@ class MapInteractionController {
     } else if(this.map.terrains[y][x].isMoveTarget() && this._checkUnitOwnedAndCurrentTurn(this.selectedUnit)) {
       // move here, only allowed if moving own unit and it's your turn
       this.map.deactivateMoveTerrains(this.selectedUnit.y, this.selectedUnit.x)
-      this.map.deactivateAttackTerrains(this.selectedUnit, this.selectedUnit.y, this.selectedUnit.x, false)
+      this.map.deactivateAttackTerrains(this.selectedUnit, this.selectedUnit.y, this.selectedUnit.x)
       this.selectedTerrainToMove = this.map.terrains[y][x]
       this.selectedTerrainToMove.activateMoveTarget()
       this.map.activateAttackTerrains(this.selectedUnit, y, x, true)
@@ -127,7 +127,7 @@ class MapInteractionController {
       }, GROUP_WEBSOCKET)
     }
 
-    this.map.deactivateAttackTerrains(this.selectedUnit, this.selectedTerrainToMove.y, this.selectedTerrainToMove.x, true)
+    this.map.deactivateAttackTerrains(this.selectedUnit, this.selectedTerrainToMove.y, this.selectedTerrainToMove.x)
     this.selectedTerrainToMove.deactivate()
     this.selectedTerrainToMove = null
     this.selectedUnit.deselect()
@@ -168,7 +168,7 @@ class MapInteractionController {
 
   _transitionStateUnitSelectToStateNormal() {
     this.map.deactivateMoveTerrains(this.selectedUnit.y, this.selectedUnit.x)
-    this.map.deactivateAttackTerrains(this.selectedUnit, this.selectedUnit.y, this.selectedUnit.x, false)
+    this.map.deactivateAttackTerrains(this.selectedUnit, this.selectedUnit.y, this.selectedUnit.x)
     this.selectedUnit.deselect()
     this.selectedUnit = null
     this.state = MAP_STATE_NORMAL

@@ -3,11 +3,12 @@ import * as PIXI from 'pixi.js'
 import Terrain from './Terrain'
 import Unit from './Unit'
 import {
+  ATTACK_TYPE_AERIAL,
   ATTACK_TYPE_GROUND,
-  ATTACK_TYPE_NONE,
+  ATTACK_TYPE_NONE, MOVE_TYPE_BLINK,
   MOVE_TYPE_GROUND,
-  UNIT_ATTACK_RANGE_MAP, UNIT_ATTACK_TYPE_MAP,
-  UNIT_MOVE_RANGE_MAP,
+  UNIT_ATTACK_RANGE_MAP, UNIT_ATTACK_RANGE_MIN_MAP, UNIT_ATTACK_TYPE_MAP,
+  UNIT_MOVE_RANGE_MAP, UNIT_MOVE_RANGE_MIN_MAP,
   UNIT_MOVE_TYPE_MAP,
   UNIT_TYPE_QUEEN,
   UNIT_WEIGHT_MAP,
@@ -26,6 +27,7 @@ import PriorityQueue from '../../utils/PriorityQueue'
 import {GAME_STATUS_ENDED, GAME_STATUS_ONGOING, GAME_STATUS_PICKING} from './gameConstants'
 import {calcMoveCost} from '../../utils/moveCost'
 import {TERRAIN_TYPE_ICE_FIELD} from './terrainConstants'
+import {UNIT_MOVE_AND_ATTACK_MAP} from './cmdWhitelist'
 
 // MIRROR: for bfs
 const K = 6
@@ -131,6 +133,9 @@ class Map {
       case MOVE_TYPE_GROUND:
         this._fillMoveGround(y, x, UNIT_MOVE_RANGE_MAP[unit.type], unit.owner, UNIT_WEIGHT_MAP[unit.type])
         break
+      case MOVE_TYPE_BLINK:
+        this._fillMoveBlink(y, x, UNIT_MOVE_RANGE_MIN_MAP[unit.type], UNIT_MOVE_RANGE_MAP[unit.type])
+        break
       default:
         console.error('null or unknown move type')
     }
@@ -145,6 +150,9 @@ class Map {
       case MOVE_TYPE_GROUND:
         this._fillMoveGroundReset(y, x)
         break
+      case MOVE_TYPE_BLINK:
+        this._fillMoveBlinkReset(y, x, UNIT_MOVE_RANGE_MIN_MAP[unit.type], UNIT_MOVE_RANGE_MAP[unit.type])
+        break
       default:
         console.error('null or unknown move type')
     }
@@ -158,25 +166,30 @@ class Map {
    * @param {boolean} afterMove - a boolean indicating whether the attack is done after moving
    */
   activateAttackTerrains(unit, y, x, afterMove) {
-    let atkRange = 0
+    if(afterMove && !UNIT_MOVE_AND_ATTACK_MAP.hasOwnProperty(unit.type)) {
+      return
+    }
+    let atkRangeMin = 0, atkRangeMax = 0
     switch(UNIT_ATTACK_TYPE_MAP[unit.type]) {
       case ATTACK_TYPE_NONE:
         break
       case ATTACK_TYPE_GROUND:
-        atkRange = UNIT_ATTACK_RANGE_MAP[unit.type]
+      case ATTACK_TYPE_AERIAL:
+        atkRangeMax = UNIT_ATTACK_RANGE_MAP[unit.type]
+        atkRangeMin = UNIT_ATTACK_RANGE_MIN_MAP[unit.type]
         break
       default:
         console.error('null or unknown attack type')
     }
-    for(let i = y-atkRange; i <= y+atkRange; i++) {
-      for(let j = x-atkRange; j <= x+atkRange; j++) {
+    for(let i = y-atkRangeMax; i <= y+atkRangeMax; i++) {
+      for(let j = x-atkRangeMax; j <= x+atkRangeMax; j++) {
         if(i === y && j === x) {
           continue
         }
         if(i < 0 || i >= this.height || j < 0 || j >= this.width) {
           continue
         }
-        if(hexDistance(y, x, i, j) > atkRange) {
+        if(hexDistance(y, x, i, j) > atkRangeMax || hexDistance(y, x, i, j) < atkRangeMin) {
           continue
         }
         if(this.units[i][j] && this.units[i][j].owner !== unit.owner) {
@@ -191,28 +204,29 @@ class Map {
    * @param {Unit} unit
    * @param y
    * @param x
-   * @param {boolean} afterMove - a boolean indicating whether the attack is done after moving
    */
-  deactivateAttackTerrains(unit, y, x, afterMove) {
-    let atkRange = 0
+  deactivateAttackTerrains(unit, y, x) {
+    let atkRangeMin = 0, atkRangeMax = 0
     switch(UNIT_ATTACK_TYPE_MAP[unit.type]) {
       case ATTACK_TYPE_NONE:
         break
       case ATTACK_TYPE_GROUND:
-        atkRange = UNIT_ATTACK_RANGE_MAP[unit.type]
+      case ATTACK_TYPE_AERIAL:
+        atkRangeMax = UNIT_ATTACK_RANGE_MAP[unit.type]
+        atkRangeMin = UNIT_ATTACK_RANGE_MIN_MAP[unit.type]
         break
       default:
         console.error('null or unknown attack type')
     }
-    for(let i = y-atkRange; i <= y+atkRange; i++) {
-      for(let j = x-atkRange; j <= x+atkRange; j++) {
+    for(let i = y-atkRangeMax; i <= y+atkRangeMax; i++) {
+      for(let j = x-atkRangeMax; j <= x+atkRangeMax; j++) {
         if(i === y && j === x) {
           continue
         }
         if(i < 0 || i >= this.height || j < 0 || j >= this.width) {
           continue
         }
-        if(hexDistance(y, x, i, j) > atkRange) {
+        if(hexDistance(y, x, i, j) > atkRangeMax || hexDistance(y, x, i, j) < atkRangeMin) {
           continue
         }
         this.terrains[i][j].deactivate()
@@ -288,6 +302,40 @@ class Map {
         this.terrains[ty][tx].dist =-1
         this.terrains[ty][tx].deactivate()
         queue.push({y: ty, x: tx})
+      }
+    }
+  }
+  // these are not mirrors from BE, because validation does not need to fill the cells specifically.
+  _fillMoveBlink(y, x, moveRangeMin, moveRangeMax) {
+    for(let i = y-moveRangeMax; i <= y+moveRangeMax; i++) {
+      for(let j = x-moveRangeMax; j <= x+moveRangeMax; j++) {
+        if(i < 0 || i >= this.height || j < 0 || j >= this.width) {
+          continue
+        }
+        if(this.units[i][j]) {
+          continue
+        }
+        const dist = hexDistance(y, x, i, j)
+        if(dist > moveRangeMax || dist < moveRangeMin) {
+          continue
+        }
+        this.terrains[i][j].dist = dist
+        this.terrains[i][j].activateMoveTarget()
+      }
+    }
+  }
+  _fillMoveBlinkReset(y, x, moveRangeMin, moveRangeMax) {
+    for(let i = y-moveRangeMax; i <= y+moveRangeMax; i++) {
+      for(let j = x-moveRangeMax; j <= x+moveRangeMax; j++) {
+        if(i < 0 || i >= this.height || j < 0 || j >= this.width) {
+          continue
+        }
+        const dist = hexDistance(y, x, i, j)
+        if(dist > moveRangeMax || dist < moveRangeMin) {
+          continue
+        }
+        this.terrains[i][j].dist = -1
+        this.terrains[i][j].deactivate()
       }
     }
   }
