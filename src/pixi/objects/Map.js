@@ -19,6 +19,7 @@ import {
   CMD_ERROR, CMD_JOIN, CMD_PING, CMD_UNIT_ATTACK,
   CMD_UNIT_MOVE,
   CMD_UNIT_MOVE_AND_ATTACK, CMD_UNIT_STAY, COMMS_MAP_EVENT_END_TURN,
+  CMD_UNIT_SWAP,
 } from '../../modules/communication/messageConstants'
 import {hexDistance} from '../../utils/grid'
 import {nullGameComms} from '../../modules/communication/GameComms'
@@ -27,7 +28,7 @@ import PriorityQueue from '../../utils/PriorityQueue'
 import {GAME_STATUS_ENDED, GAME_STATUS_ONGOING, GAME_STATUS_PICKING} from './gameConstants'
 import {calcMoveCost} from '../../utils/moveCost'
 import {TERRAIN_TYPE_ICE_FIELD} from './terrainConstants'
-import {UNIT_MOVE_AND_ATTACK_MAP} from './cmdWhitelist'
+import {UNIT_MOVE_AND_ATTACK_MAP, UNIT_SWAP_MAP} from './cmdWhitelist'
 
 // MIRROR: for bfs
 const K = 6
@@ -108,9 +109,6 @@ class Map {
       if(unit) {
         this.pixiNode.addChild(unit.pixiNode)
         this.units[cy][cx] = unit
-        if(unit.isMoved()) {
-          this.terrains[cy][cx].setUnitIsMoved()
-        }
       }
     }
   }
@@ -134,7 +132,7 @@ class Map {
         this._fillMoveGround(y, x, UNIT_MOVE_RANGE_MAP[unit.type], unit.owner, UNIT_WEIGHT_MAP[unit.type])
         break
       case MOVE_TYPE_BLINK:
-        this._fillMoveBlink(y, x, UNIT_MOVE_RANGE_MIN_MAP[unit.type], UNIT_MOVE_RANGE_MAP[unit.type])
+        this._fillMoveBlink(y, x, UNIT_MOVE_RANGE_MIN_MAP[unit.type], UNIT_MOVE_RANGE_MAP[unit.type], UNIT_SWAP_MAP[unit.type])
         break
       default:
         console.error('null or unknown move type')
@@ -306,17 +304,21 @@ class Map {
     }
   }
   // these are not mirrors from BE, because validation does not need to fill the cells specifically.
-  _fillMoveBlink(y, x, moveRangeMin, moveRangeMax) {
+  // also fills for swap
+  _fillMoveBlink(y, x, moveRangeMin, moveRangeMax, canSwap) {
     for(let i = y-moveRangeMax; i <= y+moveRangeMax; i++) {
       for(let j = x-moveRangeMax; j <= x+moveRangeMax; j++) {
         if(i < 0 || i >= this.height || j < 0 || j >= this.width) {
           continue
         }
-        if(this.units[i][j]) {
-          continue
-        }
         const dist = hexDistance(y, x, i, j)
         if(dist > moveRangeMax || dist < moveRangeMin) {
+          continue
+        }
+        if(this.units[i][j]) {
+          if(canSwap && this.units[y][x].owner === this.units[i][j].owner) {
+            this.terrains[i][j].activateSwapTarget()
+          }
           continue
         }
         this.terrains[i][j].dist = dist
@@ -330,10 +332,7 @@ class Map {
         if(i < 0 || i >= this.height || j < 0 || j >= this.width) {
           continue
         }
-        const dist = hexDistance(y, x, i, j)
-        if(dist > moveRangeMax || dist < moveRangeMin) {
-          continue
-        }
+        // no need to check distance
         this.terrains[i][j].dist = -1
         this.terrains[i][j].deactivate()
       }
@@ -356,19 +355,16 @@ class Map {
     switch(msg.cmd) {
       case CMD_UNIT_STAY:
         this.units[msg.data.y_1][msg.data.x_1].toggleMoved()
-        this.terrains[msg.data.y_1][msg.data.x_1].setUnitIsMoved()
         break
       case CMD_UNIT_MOVE:
         this._unitMove(msg.data.y_1, msg.data.x_1, msg.data.y_2, msg.data.x_2)
         this.units[msg.data.y_2][msg.data.x_2].toggleMoved()
-        this.terrains[msg.data.y_2][msg.data.x_2].setUnitIsMoved()
         break
       case CMD_UNIT_ATTACK:
         this._unitAttack(msg.data.y_1, msg.data.x_1, msg.data.hp_atk, msg.data.y_t, msg.data.x_t, msg.data.hp_def)
         if(this.units[msg.data.y_1][msg.data.x_1]) {
           this.units[msg.data.y_1][msg.data.x_1].toggleMoved()
         }
-        this.terrains[msg.data.y_1][msg.data.x_1].setUnitIsMoved()
         break
       case CMD_UNIT_MOVE_AND_ATTACK:
         this._unitMove(msg.data.y_1, msg.data.x_1, msg.data.y_2, msg.data.x_2)
@@ -376,7 +372,10 @@ class Map {
         if(this.units[msg.data.y_2][msg.data.x_2]) {
           this.units[msg.data.y_2][msg.data.x_2].toggleMoved()
         }
-        this.terrains[msg.data.y_2][msg.data.x_2].setUnitIsMoved()
+        break
+      case CMD_UNIT_SWAP:
+        this._unitSwap(msg.data.y_1, msg.data.x_1, msg.data.y_2, msg.data.x_2)
+        this.units[msg.data.y_2][msg.data.x_2].toggleMoved()
         break
       case CMD_END_TURN:
         this._nextTurn()
@@ -410,6 +409,13 @@ class Map {
     this._checkUnitAlive(y, x)
     this.units[yt][xt].setHP(hpDef)
     this._checkUnitAlive(yt, xt)
+  }
+  _unitSwap(y1, x1, y2, x2) {
+    const unit1 = this.units[y1][x1]
+    this.units[y1][x1] = this.units[y2][x2]
+    this.units[y2][x2] = unit1
+    this.units[y1][x1].moveTo(y1, x1)
+    this.units[y2][x2].moveTo(y2, x2)
   }
   // MIRROR: utils function from GameLoader BE
   _checkGameStart() {
@@ -453,7 +459,6 @@ class Map {
         this._checkGameEnd()
       }
       this.units[y][x] = null
-      this.terrains[y][x].unsetUnitIsMoved() // just in case a unit suicide-attacks
     }
   }
   _assignPlayerRank(player) {
@@ -500,7 +505,6 @@ class Map {
             this._checkUnitAlive(i, j)
           }
         }
-        this.terrains[i][j].unsetUnitIsMoved()
       }
     }
     // just in case, also check if game ends

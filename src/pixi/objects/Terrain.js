@@ -10,14 +10,13 @@ import {
 import {
   TERRAIN_STATUS_ATTACK_TARGET,
   TERRAIN_STATUS_MOVE_TARGET,
-  TERRAIN_STATUS_NORMAL, TERRAIN_TYPE_HONEY_FIELD, TERRAIN_TYPE_ICE_FIELD,
+  TERRAIN_STATUS_NORMAL, TERRAIN_STATUS_SWAP_TARGET, TERRAIN_TYPE_HONEY_FIELD, TERRAIN_TYPE_ICE_FIELD,
   TERRAIN_TYPE_PLAINS, TERRAIN_TYPE_WALLS, TERRAIN_TYPE_WASTELAND,
 } from './terrainConstants'
 
 import {nullGameComms} from '../../modules/communication/GameComms'
 import {GROUP_MAP_CONTROLLER} from '../../modules/communication/groupConstants'
 import {COMMS_TERRAIN_CLICK} from '../../modules/communication/messageConstants'
-import {dimFilter} from '../filters'
 
 class Terrain {
   /**
@@ -105,19 +104,22 @@ class Terrain {
   isAttackTarget() {
     return this.status === TERRAIN_STATUS_ATTACK_TARGET
   }
+  // triggered when the cell is in swap range of the current selected unit
+  activateSwapTarget() {
+    if(this.pixiNode) {
+      this.pixiNode.tint = 0xFF00FF
+      this.status = TERRAIN_STATUS_SWAP_TARGET
+    }
+  }
+  isSwapTarget() {
+    return this.status === TERRAIN_STATUS_SWAP_TARGET
+  }
   // return to normal
   deactivate() {
     if(this.pixiNode && this.status !== TERRAIN_STATUS_NORMAL) {
       this.pixiNode.tint = 0xFFFFFF
       this.status = TERRAIN_STATUS_NORMAL
     }
-  }
-
-  setUnitIsMoved() {
-    this.pixiNode.filters = [dimFilter]
-  }
-  unsetUnitIsMoved() {
-    this.pixiNode.filters = null
   }
 }
 

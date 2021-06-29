@@ -2,7 +2,7 @@ import {nullGameComms} from '../../modules/communication/GameComms'
 import {
   CMD_UNIT_ATTACK,
   CMD_UNIT_MOVE,
-  CMD_UNIT_MOVE_AND_ATTACK,
+  CMD_UNIT_MOVE_AND_ATTACK, CMD_UNIT_SWAP,
   COMMS_TERRAIN_CLICK,
 } from '../../modules/communication/messageConstants'
 import {GROUP_WEBSOCKET} from '../../modules/communication/groupConstants'
@@ -11,6 +11,7 @@ const MAP_STATE_NORMAL = 0
 const MAP_STATE_UNIT_SELECT = 1
 const MAP_STATE_MOVE_CONFIRM = 2
 const MAP_STATE_ATTACK_CONFIRM = 3
+const MAP_STATE_SWAP_CONFIRM = 4
 
 /**
  * this class is responsible for listening click events in a map and updating it.
@@ -31,7 +32,7 @@ class MapInteractionController {
     /** @type {Terrain} */
     this.selectedTerrainToMove = null
     /** @type {Unit} */
-    this.selectedUnitToAttack = null
+    this.selectedUnitForAction = null // as the target, can be for Attack, for Swap, etc
   }
 
   // required by comms
@@ -62,6 +63,9 @@ class MapInteractionController {
       case MAP_STATE_ATTACK_CONFIRM:
         this._handleClickStateAttackConfirm(y, x)
         break
+      case MAP_STATE_SWAP_CONFIRM:
+        this._handleClickStateSwapConfirm(y, x)
+        break
       default:
         console.error('unknown map state. did you forget to add this?')
     }
@@ -78,10 +82,18 @@ class MapInteractionController {
       // attack confirmation, only allowed if moving own unit and it's your turn
       this.map.deactivateMoveTerrains(this.selectedUnit.y, this.selectedUnit.x)
       this.map.deactivateAttackTerrains(this.selectedUnit, this.selectedUnit.y, this.selectedUnit.x)
-      this.selectedUnitToAttack = this.map.units[y][x]
+      this.selectedUnitForAction = this.map.units[y][x]
       this.map.terrains[this.selectedUnit.y][this.selectedUnit.x].activateMoveTarget()
       this.map.terrains[y][x].activateAttackTarget()
       this.state = MAP_STATE_ATTACK_CONFIRM
+    } else if(this.map.terrains[y][x].isSwapTarget() && this._checkUnitOwnedAndCurrentTurn(this.selectedUnit)) {
+      // swap confirmation, similar to attack confirmation
+      this.map.deactivateMoveTerrains(this.selectedUnit.y, this.selectedUnit.x)
+      this.map.deactivateAttackTerrains(this.selectedUnit, this.selectedUnit.y, this.selectedUnit.x)
+      this.selectedUnitForAction = this.map.units[y][x]
+      this.map.terrains[this.selectedUnit.y][this.selectedUnit.x].activateSwapTarget()
+      this.map.terrains[y][x].activateSwapTarget()
+      this.state = MAP_STATE_SWAP_CONFIRM
     } else if(this.map.units[y][x]) { // click on unit
       if(!this.map.units[y][x].isMoved() && this.map.units[y][x] !== this.selectedUnit) { // select another unit
         this._transitionStateUnitSelectToStateNormal()
@@ -136,7 +148,7 @@ class MapInteractionController {
   }
 
   _handleClickStateAttackConfirm(y, x) {
-    if(this.map.units[y][x] === this.selectedUnitToAttack) {
+    if(this.map.units[y][x] === this.selectedUnitForAction) {
       this.comms.triggerMsg({
         cmd: CMD_UNIT_ATTACK,
         data: {
@@ -148,12 +160,23 @@ class MapInteractionController {
       }, GROUP_WEBSOCKET)
     }
 
-    this.map.terrains[this.selectedUnit.y][this.selectedUnit.x].deactivate()
-    this.map.terrains[this.selectedUnitToAttack.y][this.selectedUnitToAttack.x].deactivate()
-    this.selectedUnitToAttack = null
-    this.selectedUnit.deselect()
-    this.selectedUnit = null
-    this.state = MAP_STATE_NORMAL
+    this._transitionStateActionConfirmToStateNormal()
+  }
+
+  _handleClickStateSwapConfirm(y, x) {
+    if(this.map.units[y][x] === this.selectedUnitForAction) {
+      this.comms.triggerMsg({
+        cmd: CMD_UNIT_SWAP,
+        data: {
+          y_1: this.selectedUnit.y,
+          x_1: this.selectedUnit.x,
+          y_2: y,
+          x_2: x,
+        },
+      }, GROUP_WEBSOCKET)
+    }
+
+    this._transitionStateActionConfirmToStateNormal()
   }
 
   // repetitive transition functions
@@ -169,6 +192,16 @@ class MapInteractionController {
   _transitionStateUnitSelectToStateNormal() {
     this.map.deactivateMoveTerrains(this.selectedUnit.y, this.selectedUnit.x)
     this.map.deactivateAttackTerrains(this.selectedUnit, this.selectedUnit.y, this.selectedUnit.x)
+    this.selectedUnit.deselect()
+    this.selectedUnit = null
+    this.state = MAP_STATE_NORMAL
+  }
+
+  // can be for attack confirm, swap confirm, etc
+  _transitionStateActionConfirmToStateNormal() {
+    this.map.terrains[this.selectedUnit.y][this.selectedUnit.x].deactivate()
+    this.map.terrains[this.selectedUnitForAction.y][this.selectedUnitForAction.x].deactivate()
+    this.selectedUnitForAction = null
     this.selectedUnit.deselect()
     this.selectedUnit = null
     this.state = MAP_STATE_NORMAL
