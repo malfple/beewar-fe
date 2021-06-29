@@ -20,7 +20,7 @@ import Register from './Register'
 import About from './About'
 import How2Play from './How2Play'
 import Leaderboard from './Leaderboard'
-import Wiki from './wiki/Wiki'
+import Wiki from './Wiki'
 import Changelog from './Changelog'
 import Home from './Home'
 

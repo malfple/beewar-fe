@@ -1,0 +1,5 @@
+.wiki table, .wiki th, .wiki tr {
+    border: 1px solid white;
+    border-collapse: collapse;
+    padding: 10px;
+}
