@@ -40,3 +40,8 @@ header {
 .navbar__navs__nav a:hover, .navbar__navs__nav div:hover {
     color: #ffdd55;
 }
+
+.nav--small a, .nav--small div {
+    font-size: 14px;
+    color: darkgrey;
+}

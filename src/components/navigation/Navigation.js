@@ -36,10 +36,10 @@ function Navigation(props) {
           <Nav show={true}><Link to="/how2play">How to Play</Link></Nav>
         </div>
         <div className="navbar__navs--bottom">
-          <Nav show={!userLoggedIn}><Link to="/login">Login</Link></Nav>
-          <Nav show={!userLoggedIn}><Link to="/register">Register</Link></Nav>
-          <Nav show={userLoggedIn}><Link to={`/profile/${userToken.username}`}>{userToken.username} (My Profile)</Link></Nav>
-          <Nav show={userLoggedIn}><div onClick={logout}>Logout</div></Nav>
+          <Nav show={!userLoggedIn} small={true}><Link to="/login">Login</Link></Nav>
+          <Nav show={!userLoggedIn} small={true}><Link to="/register">Register</Link></Nav>
+          <Nav show={userLoggedIn} small={true}><Link to={`/profile/${userToken.username}`}>{userToken.username} (My Profile)</Link></Nav>
+          <Nav show={userLoggedIn} small={true}><div onClick={logout}>Logout</div></Nav>
         </div>
       </div>
     </header>

@@ -7,6 +7,14 @@ function Nav(props) {
     return null
   }
 
+  if(props.small) {
+    return (
+        <div className="navbar__navs__nav nav--small">
+          {props.children}
+        </div>
+    )
+  }
+
   return (
     <div className="navbar__navs__nav">
       {props.children}
@@ -16,6 +24,7 @@ function Nav(props) {
 
 Nav.propTypes = {
   show: PropTypes.bool.isRequired,
+  small: PropTypes.bool,
 }
 
 export default Nav
