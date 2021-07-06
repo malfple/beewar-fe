@@ -5,6 +5,7 @@ import './../components/forms/Form.css'
 import {apiAuthRegister} from '../modules/api/auth'
 import Button from '../components/forms/button/Button'
 import useInputChange from '../components/forms/useInputChange'
+import InputBox from '../components/forms/InputBox'
 
 function Register() {
   const history = useHistory()
@@ -36,11 +37,10 @@ function Register() {
         <h1>Register</h1>
         <h2>Create your new account</h2>
         <div>
-          <input
-            className="form__input-box"
+          <InputBox
+            label="Email"
             type="text"
             name="email"
-            placeholder="Email"
             disabled={loading}
             onChange={handleInputChange}
             required={true}
@@ -48,11 +48,10 @@ function Register() {
           <div className="form__note">As this is still in testing phase, the email isn't even verified lmao. You can input any random string :D</div>
         </div>
         <div>
-          <input
-            className="form__input-box"
+          <InputBox
+            label="Username"
             type="text"
             name="username"
-            placeholder="Username"
             disabled={loading}
             onChange={handleInputChange}
             required={true}
@@ -60,11 +59,10 @@ function Register() {
           <div className="form__note">Choose a unique username</div>
         </div>
         <div>
-          <input
-            className="form__input-box"
+          <InputBox
+            label="Password"
             type="password"
             name="password"
-            placeholder="Password"
             disabled={loading}
             onChange={handleInputChange}
             required={true}

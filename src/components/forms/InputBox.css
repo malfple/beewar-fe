@@ -1,0 +1,56 @@
+.form__input-box {
+    position: relative;
+    display: inline-block;
+}
+
+/* Form input and floating label */
+.form__input-box__input {
+    background-color: transparent;
+    height: 60px;
+    width: 400px;
+    margin: 20px;
+    border: 2px solid lightgrey;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    padding: 0 20px;
+}
+
+.form__input-box__floating-label {
+    color: lightgrey;
+    position: absolute;
+    pointer-events: none;
+    top: 42px;
+    left: 42px;
+    transition: 0.2s ease all;
+}
+
+.form__input-box__input:focus {
+    outline: none;
+    border: 2px solid #ffdd55;
+    background-color: black;
+}
+
+.form__input-box__input:focus ~ .form__input-box__floating-label,
+.form__input-box__input:not(:focus):not(:placeholder-shown) ~ .form__input-box__floating-label {
+    top: 24px;
+    left: 60px;
+    font-size: 14px;
+    color: #ffdd55;
+}
+
+/* When disabled */
+.form__input-box__input:disabled {
+    background-color: black;
+    color: darkgrey;
+}
+
+/* for autocomplete */
+.form__input-box__input:-webkit-autofill,
+.form__input-box__input:-webkit-autofill:hover,
+.form__input-box__input:-webkit-autofill:focus,
+.form__input-box__input:-webkit-autofill:active
+{
+    -webkit-box-shadow: 0 0 0 30px #222222 inset !important;
+    -webkit-text-fill-color: white;
+}

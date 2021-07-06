@@ -5,6 +5,7 @@ import {UserTokenContext} from '../../context'
 import './../../components/forms/Form.css'
 import Button from '../../components/forms/button/Button'
 import useInputChange from '../../components/forms/useInputChange'
+import InputBox from '../../components/forms/InputBox'
 
 function GameCreate() {
   const {map_id} = useParams()
@@ -32,21 +33,19 @@ function GameCreate() {
           map id: {map_id}
         </div>
         <div>
-          <input
-            className="form__input-box"
+          <InputBox
+            label="Game name"
             type="text"
             name="name"
-            placeholder="Game name"
             onChange={handleInputChange}
             required={true}
           />
         </div>
         <div>
-          <input
-            className="form__input-box"
+          <InputBox
+            label="Game password"
             type="text"
             name="password"
-            placeholder="Game password"
             onChange={handleInputChange}
           />
           <div className="form__note">Leave empty for a password-less game</div>
