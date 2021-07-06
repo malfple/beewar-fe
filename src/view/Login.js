@@ -4,15 +4,18 @@ import './../components/forms/Form.css'
 
 import {apiAuthLogin} from '../modules/api/auth'
 import Button from '../components/forms/button/Button'
+import useInputChange from '../components/forms/useInputChange'
 
 function Login(props) {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [input, handleInputChange] = useInputChange({
+    username: '',
+    password: '',
+  })
   const [loading, setLoading] = useState(false)
 
   function handleSubmit(e) {
     setLoading(true)
-    apiAuthLogin(username, password).then(res => {
+    apiAuthLogin(input.username, input.password).then(res => {
       setLoading(false)
       props.onLogin(res.data.token)
     }).catch(err => {
@@ -33,7 +36,7 @@ function Login(props) {
             name="username"
             placeholder="Username"
             disabled={loading}
-            onChange={e => setUsername(e.target.value)}
+            onChange={handleInputChange}
             required={true}
           />
         </div>
@@ -44,7 +47,7 @@ function Login(props) {
             name="password"
             placeholder="Password"
             disabled={loading}
-            onChange={e => setPassword(e.target.value)}
+            onChange={handleInputChange}
             required={true}
           />
         </div>

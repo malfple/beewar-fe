@@ -1,20 +1,23 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext} from 'react'
 import {useHistory, useParams} from 'react-router-dom'
 import {apiGameCreate} from '../../modules/api/game'
 import {UserTokenContext} from '../../context'
 import './../../components/forms/Form.css'
 import Button from '../../components/forms/button/Button'
+import useInputChange from '../../components/forms/useInputChange'
 
 function GameCreate() {
   const {map_id} = useParams()
   const userToken = useContext(UserTokenContext)
   const history = useHistory()
 
-  const [name, setName] = useState('')
-  const [password, setPassword] = useState('')
+  const [input, handleInputChange] = useInputChange({
+    name: '',
+    password: '',
+  })
 
   function createGame(e) {
-    apiGameCreate(userToken.token, map_id, name, password).then(res => {
+    apiGameCreate(userToken.token, map_id, input.name, input.password).then(res => {
       alert(`create game with map id: ${map_id}, game id: ${res.data.game_id}`)
       history.push(`/game/${res.data.game_id}`)
     })
@@ -34,7 +37,7 @@ function GameCreate() {
             type="text"
             name="name"
             placeholder="Game name"
-            onChange={e => setName(e.target.value)}
+            onChange={handleInputChange}
             required={true}
           />
         </div>
@@ -44,7 +47,7 @@ function GameCreate() {
             type="text"
             name="password"
             placeholder="Game password"
-            onChange={e => setPassword(e.target.value)}
+            onChange={handleInputChange}
           />
           <div className="form__note">Leave empty for a password-less game</div>
         </div>

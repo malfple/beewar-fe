@@ -3,7 +3,7 @@ import {useHistory} from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import './Card.css'
-import {GAME_STATUS_TEXT} from '../../pixi/objects/gameConstants'
+import {GAME_STATUS_PICKING, GAME_STATUS_TEXT} from '../../pixi/objects/gameConstants'
 
 function GameCard(props) {
   const history = useHistory()
@@ -28,6 +28,11 @@ function GameCard(props) {
       <div>
         Game status: {GAME_STATUS_TEXT[props.game.status]}
       </div>
+      {props.game.status === GAME_STATUS_PICKING ?
+        <div>
+          Using password: {props.game.password.length > 0 ? 'Yes' : 'No'}
+        </div>
+        : null}
     </div>
   )
 }

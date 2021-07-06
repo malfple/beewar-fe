@@ -4,17 +4,20 @@ import './../components/forms/Form.css'
 
 import {apiAuthRegister} from '../modules/api/auth'
 import Button from '../components/forms/button/Button'
+import useInputChange from '../components/forms/useInputChange'
 
 function Register() {
   const history = useHistory()
-  const [email, setEmail] = useState('')
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [input, handleInputChange] = useInputChange({
+    email: '',
+    username: '',
+    password: '',
+  })
   const [loading, setLoading] = useState(false)
 
   function handleSubmit(e) {
     setLoading(true)
-    apiAuthRegister(email, username, password).then(res => {
+    apiAuthRegister(input.email, input.username, input.password).then(res => {
       setLoading(false)
       const errMsg = res.data.err_msg
       if(errMsg === '') {
@@ -39,7 +42,7 @@ function Register() {
             name="email"
             placeholder="Email"
             disabled={loading}
-            onChange={e => setEmail(e.target.value)}
+            onChange={handleInputChange}
             required={true}
           />
           <div className="form__note">As this is still in testing phase, the email isn't even verified lmao. You can input any random string :D</div>
@@ -51,7 +54,7 @@ function Register() {
             name="username"
             placeholder="Username"
             disabled={loading}
-            onChange={e => setUsername(e.target.value)}
+            onChange={handleInputChange}
             required={true}
           />
           <div className="form__note">Choose a unique username</div>
@@ -63,7 +66,7 @@ function Register() {
             name="password"
             placeholder="Password"
             disabled={loading}
-            onChange={e => setPassword(e.target.value)}
+            onChange={handleInputChange}
             required={true}
           />
         </div>
