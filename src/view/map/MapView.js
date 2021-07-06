@@ -5,6 +5,7 @@ import {apiMapGet} from '../../modules/api/map'
 import MapViewApp from '../../components/pixiapp/MapViewApp'
 import NormalLoadingSpinner from '../../components/loading/NormalLoadingSpinner'
 import Button from '../../components/forms/button/Button'
+import UserLabel from '../../components/userlabel/UserLabel'
 
 function MapView() {
   const [map, setMap] = useState(null)
@@ -36,6 +37,7 @@ function MapView() {
       </div>
       <div className="map-game-view__column-right">
         <h1>{map.name}</h1>
+        <div>Author: <UserLabel userID={map.author_user_id} /></div>
         <div>Size (width x height): {map.width} x {map.height}</div>
         <div>
           <Button theme="hollow" small={true}>

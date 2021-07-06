@@ -6,6 +6,7 @@ import {CMD_JOIN} from '../../modules/communication/messageConstants'
 import {GROUP_WEBSOCKET} from '../../modules/communication/groupConstants'
 import {apiGameBeebotJoin} from '../../modules/api/game'
 import {UserTokenContext} from '../../context'
+import UserLabel from '../userlabel/UserLabel'
 
 function PlayerText(props) {
   const userToken = useContext(UserTokenContext)
@@ -55,17 +56,17 @@ function PlayerText(props) {
     backgroundColor: `#${colorHex.toString(16)}`,
   }
 
-  let username = 'no player'
+  let userLabel = 'no player'
   let joinButton = <button onClick={joinGame}>Join</button>
   let beebotJoinButton = <button onClick={beebotJoinGame}>Invite Beebot</button>
   if(props.gameUser.user) {
-    username = props.gameUser.user.username
+    userLabel = <UserLabel user={props.gameUser.user} />
     joinButton = null
     beebotJoinButton = null
   }
 
   return (
-    <div style={style}>{username} {joinButton} {beebotJoinButton}</div>
+    <div style={style}>{userLabel} {joinButton} {beebotJoinButton}</div>
   )
 }
 

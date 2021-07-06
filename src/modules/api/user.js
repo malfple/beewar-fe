@@ -1,9 +1,21 @@
 import {axiosCustom} from './api'
+import axios from 'axios'
 
 function apiUserGetByUsername(username) {
   return axiosCustom.get('/api/user/get_by_username', {
     params: {
       username: username,
+    },
+  })
+}
+
+/**
+ * @param {Array<number>} ids
+ */
+function apiUserGetManyByID(ids) {
+  return axios.get('/api/user/get_many_by_id', {
+    params: {
+      ids: ids.join(','),
     },
   })
 }
@@ -19,5 +31,6 @@ function apiUserList() {
 
 export {
   apiUserGetByUsername,
+  apiUserGetManyByID,
   apiUserList,
 }
