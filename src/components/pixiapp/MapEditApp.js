@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import * as PIXI from 'pixi.js'
 
-import Map from '../../pixi/objects/Map'
+import MapForEdit from '../../pixi/objects/MapForEdit'
 import ViewPort from '../../pixi/objects/ViewPort'
 import {renderer} from '../../pixi/renderer'
 import MapInteractionControllerForEdit from '../../pixi/objects/MapInteractionControllerForEdit'
@@ -12,7 +12,7 @@ import {GROUP_MAP_CONTROLLER} from '../../modules/communication/groupConstants'
 function MapEditApp(props) {
   useEffect(() => {
     const stage = new PIXI.Container()
-    const map = new Map(props.map, [], 0, true, props.comms, true)
+    const map = new MapForEdit(props.map, props.comms)
     const viewport = new ViewPort(map)
     stage.addChild(viewport.fixedFrame)
 

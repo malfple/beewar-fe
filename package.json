@@ -37,6 +37,7 @@
         }
       ],
       "no-param-reassign": "warn",
+      "default-param-last": "error",
       "prefer-template": "error",
       "template-curly-spacing": "error",
       "arrow-spacing": "error",

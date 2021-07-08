@@ -5,7 +5,7 @@ import * as PIXI from 'pixi.js'
 
 import {renderer} from '../../pixi/renderer'
 import ViewPort from '../../pixi/objects/ViewPort'
-import Map from '../../pixi/objects/Map'
+import MapForGame from '../../pixi/objects/MapForGame'
 import {
   GROUP_MAP_CONTROLLER,
   GROUP_MAP_EVENT_LISTENERS,
@@ -22,7 +22,7 @@ function GameApp(props) {
     // setup app
     const stage = new PIXI.Container()
 
-    const map = new Map(props.gameData.game, props.gameData.players, userToken.userID, true, props.comms)
+    const map = new MapForGame(props.gameData.game, props.gameData.players, userToken.userID, props.comms)
     props.comms.registerSubscriber(map, [GROUP_WEBSOCKET_LISTENERS])
     const viewport = new ViewPort(map)
     stage.addChild(viewport.fixedFrame)

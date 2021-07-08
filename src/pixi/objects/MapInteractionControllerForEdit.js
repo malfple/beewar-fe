@@ -2,8 +2,6 @@ import {nullGameComms} from '../../modules/communication/GameComms'
 import {TERRAIN_TYPE_VOID} from './terrainConstants'
 import {COMMS_BRUSH_SELECT, COMMS_TERRAIN_CLICK} from '../../modules/communication/messageConstants'
 import {TERRAIN_BRUSH, UNIT_BRUSH} from './editorConstants'
-import Terrain from './Terrain'
-import Unit from './Unit'
 import {UNIT_MAX_HP_MAP} from './unitConstants'
 
 /**
@@ -12,8 +10,8 @@ import {UNIT_MAX_HP_MAP} from './unitConstants'
  */
 class MapInteractionControllerForEdit {
   /**
-   * @param {Map}       map
-   * @param {GameComms} comms
+   * @param {MapForEdit}  map
+   * @param {GameComms}   comms
    */
   constructor(map, comms=nullGameComms) {
     this.map = map
@@ -60,12 +58,7 @@ class MapInteractionControllerForEdit {
         this.map.units[y][x] = null
       }
 
-      // add terrain, logic replicated from Map
-      const terrain = new Terrain(this.brushCode - TERRAIN_BRUSH, y, x, true, this.comms, true)
-      if(terrain.pixiNode) {
-        this.map.pixiNode.addChild(terrain.pixiNode)
-      }
-      this.map.terrains[y][x] = terrain
+      this.map.createTerrain(this.brushCode - TERRAIN_BRUSH, y, x)
     } else {
       // it's a unit brush
       if(this.map.units[y][x]) {
@@ -78,9 +71,7 @@ class MapInteractionControllerForEdit {
       // only certain terrains
       if(this.map.terrains[y][x].type !== TERRAIN_TYPE_VOID) {
         // add unit, logic replicated from Map
-        const unit = new Unit(y, x, this.playerOrder, this.brushCode - UNIT_BRUSH, UNIT_MAX_HP_MAP[this.brushCode - UNIT_BRUSH], 0)
-        this.map.pixiNode.addChild(unit.pixiNode)
-        this.map.units[y][x] = unit
+        this.map.createUnit(y, x, this.playerOrder, this.brushCode - UNIT_BRUSH, UNIT_MAX_HP_MAP[this.brushCode - UNIT_BRUSH], 0)
       }
     }
   }

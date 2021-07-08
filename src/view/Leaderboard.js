@@ -22,7 +22,7 @@ function Leaderboard() {
     <div>
       <h1>Leaderboard</h1>
       {state.loading ? <NormalLoadingSpinner /> : null}
-      {state.users.map((user, i) => <div><UserLabel key={i} user={user} /></div>)}
+      {state.users.map((user, i) => <div key={i}><UserLabel user={user} /></div>)}
     </div>
   )
 }

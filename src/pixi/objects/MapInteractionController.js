@@ -19,7 +19,7 @@ const MAP_STATE_SWAP_CONFIRM = 4
  */
 class MapInteractionController {
   /**
-   * @param {Map}       map
+   * @param {MapForGame}       map
    * @param {GameComms} comms
    */
   constructor(map, comms=nullGameComms) {

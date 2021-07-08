@@ -23,11 +23,11 @@ class Terrain {
    * @param type  terrain type
    * @param y     row
    * @param x     column
+   * @param {boolean} showVoid      - if true, show void texture. Set this to true if using it in map editor
    * @param {boolean} interactive   - if true, create listeners
    * @param {GameComms} comms
-   * @param {boolean} forEdit       - if true, show void texture
    */
-  constructor(type, y, x, interactive, comms=nullGameComms, forEdit) {
+  constructor(type, y, x, showVoid=false, interactive=false, comms=nullGameComms) {
     this.y = y
     this.x = x
     this.type = type
@@ -37,7 +37,7 @@ class Terrain {
 
     switch (type) {
       case TERRAIN_TYPE_VOID:
-        if(!forEdit) {
+        if(!showVoid) {
           return
         }
         this.pixiNode = new PIXI.Sprite(voidPlaceholderTexture)
