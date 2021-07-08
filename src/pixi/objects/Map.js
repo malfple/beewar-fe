@@ -53,11 +53,12 @@ class Map {
    * @param {int}       userID       - the current logged in user
    * @param {boolean}   interactive
    * @param {GameComms} comms
+   * @param {boolean}   forEdit      - set to true if map editor
    */
-  constructor(mapData, playerData=[], userID, interactive=false, comms=nullGameComms) {
+  constructor(mapData, playerData=[], userID=0, interactive=false, comms=nullGameComms, forEdit=false) {
     this.playerData = playerData
     this.userID = userID
-    this.currentPlayer = 0
+    this.currentPlayer = 0 // only used by map interaction controller
     this.calcCurrentPlayer()
     this.height = mapData.height
     this.width = mapData.width
@@ -79,7 +80,7 @@ class Map {
       this.units.push([])
       for(let j = 0; j < mapData.width; j++) {
         const terrainType = terrainInfo.charCodeAt(i * mapData.width + j)
-        const terrain = new Terrain(terrainType, i, j, interactive, this.comms)
+        const terrain = new Terrain(terrainType, i, j, interactive, this.comms, forEdit)
         if(terrain.pixiNode) {
           this.pixiNode.addChild(terrain.pixiNode)
         }

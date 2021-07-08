@@ -1,0 +1,11 @@
+.brush-icon {
+    display: inline-block;
+    height: 100px;
+    width: 90px;
+    border: solid 2px transparent;
+    font-size: 30px;
+}
+
+.brush-icon--selected {
+    border: solid 2px white;
+}

@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 
+import voidPlaceholderPNG from './assets/terrain-void-placeholder.png'
 import plainsPNG from './assets/terrain-plains.png'
 import wallsPNG from './assets/terrain-walls.png'
 import honeyFieldPNG from './assets/terrain-honeyfield.png'
@@ -22,6 +23,7 @@ import mortarTintPNG from './assets/unit-mortar-tint.png'
 import btnZoomInPNG from './assets/btn-zoom-in.png'
 import btnZoomOutPNG from './assets/btn-zoom-out.png'
 
+const voidPlaceholderTexture = PIXI.Texture.from(voidPlaceholderPNG)
 const plainsTexture = PIXI.Texture.from(plainsPNG)
 const wallsTexture = PIXI.Texture.from(wallsPNG)
 const honeyFieldTexture = PIXI.Texture.from(honeyFieldPNG)
@@ -54,6 +56,7 @@ const btnZoomInTexture = PIXI.Texture.from(btnZoomInPNG)
 const btnZoomOutTexture = PIXI.Texture.from(btnZoomOutPNG)
 
 export {
+  voidPlaceholderTexture,
   plainsTexture,
   wallsTexture,
   honeyFieldTexture,

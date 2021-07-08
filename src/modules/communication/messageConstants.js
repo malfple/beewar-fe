@@ -21,7 +21,14 @@ const CMD_END_TURN = 'END_TURN'
 FE specific commands
  */
 const COMMS_TERRAIN_CLICK = 'TERRAIN_CLICK'
+// terrain click data
+// {y, x} position only
 const COMMS_MAP_EVENT_END_TURN = 'MAP_END_TURN'
+// end turn data
+// {status, turn_count, turn_player}
+const COMMS_BRUSH_SELECT = 'BRUSH_SELECT'
+// brush select
+// {brush_code, player_order}
 
 export {
   CMD_CHAT,
@@ -41,4 +48,5 @@ export {
 
   COMMS_TERRAIN_CLICK,
   COMMS_MAP_EVENT_END_TURN,
+  COMMS_BRUSH_SELECT,
 }

@@ -3,7 +3,7 @@ import {
   honeyFieldTexture,
   iceFieldTexture,
   plainsTexture,
-  terrainHitArea,
+  terrainHitArea, voidPlaceholderTexture,
   wallsTexture,
   wastelandTexture,
 } from '../textures'
@@ -11,7 +11,7 @@ import {
   TERRAIN_STATUS_ATTACK_TARGET,
   TERRAIN_STATUS_MOVE_TARGET,
   TERRAIN_STATUS_NORMAL, TERRAIN_STATUS_SWAP_TARGET, TERRAIN_TYPE_HONEY_FIELD, TERRAIN_TYPE_ICE_FIELD,
-  TERRAIN_TYPE_PLAINS, TERRAIN_TYPE_WALLS, TERRAIN_TYPE_WASTELAND,
+  TERRAIN_TYPE_PLAINS, TERRAIN_TYPE_VOID, TERRAIN_TYPE_WALLS, TERRAIN_TYPE_WASTELAND,
 } from './terrainConstants'
 
 import {nullGameComms} from '../../modules/communication/GameComms'
@@ -23,10 +23,11 @@ class Terrain {
    * @param type  terrain type
    * @param y     row
    * @param x     column
-   * @param interactive: boolean, if true, create listeners
+   * @param {boolean} interactive   - if true, create listeners
    * @param {GameComms} comms
+   * @param {boolean} forEdit       - if true, show void texture
    */
-  constructor(type, y, x, interactive, comms=nullGameComms) {
+  constructor(type, y, x, interactive, comms=nullGameComms, forEdit) {
     this.y = y
     this.x = x
     this.type = type
@@ -34,10 +35,13 @@ class Terrain {
     this.dist = -1 // used in bfs for determining distance
     this.status = TERRAIN_STATUS_NORMAL // rendering status
 
-    if(type === 0) {
-      return
-    }
     switch (type) {
+      case TERRAIN_TYPE_VOID:
+        if(!forEdit) {
+          return
+        }
+        this.pixiNode = new PIXI.Sprite(voidPlaceholderTexture)
+        break
       case TERRAIN_TYPE_PLAINS:
         this.pixiNode = new PIXI.Sprite(plainsTexture)
         break

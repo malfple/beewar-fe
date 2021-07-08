@@ -14,8 +14,6 @@ function Login(props) {
   })
   const [loading, setLoading] = useState(false)
 
-  console.log(input)
-
   function handleSubmit(e) {
     setLoading(true)
     apiAuthLogin(input.username, input.password).then(res => {

@@ -63,6 +63,8 @@ class GameComms {
       this.groupedSubscribers[group].forEach(subscriber => {
         subscriber.handleComms(msg)
       })
+    } else {
+      console.log(`COMMS: trigger msg to ${group}: but not subscribers`, msg)
     }
   }
 }
