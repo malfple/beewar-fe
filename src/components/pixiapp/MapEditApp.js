@@ -8,16 +8,27 @@ import ViewPort from '../../pixi/objects/ViewPort'
 import {renderer} from '../../pixi/renderer'
 import MapInteractionControllerForEdit from '../../pixi/objects/MapInteractionControllerForEdit'
 import {GROUP_MAP_CONTROLLER} from '../../modules/communication/groupConstants'
+import MapSizeModifier from '../../pixi/objects/MapSizeModifier'
 
-function MapEditApp(props) {
+/**
+ * Map edit app uses forward ref so the parent component can access the map object
+ * @type {React.ForwardRefExoticComponent<React.PropsWithoutRef<{}> & React.RefAttributes<MapForEdit>>}
+ */
+const MapEditApp = React.forwardRef((props, ref) => {
   useEffect(() => {
     const stage = new PIXI.Container()
     const map = new MapForEdit(props.map, props.comms)
     const viewport = new ViewPort(map)
     stage.addChild(viewport.fixedFrame)
 
+    // set forward ref
+    ref.current = map
+
     const mapInteractionController = new MapInteractionControllerForEdit(map, props.comms)
     props.comms.registerSubscriber(mapInteractionController, [GROUP_MAP_CONTROLLER], true)
+
+    const mapSizeModifier = new MapSizeModifier(props.comms)
+    stage.addChild(mapSizeModifier.pixiNode)
 
     const ticker = new PIXI.Ticker()
     ticker.add(() => {
@@ -41,7 +52,7 @@ function MapEditApp(props) {
       </div>
     </div>
   )
-}
+})
 
 MapEditApp.propTypes = {
   map: PropTypes.object.isRequired,

@@ -69,6 +69,12 @@ class ViewPort {
       this.btnZoomIn.y + this.btnZoomIn.height + 10)
 
     this.btnZoomIn.interactive = true
+    this.btnZoomIn.on('pointerover', () => {
+      this.btnZoomIn.alpha = 0.5
+    })
+    this.btnZoomIn.on('pointerout', () => {
+      this.btnZoomIn.alpha = 1
+    })
     this.btnZoomIn.on('click', () => {
       let newScale = map.pixiNode.scale.x + 0.1
       if(newScale > 2) {
@@ -78,6 +84,12 @@ class ViewPort {
     })
 
     this.btnZoomOut.interactive = true
+    this.btnZoomOut.on('pointerover', () => {
+      this.btnZoomOut.alpha = 0.5
+    })
+    this.btnZoomOut.on('pointerout', () => {
+      this.btnZoomOut.alpha = 1
+    })
     this.btnZoomOut.on('click', () => {
       let newScale = map.pixiNode.scale.x - 0.1
       if(newScale < 0.2) {

@@ -87,10 +87,10 @@ class Unit {
     this.hpText.position.set(-40, 0)
     this.pixiNode.addChild(this.hpText)
 
-    this._setPosition(y, x)
+    this.setPosition(y, x)
   }
 
-  _setPosition(y, x) {
+  setPosition(y, x) {
     this.y = y
     this.x = x
     const py = 75 * y + 50
@@ -107,9 +107,6 @@ class Unit {
     this.pixiNode.scale.set(1)
   }
 
-  moveTo(y, x) {
-    this._setPosition(y, x)
-  }
   toggleMoved() {
     this.state |= UNIT_STATE_BIT_MOVED
     this._updateSpriteFromState()

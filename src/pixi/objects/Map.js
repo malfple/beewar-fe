@@ -71,6 +71,24 @@ class Map {
     this.pixiNode.addChild(unit.pixiNode)
     this.units[y][x] = unit
   }
+
+  removeTerrain(y, x) {
+    if(this.terrains[y][x]) {
+      this.terrains[y][x].pixiNode.destroy({
+        children: true,
+      })
+      this.terrains[y][x] = null
+    }
+  }
+
+  removeUnit(y, x) {
+    if(this.units[y][x]) {
+      this.units[y][x].pixiNode.destroy({
+        children: true,
+      })
+      this.units[y][x] = null
+    }
+  }
 }
 
 export default Map

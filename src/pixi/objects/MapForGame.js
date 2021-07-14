@@ -356,7 +356,7 @@ class MapForGame extends Map {
     const unit = this.units[y1][x1]
     this.units[y1][x1] = null
     this.units[y2][x2] = unit
-    unit.moveTo(y2, x2)
+    unit.setPosition(y2, x2)
   }
   _unitAttack(y, x, hpAtk, yt, xt, hpDef) {
     this.units[y][x].setHP(hpAtk)
@@ -368,8 +368,8 @@ class MapForGame extends Map {
     const unit1 = this.units[y1][x1]
     this.units[y1][x1] = this.units[y2][x2]
     this.units[y2][x2] = unit1
-    this.units[y1][x1].moveTo(y1, x1)
-    this.units[y2][x2].moveTo(y2, x2)
+    this.units[y1][x1].setPosition(y1, x1)
+    this.units[y2][x2].setPosition(y2, x2)
   }
   // MIRROR: utils function from GameLoader BE
   _checkGameStart() {

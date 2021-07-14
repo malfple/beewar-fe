@@ -29,6 +29,9 @@ const COMMS_MAP_EVENT_END_TURN = 'MAP_END_TURN'
 const COMMS_BRUSH_SELECT = 'BRUSH_SELECT'
 // brush select
 // {brush_code, player_order}
+const COMMS_MAP_SIZE_CHANGE = 'MAP_SIZE_CHANGE'
+// change map size
+// {side: U/D/L/R, diff: +1/-1}
 
 export {
   CMD_CHAT,
@@ -49,4 +52,5 @@ export {
   COMMS_TERRAIN_CLICK,
   COMMS_MAP_EVENT_END_TURN,
   COMMS_BRUSH_SELECT,
+  COMMS_MAP_SIZE_CHANGE,
 }

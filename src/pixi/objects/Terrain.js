@@ -62,9 +62,7 @@ class Terrain {
         return
     }
     this.pixiNode.anchor.set(0.5, 0.5)
-    const py = 75 * y + 50
-    const px = 90 * x + (y % 2 === 0 ? 95 : 50)
-    this.pixiNode.position.set(px, py)
+    this.setPosition(y, x)
     this.pixiNode.hitArea = terrainHitArea
 
     // events
@@ -86,6 +84,14 @@ class Terrain {
         }, GROUP_MAP_CONTROLLER)
       })
     }
+  }
+
+  setPosition(y, x) {
+    this.y = y
+    this.x = x
+    const py = 75 * y + 50
+    const px = 90 * x + (y % 2 === 0 ? 95 : 50)
+    this.pixiNode.position.set(px, py)
   }
 
   // triggered when the cell is in movement range of the current selected unit
