@@ -36,8 +36,6 @@ function MapEdit(props) {
   function handleSubmit(e) {
     console.log(input, props.map)
     console.log(mapObject.current)
-    // e.preventDefault() // TODO: remove
-    // return // TODO: remove
     // check token
     userToken.checkTokenAndRefresh().then(() => {
       apiMapUpdate(
@@ -51,12 +49,10 @@ function MapEdit(props) {
         mapObject.current.calcTerrainInfo(),
         mapObject.current.calcUnitInfo(),
       ).then(res => {
-        const errMsg = res.data.err_msg
-        console.log(res.data)
-        if(errMsg.length === 0) {
+        if(res.data.err_msg === '') {
           alert('save success')
         } else {
-          alert(errMsg)
+          alert(res.data.err_msg)
         }
       })
     }).catch(() => {

@@ -21,7 +21,7 @@
     width: 300px;
 }
 
-.button a, .button input {
+.button a, .button input, .button div {
     text-decoration: none;
     display: flex;
     justify-content: center;
@@ -29,9 +29,10 @@
     height: 100%;
     width: 100%;
     font-size: 18px;
+    cursor: pointer;
 }
 
-.button--small a {
+.button--small a, .button--small input, .button--small div {
     font-size: 15px;
 }
 

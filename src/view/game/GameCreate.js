@@ -19,8 +19,12 @@ function GameCreate() {
 
   function createGame(e) {
     apiGameCreate(userToken.token, map_id, input.name, input.password).then(res => {
-      alert(`create game with map id: ${map_id}, game id: ${res.data.game_id}`)
-      history.push(`/game/${res.data.game_id}`)
+      if(res.data.err_msg === '') {
+        alert(`create game with map id: ${map_id}, game id: ${res.data.game_id}`)
+        history.push(`/game/${res.data.game_id}`)
+      } else {
+        alert(`Error: ${res.data.err_msg}`)
+      }
     })
     e.preventDefault()
   }
