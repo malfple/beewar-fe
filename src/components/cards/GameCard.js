@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 
 import './Card.css'
 import {GAME_STATUS_PICKING, GAME_STATUS_TEXT} from '../../pixi/objects/gameConstants'
+import Preview from './Preview'
 
 function GameCard(props) {
   const history = useHistory()
@@ -16,23 +17,26 @@ function GameCard(props) {
 
   return (
     <div className="card" onClick={toGame}>
-      <div>
-        Game {props.game.id}
-      </div>
-      <div>
-        Name: {props.game.name}
-      </div>
-      <div>
-        Players: {props.game.player_count}
-      </div>
-      <div>
-        Game status: {GAME_STATUS_TEXT[props.game.status]}
-      </div>
-      {props.game.status === GAME_STATUS_PICKING ?
+      <Preview map={props.game} />
+      <div className="card__content">
         <div>
-          Using password: {props.game.password.length > 0 ? 'Yes' : 'No'}
+          Game {props.game.id}
         </div>
-        : null}
+        <div>
+          Name: {props.game.name}
+        </div>
+        <div>
+          Players: {props.game.player_count}
+        </div>
+        <div>
+          Game status: {GAME_STATUS_TEXT[props.game.status]}
+        </div>
+        {props.game.status === GAME_STATUS_PICKING ?
+          <div>
+            Using password: {props.game.password.length > 0 ? 'Yes' : 'No'}
+          </div>
+          : null}
+      </div>
     </div>
   )
 }
