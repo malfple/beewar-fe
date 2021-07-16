@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useRef} from 'react'
 import PropTypes from 'prop-types'
 
 import * as PIXI from 'pixi.js'
@@ -8,6 +8,9 @@ import ViewPort from '../../pixi/objects/ViewPort'
 import Map from '../../pixi/objects/Map'
 
 function MapViewApp(props) {
+  /** @type {React.MutableRefObject<>} */
+  const appContainer = useRef(null)
+
   useEffect(() => {
     const stage = new PIXI.Container()
     const map = new Map(props.map)
@@ -21,7 +24,7 @@ function MapViewApp(props) {
     }, PIXI.UPDATE_PRIORITY.LOW)
     ticker.start()
 
-    document.getElementById('map-view-app').appendChild(renderer.view)
+    appContainer.current.appendChild(renderer.view)
 
     return function cleanup() {
       stage.destroy({
@@ -32,10 +35,7 @@ function MapViewApp(props) {
   })
 
   return (
-    <div>
-      <div id="map-view-app">
-      </div>
-    </div>
+    <div ref={appContainer} />
   )
 }
 

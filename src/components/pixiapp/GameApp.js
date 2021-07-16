@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react'
+import React, {useContext, useEffect, useRef} from 'react'
 import PropTypes from 'prop-types'
 
 import * as PIXI from 'pixi.js'
@@ -17,6 +17,8 @@ import MapInteractionController from '../../pixi/objects/MapInteractionControlle
 
 function GameApp(props) {
   const userToken = useContext(UserTokenContext)
+  /** @type {React.MutableRefObject<>} */
+  const appContainer = useRef(null)
 
   useEffect(() => {
     // setup app
@@ -41,7 +43,7 @@ function GameApp(props) {
     ticker.start()
 
     console.log('load map pixi')
-    document.getElementById('game-app').appendChild(renderer.view)
+    appContainer.current.appendChild(renderer.view)
 
     console.log(`stage has ${stage.children.length} instances`)
     console.log(`map has ${map.pixiNode.children.length} instances`)
@@ -56,10 +58,7 @@ function GameApp(props) {
   })
 
   return (
-    <div>
-      <div id="game-app">
-      </div>
-    </div>
+    <div ref={appContainer} />
   )
 }
 

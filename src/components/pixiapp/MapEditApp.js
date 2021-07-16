@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useRef} from 'react'
 import PropTypes from 'prop-types'
 
 import * as PIXI from 'pixi.js'
@@ -15,6 +15,9 @@ import MapSizeModifier from '../../pixi/objects/MapSizeModifier'
  * @type {React.ForwardRefExoticComponent<React.PropsWithoutRef<{}> & React.RefAttributes<MapForEdit>>}
  */
 const MapEditApp = React.forwardRef((props, ref) => {
+  /** @type {React.MutableRefObject<>} */
+  const appContainer = useRef(null)
+
   useEffect(() => {
     const stage = new PIXI.Container()
     const map = new MapForEdit(props.map, props.comms)
@@ -36,7 +39,7 @@ const MapEditApp = React.forwardRef((props, ref) => {
     }, PIXI.UPDATE_PRIORITY.LOW)
     ticker.start()
 
-    document.getElementById('map-edit-app').appendChild(renderer.view)
+    appContainer.current.appendChild(renderer.view)
 
     return function cleanup() {
       stage.destroy({
@@ -47,10 +50,7 @@ const MapEditApp = React.forwardRef((props, ref) => {
   })
 
   return (
-    <div>
-      <div id="map-edit-app">
-      </div>
-    </div>
+    <div ref={appContainer} />
   )
 })
 
