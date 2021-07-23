@@ -4,8 +4,8 @@ import {
   CMD_UNIT_MOVE,
   CMD_UNIT_MOVE_AND_ATTACK, CMD_UNIT_SWAP,
   COMMS_TERRAIN_CLICK,
+  GROUP_WEBSOCKET,
 } from '../../modules/communication/messageConstants'
-import {GROUP_WEBSOCKET} from '../../modules/communication/groupConstants'
 
 const MAP_STATE_NORMAL = 0
 const MAP_STATE_UNIT_SELECT = 1

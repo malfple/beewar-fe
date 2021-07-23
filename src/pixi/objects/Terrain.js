@@ -15,8 +15,7 @@ import {
 } from './terrainConstants'
 
 import {nullGameComms} from '../../modules/communication/GameComms'
-import {GROUP_MAP_CONTROLLER} from '../../modules/communication/groupConstants'
-import {COMMS_TERRAIN_CLICK} from '../../modules/communication/messageConstants'
+import {COMMS_TERRAIN_CLICK, GROUP_MAP_CONTROLLER} from '../../modules/communication/messageConstants'
 
 class Terrain {
   /**

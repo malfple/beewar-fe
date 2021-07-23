@@ -1,4 +1,4 @@
-import {GROUP_NONE} from './groupConstants'
+import {GROUP_NONE} from './messageConstants'
 
 /**
  * Game Comms
@@ -19,7 +19,7 @@ class GameComms {
 
   /**
    * @param {Object}    subscriber      - need to have handleComms(msg) function defined
-   * @param {string[]}  groups          - an array of strings. Use groupConstants for the group names
+   * @param {string[]}  groups          - an array of strings. Use group constants in messageConstants for the group names
    * @param {boolean}   excludeFromAll  - if true, won't add to all subscribers
    */
   registerSubscriber(subscriber, groups=[], excludeFromAll=false) {

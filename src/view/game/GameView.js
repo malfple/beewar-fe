@@ -3,10 +3,9 @@ import {useParams} from 'react-router-dom'
 
 import {UserTokenContext} from '../../context'
 import GameApp from '../../components/pixiapp/GameApp'
-import {CMD_END_TURN, CMD_ERROR, CMD_GAME_DATA} from '../../modules/communication/messageConstants'
+import {CMD_END_TURN, CMD_ERROR, CMD_GAME_DATA, GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/messageConstants'
 import GameComms from '../../modules/communication/GameComms'
 import WebsocketWrapper from '../../modules/communication/WebsocketWrapper'
-import {GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/groupConstants'
 import ChatBox from '../../components/game/ChatBox'
 import NormalLoadingSpinner from '../../components/loading/NormalLoadingSpinner'
 

@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 
-import {CMD_CHAT, CMD_JOIN} from '../../modules/communication/messageConstants'
-import {GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/groupConstants'
+import {CMD_CHAT, CMD_JOIN, GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/messageConstants'
 
 import PlayerText from './PlayerText'
 

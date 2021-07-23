@@ -19,8 +19,7 @@ import mortarPNG from '../../pixi/assets/unit-mortar.png'
 import {TERRAIN_BRUSH} from '../../pixi/objects/editorConstants'
 import BrushForUnitTerrain from './BrushForUnitTerrain'
 import BrushForColor from './BrushForColor'
-import {COMMS_BRUSH_SELECT} from '../../modules/communication/messageConstants'
-import {GROUP_MAP_CONTROLLER} from '../../modules/communication/groupConstants'
+import {COMMS_BRUSH_SELECT, GROUP_MAP_CONTROLLER} from '../../modules/communication/messageConstants'
 
 function BrushPanel(props) {
   const [state, setState] = useState({

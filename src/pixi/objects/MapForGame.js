@@ -19,9 +19,9 @@ import {
   CMD_UNIT_MOVE,
   CMD_UNIT_MOVE_AND_ATTACK, CMD_UNIT_STAY, COMMS_MAP_EVENT_END_TURN,
   CMD_UNIT_SWAP,
+  GROUP_MAP_EVENT_LISTENERS,
 } from '../../modules/communication/messageConstants'
 import {hexDistance} from '../../utils/grid'
-import {GROUP_MAP_EVENT_LISTENERS} from '../../modules/communication/groupConstants'
 import PriorityQueue from '../../utils/PriorityQueue'
 import {GAME_STATUS_ENDED, GAME_STATUS_ONGOING, GAME_STATUS_PICKING} from './gameConstants'
 import {calcMoveCost} from '../../utils/moveCost'

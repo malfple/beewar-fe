@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js'
 import {renderer} from '../renderer'
-import {GROUP_MAP_CONTROLLER} from '../../modules/communication/groupConstants'
-import {COMMS_MAP_SIZE_CHANGE} from '../../modules/communication/messageConstants'
+import {COMMS_MAP_SIZE_CHANGE, GROUP_MAP_CONTROLLER} from '../../modules/communication/messageConstants'
 
 class MapSizeModifier {
   /**

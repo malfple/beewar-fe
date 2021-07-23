@@ -1,5 +1,4 @@
-import {CMD_GAME_DATA} from './messageConstants'
-import {GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from './groupConstants'
+import {CMD_GAME_DATA, GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from './messageConstants'
 
 const BE_SERVER_WEBSOCKET_URL = process.env.REACT_APP_BE_SERVER_WEBSOCKET_URL
 

@@ -7,7 +7,7 @@ import MapForEdit from '../../pixi/objects/MapForEdit'
 import ViewPort from '../../pixi/objects/ViewPort'
 import {renderer} from '../../pixi/renderer'
 import MapInteractionControllerForEdit from '../../pixi/objects/MapInteractionControllerForEdit'
-import {GROUP_MAP_CONTROLLER} from '../../modules/communication/groupConstants'
+import {GROUP_MAP_CONTROLLER} from '../../modules/communication/messageConstants'
 import MapSizeModifier from '../../pixi/objects/MapSizeModifier'
 
 /**

@@ -10,7 +10,7 @@ import {
   GROUP_MAP_CONTROLLER,
   GROUP_MAP_EVENT_LISTENERS,
   GROUP_WEBSOCKET_LISTENERS,
-} from '../../modules/communication/groupConstants'
+} from '../../modules/communication/messageConstants'
 import {UserTokenContext} from '../../context'
 import InfoPanel from '../../pixi/objects/InfoPanel'
 import MapInteractionController from '../../pixi/objects/MapInteractionController'
