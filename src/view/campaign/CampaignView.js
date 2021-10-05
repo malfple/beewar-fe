@@ -40,7 +40,7 @@ function CampaignView(props) {
       <div className="map-game-view__column-right">
         <h1>{props.map.name}</h1>
         <div>
-          <Button theme="hollow">
+          <Button theme="hollow" small={true}>
             <div onClick={startCampaign}>
               Start Campaign
             </div>
