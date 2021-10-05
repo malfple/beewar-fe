@@ -23,6 +23,7 @@ import Leaderboard from './Leaderboard'
 import Wiki from './Wiki'
 import Changelog from './Changelog'
 import Home from './Home'
+import Campaign from './campaign/Campaign'
 
 // App is the root router
 
@@ -124,6 +125,9 @@ function App(props) {
             </Route>
             <RouteWithLogin path="/game">
               <Game />
+            </RouteWithLogin>
+            <RouteWithLogin path="/campaign">
+              <Campaign />
             </RouteWithLogin>
             <Route path="/about">
               <About />

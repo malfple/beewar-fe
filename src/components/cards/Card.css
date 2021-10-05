@@ -13,6 +13,11 @@
     overflow: hidden;
 }
 
+.card--campaign {
+    width: 80%;
+    height: 200px;
+}
+
 .card__content {
     padding: 20px;
     width: 100%;

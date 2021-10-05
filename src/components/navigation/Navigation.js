@@ -31,6 +31,7 @@ function Navigation(props) {
           <Nav show={true}><Link to="/map/list">Maps</Link></Nav>
           <Nav show={userLoggedIn}><Link to="/game/list">Open Games</Link></Nav>
           <Nav show={userLoggedIn}><Link to="/game/my_games">My Games</Link></Nav>
+          <Nav show={userLoggedIn}><Link to="/campaign">Campaign</Link></Nav>
           <Nav show={true}><Link to="/leaderboard">Leaderboard</Link></Nav>
           <Nav show={true}><Link to="/about">About</Link></Nav>
           <Nav show={true}><Link to="/how2play">How to Play</Link></Nav>
