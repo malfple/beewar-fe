@@ -13,10 +13,25 @@ function Home() {
   if(userToken.username !== '') { // logged in
     return (
       <div className="App">
-        <h1>BeeWar</h1>
+        <br /><br />
+        <h1>Welcome to Bee War</h1>
         <h2>
-          Check the navigation bar haha
+          &lt;-- You can navigate the site using the side bar
         </h2>
+        <h3>
+          If this is your first time, it is recommended to try the campaign mode!
+        </h3>
+        <div>
+          <Button theme="fill">
+            <Link to="/campaign">
+              Play campaign
+            </Link>
+          </Button>
+        </div>
+        <div>
+          You can also use the sidebar to go to campaign from anywhere
+        </div>
+        <br /><br /><br /><br />
         <ServerStats />
         <PingTest />
         <ReactHome show={false} />
@@ -98,6 +113,9 @@ function ServerStats() {
 
   return (
     <div>
+      <h3>
+        Server Stats
+      </h3>
       <div>
         Active game hubs: {state.hub_count} hubs
       </div>
