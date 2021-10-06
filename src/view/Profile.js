@@ -14,6 +14,7 @@ function Profile() {
         setUser({
           username: res.data.user.username,
           email: res.data.user.email,
+          highest_campaign: res.data.user.highest_campaign,
         })
       }
     })
@@ -34,6 +35,9 @@ function Profile() {
       </div>
       <div>
         Email: {user.email}
+      </div>
+      <div>
+        Highest campaign level reached: {user.highest_campaign}
       </div>
     </div>
   )
