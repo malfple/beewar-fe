@@ -3,7 +3,7 @@ import {useParams} from 'react-router-dom'
 
 import {UserTokenContext} from '../../context'
 import GameApp from '../../components/pixiapp/GameApp'
-import {CMD_END_TURN, CMD_ERROR, CMD_GAME_DATA, GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/messageConstants'
+import {CMD_ERROR, CMD_GAME_DATA, GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/messageConstants'
 import GameComms from '../../modules/communication/GameComms'
 import WebsocketWrapper from '../../modules/communication/WebsocketWrapper'
 import ChatBox from '../../components/game/ChatBox'
@@ -51,12 +51,6 @@ function GameView() {
     }
   }, [id, userToken])
 
-  function endTurn() {
-    comms.current.triggerMsg({
-      cmd: CMD_END_TURN,
-    }, GROUP_WEBSOCKET)
-  }
-
   if(!gameData) {
     return (
       <div>
@@ -72,7 +66,6 @@ function GameView() {
       </div>
       <div className="map-game-view__column-right">
         <ChatBox comms={comms.current} gameID={gameData.game.id} players={gameData.players} gameHasPassword={gameData.game.password !== ''} />
-        <button onClick={endTurn}>end turn</button> <br />
       </div>
     </div>
   )

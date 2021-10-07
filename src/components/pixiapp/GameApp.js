@@ -32,7 +32,7 @@ function GameApp(props) {
     const mapInteractionController = new MapInteractionController(map, props.comms)
     props.comms.registerSubscriber(mapInteractionController, [GROUP_WEBSOCKET_LISTENERS, GROUP_MAP_CONTROLLER], true)
 
-    const infoPanel = new InfoPanel(props.gameData.game)
+    const infoPanel = new InfoPanel(props.gameData.game, props.comms)
     props.comms.registerSubscriber(infoPanel, [GROUP_MAP_EVENT_LISTENERS])
     stage.addChild(infoPanel.pixiNode)
 

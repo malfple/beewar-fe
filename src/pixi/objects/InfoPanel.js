@@ -2,15 +2,23 @@ import * as PIXI from 'pixi.js'
 
 import {renderer} from '../renderer'
 import {PLAYER_COLOR_NAME, PLAYER_COLOR_TINT} from './unitConstants'
-import {COMMS_MAP_EVENT_END_TURN} from '../../modules/communication/messageConstants'
+import {CMD_END_TURN, COMMS_MAP_EVENT_END_TURN, GROUP_WEBSOCKET} from '../../modules/communication/messageConstants'
 import {GAME_STATUS_ONGOING, GAME_STATUS_PICKING} from './gameConstants'
+import {nullGameComms} from '../../modules/communication/GameComms'
 
+/**
+ * This class shows the overall game information and contains game-wide elements. This includes:
+ * 1. Whose turn is it?
+ * 2. Has the game already ended?
+ * 3. The end turn button
+ */
 class InfoPanel {
-  constructor(game) {
+  constructor(game, comms=nullGameComms) {
     this.status = game.status
     this.player_count = game.player_count
     this.turn_count = game.turn_count
     this.turn_player = game.turn_player
+    this.comms = comms
     this.pixiNode = new PIXI.Container()
 
     // create border
@@ -35,6 +43,35 @@ class InfoPanel {
     this.turnInfoText.position.set(20, 20)
     this._updateInfoText()
     this.pixiNode.addChild(this.turnInfoText)
+
+    // end turn button
+    // currently only a text
+    this.btnEndTurn = new PIXI.Text('End Turn', {
+      fontFamily: 'Arial',
+      fontSize: 24,
+      align: 'left',
+      stroke: 'black',
+      strokeThickness: 8,
+      fill: 'white',
+    })
+    this.btnEndTurn.position.set(renderer.width - this.btnEndTurn.width - 20, renderer.height - this.btnEndTurn.height - 20)
+    this.pixiNode.addChild(this.btnEndTurn)
+    this._setupEndTurnInteraction()
+  }
+
+  _setupEndTurnInteraction() {
+    this.btnEndTurn.interactive = true
+    this.btnEndTurn.on('pointerover', () => {
+      this.btnEndTurn.alpha = 0.5
+    })
+    this.btnEndTurn.on('pointerout', () => {
+      this.btnEndTurn.alpha = 1
+    })
+    this.btnEndTurn.on('click', () => {
+      this.comms.triggerMsg({
+        cmd: CMD_END_TURN,
+      }, GROUP_WEBSOCKET)
+    })
   }
 
   // end turn event sent from Map object
