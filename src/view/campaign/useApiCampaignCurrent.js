@@ -8,20 +8,26 @@ import {UserTokenContext} from '../../context'
  */
 function useApiCampaignCurrent() {
   const userToken = useContext(UserTokenContext)
-  const [gameID, setGameID] = useState(null)
+  const [state, setState] = useState({
+    gameID: null,
+    campaignLevel: null,
+  })
 
   useEffect(() => {
     // check token
     userToken.checkTokenAndRefresh().then(() => {
       apiCampaignCurrent(userToken.token).then(res => {
-        setGameID(res.data.game_id)
+        setState({
+          gameID: res.data.game_id,
+          campaignLevel: res.data.campaign_level,
+        })
       })
     }).catch(() => {
       // do nothing
     })
   }, [userToken])
 
-  return gameID
+  return [state.gameID, state.campaignLevel]
 }
 
 export default useApiCampaignCurrent

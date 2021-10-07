@@ -4,7 +4,7 @@ import NormalLoadingSpinner from '../../components/loading/NormalLoadingSpinner'
 import useApiCampaignCurrent from './useApiCampaignCurrent'
 
 function CampaignHome() {
-  const gameID = useApiCampaignCurrent()
+  const [gameID] = useApiCampaignCurrent()
 
   return (
     <div>

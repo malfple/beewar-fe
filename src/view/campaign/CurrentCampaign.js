@@ -5,7 +5,7 @@ import CampaignGameView from './CampaignGameView'
 import useApiCampaignCurrent from './useApiCampaignCurrent'
 
 function CurrentCampaign() {
-  const gameID = useApiCampaignCurrent()
+  const [gameID, campaignLevel] = useApiCampaignCurrent()
 
   if(gameID === null) {
     return (
@@ -32,7 +32,7 @@ function CurrentCampaign() {
   }
 
   return (
-    <CampaignGameView gameID={gameID} />
+    <CampaignGameView gameID={gameID} campaignLevel={campaignLevel} />
   )
 }
 

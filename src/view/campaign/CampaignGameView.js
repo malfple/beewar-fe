@@ -9,6 +9,7 @@ import GameComms from '../../modules/communication/GameComms'
 import WebsocketWrapper from '../../modules/communication/WebsocketWrapper'
 import PlayersAndChatBox from '../../components/game/PlayersAndChatBox'
 import NormalLoadingSpinner from '../../components/loading/NormalLoadingSpinner'
+import CampaignHints from '../../components/game/CampaignHints'
 
 /**
  * This component is very similar to GameView
@@ -80,6 +81,7 @@ function CampaignGameView(props) {
           gameHasPassword={gameData.game.password !== ''}
           disableChat={true}
         />
+        <CampaignHints campaignLevel={props.campaignLevel} />
         <div className="map-game-view__column-right__footer">
           <Link to="/campaign/list">
             >>> go to campaign list
@@ -92,6 +94,7 @@ function CampaignGameView(props) {
 
 CampaignGameView.propTypes = {
   gameID: PropTypes.number.isRequired,
+  campaignLevel: PropTypes.number.isRequired,
 }
 
 export default CampaignGameView
