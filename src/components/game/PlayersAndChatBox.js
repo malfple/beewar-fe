@@ -5,7 +5,7 @@ import {CMD_CHAT, CMD_JOIN, GROUP_WEBSOCKET, GROUP_WEBSOCKET_LISTENERS} from '..
 
 import PlayerText from './PlayerText'
 
-function ChatBox(props) {
+function PlayersAndChatBox(props) {
   const [msg, setMsg] = useState('')
   const [messages, setMessages] = useState(['start of chat'])
   const [players, setPlayers] = useState(props.players)
@@ -49,14 +49,12 @@ function ChatBox(props) {
     }
   }, [props.comms, players])
 
-  return (
-    <div>
-      <div>
-        Players:
-        <div>
-          {players.map((player, i) => <PlayerText key={i} comms={props.comms} gameID={props.gameID} gameUser={player} gameHasPassword={props.gameHasPassword} />)}
-        </div>
-      </div>
+  function renderChat() {
+    if(props.disableChat) {
+      return null
+    }
+
+    return (
       <div>
         Chat:
         <input type="text" onChange={e => setMsg(e.target.value)} />
@@ -65,15 +63,28 @@ function ChatBox(props) {
           {messages.map((msg, i) => <div key={i}>{msg}</div>)}
         </div>
       </div>
+    )
+  }
+
+  return (
+    <div>
+      <div>
+        Players:
+        <div>
+          {players.map((player, i) => <PlayerText key={i} comms={props.comms} gameID={props.gameID} gameUser={player} gameHasPassword={props.gameHasPassword} />)}
+        </div>
+      </div>
+      {renderChat()}
     </div>
   )
 }
 
-ChatBox.propTypes = {
+PlayersAndChatBox.propTypes = {
   comms: PropTypes.object.isRequired,
   gameID: PropTypes.number.isRequired,
   players: PropTypes.array.isRequired,
   gameHasPassword: PropTypes.bool.isRequired,
+  disableChat: PropTypes.bool,
 }
 
-export default ChatBox
+export default PlayersAndChatBox

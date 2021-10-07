@@ -6,7 +6,7 @@ import GameApp from '../../components/pixiapp/GameApp'
 import {CMD_ERROR, CMD_GAME_DATA, GROUP_WEBSOCKET_LISTENERS} from '../../modules/communication/messageConstants'
 import GameComms from '../../modules/communication/GameComms'
 import WebsocketWrapper from '../../modules/communication/WebsocketWrapper'
-import ChatBox from '../../components/game/ChatBox'
+import PlayersAndChatBox from '../../components/game/PlayersAndChatBox'
 import NormalLoadingSpinner from '../../components/loading/NormalLoadingSpinner'
 
 function GameView() {
@@ -65,7 +65,12 @@ function GameView() {
         <GameApp gameData={gameData} comms={comms.current} />
       </div>
       <div className="map-game-view__column-right">
-        <ChatBox comms={comms.current} gameID={gameData.game.id} players={gameData.players} gameHasPassword={gameData.game.password !== ''} />
+        <PlayersAndChatBox
+          comms={comms.current}
+          gameID={gameData.game.id}
+          players={gameData.players}
+          gameHasPassword={gameData.game.password !== ''}
+        />
       </div>
     </div>
   )
