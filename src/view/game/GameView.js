@@ -65,6 +65,9 @@ function GameView() {
         <GameApp gameData={gameData} comms={comms.current} />
       </div>
       <div className="map-game-view__column-right">
+        <h2>
+          {gameData.game.name}
+        </h2>
         <PlayersAndChatBox
           comms={comms.current}
           gameID={gameData.game.id}

@@ -64,17 +64,17 @@
         "always"
       ],
       "semi": [
-        "error",
+        "warn",
         "never"
       ],
       "curly": "error",
       "dot-notation": "error",
       "quotes": [
-        "error",
+        "warn",
         "single"
       ],
       "jsx-quotes": [
-        "error",
+        "warn",
         "prefer-double"
       ],
       "comma-dangle": [

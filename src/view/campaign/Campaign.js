@@ -5,6 +5,7 @@ import NotFound from '../NotFound'
 import withFetchMapData from '../map/withFetchMapData'
 import CampaignView from './CampaignView'
 import CurrentCampaign from './CurrentCampaign'
+import CampaignHome from './CampaignHome'
 
 const CampaignViewWithFetchMapData = withFetchMapData(CampaignView)
 
@@ -15,6 +16,9 @@ function Campaign() {
     <div>
       <Switch>
         <Route exact path={`${path}/`}>
+          <CampaignHome />
+        </Route>
+        <Route exact path={`${path}/current`}>
           <CurrentCampaign />
         </Route>
         <Route exact path={`${path}/list`}>
