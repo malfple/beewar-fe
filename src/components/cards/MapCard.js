@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 
 import './Card.css'
 import Preview from './Preview'
+import {MAP_TYPE_TEXT} from '../../pixi/objects/mapTypeConstants'
 
 function MapCard(props) {
   const history = useHistory()
@@ -20,6 +21,9 @@ function MapCard(props) {
       <div className="card__content">
         <div>
           Name: {props.map.name}
+        </div>
+        <div>
+          Map Type/Game Mode: {MAP_TYPE_TEXT[props.map.type]}
         </div>
         <div>
           Size (height x width) : {props.map.height} x {props.map.width}

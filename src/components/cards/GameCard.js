@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import './Card.css'
 import {GAME_STATUS_PICKING, GAME_STATUS_TEXT} from '../../pixi/objects/gameConstants'
 import Preview from './Preview'
+import {MAP_TYPE_TEXT} from "../../pixi/objects/mapTypeConstants";
 
 function GameCard(props) {
   const history = useHistory()
@@ -24,6 +25,9 @@ function GameCard(props) {
         </div>
         <div>
           Name: {props.game.name}
+        </div>
+        <div>
+          Map Type/Game Mode: {MAP_TYPE_TEXT[props.game.type]}
         </div>
         <div>
           Players: {props.game.player_count}
