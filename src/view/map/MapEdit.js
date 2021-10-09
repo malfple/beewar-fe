@@ -9,11 +9,14 @@ import BrushPanel from '../../components/mapeditor/BrushPanel'
 import Button from '../../components/forms/button/Button'
 import {apiMapUpdate} from '../../modules/api/map'
 import {UserTokenContext} from '../../context'
+import {MAP_TYPE_ESCAPE, MAP_TYPE_FFA, MAP_TYPE_TEXT} from '../../pixi/objects/mapTypeConstants'
+import SelectBox from '../../components/forms/SelectBox'
 
 function MapEdit(props) {
   const userToken = useContext(UserTokenContext)
   const [input, handleInputChange] = useInputChange({
     name: props.map.name,
+    mapType: props.map.type,
     playerCount: props.map.player_count,
   })
   /** @type {React.MutableRefObject<GameComms>} */
@@ -41,7 +44,7 @@ function MapEdit(props) {
       apiMapUpdate(
         userToken.token,
         props.map.id,
-        props.map.type,
+        input.mapType,
         mapObject.current.height,
         mapObject.current.width,
         input.name,
@@ -100,10 +103,16 @@ function MapEdit(props) {
             />
           </div>
           <div>
+            <SelectBox name="mapType" defaultValue={props.map.type} onChange={handleInputChange}>
+              <option value={0}>{MAP_TYPE_TEXT[MAP_TYPE_FFA]}</option>
+              <option value={1}>{MAP_TYPE_TEXT[MAP_TYPE_ESCAPE]}</option>
+            </SelectBox>
+          </div>
+          <div>
             <InputBox
               label="Player Count"
               type="number"
-              min="2"
+              min="1"
               name="playerCount"
               defaultValue={props.map.player_count}
               onChange={handleInputChange}
