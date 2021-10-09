@@ -2,7 +2,7 @@
 
 import {
   TERRAIN_TYPE_HONEY_FIELD, TERRAIN_TYPE_ICE_FIELD,
-  TERRAIN_TYPE_PLAINS, TERRAIN_TYPE_VOID,
+  TERRAIN_TYPE_PLAINS, TERRAIN_TYPE_THRONE, TERRAIN_TYPE_VOID,
   TERRAIN_TYPE_WALLS,
   TERRAIN_TYPE_WASTELAND,
 } from '../pixi/objects/terrainConstants'
@@ -26,6 +26,8 @@ function calcMoveCost(terrainType, unitWeight) {
       return 1 + unitWeight
     case TERRAIN_TYPE_ICE_FIELD:
       return 2
+    case TERRAIN_TYPE_THRONE:
+      return 1
     default:
       // do nothing
   }

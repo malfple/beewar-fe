@@ -25,8 +25,9 @@ import {hexDistance} from '../../utils/grid'
 import PriorityQueue from '../../utils/PriorityQueue'
 import {GAME_STATUS_ENDED, GAME_STATUS_ONGOING, GAME_STATUS_PICKING} from './gameConstants'
 import {calcMoveCost} from '../../utils/moveCost'
-import {TERRAIN_TYPE_ICE_FIELD} from './terrainConstants'
+import {TERRAIN_TYPE_ICE_FIELD, TERRAIN_TYPE_THRONE} from './terrainConstants'
 import {UNIT_MOVE_AND_ATTACK_MAP, UNIT_SWAP_MAP} from './cmdWhitelist'
+import {MAP_TYPE_ESCAPE} from './mapTypeConstants'
 
 // MIRROR: for bfs
 const K = 6
@@ -312,7 +313,9 @@ class MapForGame extends Map {
         break
       case CMD_UNIT_MOVE:
         this._unitMove(msg.data.y_1, msg.data.x_1, msg.data.y_2, msg.data.x_2)
-        this.units[msg.data.y_2][msg.data.x_2].toggleMoved()
+        if(this.units[msg.data.y_2][msg.data.x_2]) { // if dis a queen, might be gone already
+          this.units[msg.data.y_2][msg.data.x_2].toggleMoved()
+        }
         break
       case CMD_UNIT_ATTACK:
         this._unitAttack(msg.data.y_1, msg.data.x_1, msg.data.hp_atk, msg.data.y_t, msg.data.x_t, msg.data.hp_def)
@@ -357,6 +360,7 @@ class MapForGame extends Map {
     this.units[y1][x1] = null
     this.units[y2][x2] = unit
     unit.setPosition(y2, x2)
+    this._checkQueenOnThrone(y2, x2)
   }
   _unitAttack(y, x, hpAtk, yt, xt, hpDef) {
     this.units[y][x].setHP(hpAtk)
@@ -370,6 +374,7 @@ class MapForGame extends Map {
     this.units[y2][x2] = unit1
     this.units[y1][x1].setPosition(y1, x1)
     this.units[y2][x2].setPosition(y2, x2)
+    this._checkQueenOnThrone(y1, x1) // the swapped unit might be a queen
   }
   // MIRROR: utils function from GameLoader BE
   _checkGameStart() {
@@ -415,16 +420,25 @@ class MapForGame extends Map {
       this.units[y][x] = null
     }
   }
+  _checkQueenOnThrone(y, x) {
+    if(this.type === MAP_TYPE_ESCAPE) {
+      if(this.terrains[y][x].type === TERRAIN_TYPE_THRONE) {
+        if(this.units[y][x].type === UNIT_TYPE_QUEEN) {
+          this._assignPlayerRank(this.units[y][x].owner)
+          this.units[y][x].setHP(0) // need this additional step to remove the queen sprite
+          this.units[y][x] = null
+          this._checkGameEnd()
+        }
+      }
+    }
+  }
   _assignPlayerRank(player) {
     // modifying player directly is dangerous but whatever
     if(this.playerData[player-1].final_turns !== 0) {
       return
     }
-    for(let i = 0; i < this.playerData.length; i++) {
-      if(this.playerData[i].final_turns === 0) {
-        this.playerData[player-1].final_rank++
-      }
-    }
+    // final_rank is currently unused, so it's empty here.
+    // if it is needed, copy from BE
     this.playerData[player-1].final_turns = this.turn_count
   }
 

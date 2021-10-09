@@ -13,6 +13,7 @@ class Map {
    * @param {GameComms} comms         - added here because it's needed by terrain
    */
   constructor(mapData, comms=nullGameComms) {
+    this.type = mapData.type
     this.height = mapData.height
     this.width = mapData.width
     this.terrains = []
