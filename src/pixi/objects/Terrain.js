@@ -3,7 +3,7 @@ import {
   honeyFieldTexture,
   iceFieldTexture,
   plainsTexture,
-  terrainHitArea, voidPlaceholderTexture,
+  terrainHitArea, throneTexture, voidPlaceholderTexture,
   wallsTexture,
   wastelandTexture,
 } from '../textures'
@@ -11,7 +11,7 @@ import {
   TERRAIN_STATUS_ATTACK_TARGET,
   TERRAIN_STATUS_MOVE_TARGET,
   TERRAIN_STATUS_NORMAL, TERRAIN_STATUS_SWAP_TARGET, TERRAIN_TYPE_HONEY_FIELD, TERRAIN_TYPE_ICE_FIELD,
-  TERRAIN_TYPE_PLAINS, TERRAIN_TYPE_VOID, TERRAIN_TYPE_WALLS, TERRAIN_TYPE_WASTELAND,
+  TERRAIN_TYPE_PLAINS, TERRAIN_TYPE_THRONE, TERRAIN_TYPE_VOID, TERRAIN_TYPE_WALLS, TERRAIN_TYPE_WASTELAND,
 } from './terrainConstants'
 
 import {nullGameComms} from '../../modules/communication/GameComms'
@@ -55,6 +55,9 @@ class Terrain {
         break
       case TERRAIN_TYPE_ICE_FIELD:
         this.pixiNode = new PIXI.Sprite(iceFieldTexture)
+        break
+      case TERRAIN_TYPE_THRONE:
+        this.pixiNode = new PIXI.Sprite(throneTexture)
         break
       default:
         console.error('unknown terrain type')

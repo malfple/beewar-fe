@@ -6,6 +6,7 @@ import wallsPNG from './assets/terrain-walls.png'
 import honeyFieldPNG from './assets/terrain-honeyfield.png'
 import wastelandPNG from './assets/terrain-wasteland.png'
 import iceFieldPNG from './assets/terrain-icefield.png'
+import thronePNG from './assets/terrain-throne.png'
 
 import queenMaskPNG from './assets/unit-queen-mask.png'
 import queenTintPNG from './assets/unit-queen-tint.png'
@@ -29,6 +30,7 @@ const wallsTexture = PIXI.Texture.from(wallsPNG)
 const honeyFieldTexture = PIXI.Texture.from(honeyFieldPNG)
 const wastelandTexture = PIXI.Texture.from(wastelandPNG)
 const iceFieldTexture = PIXI.Texture.from(iceFieldPNG)
+const throneTexture= PIXI.Texture.from(thronePNG)
 
 const terrainHitArea = new PIXI.Polygon([
   -45, -25,
@@ -62,6 +64,7 @@ export {
   honeyFieldTexture,
   wastelandTexture,
   iceFieldTexture,
+  throneTexture,
 
   terrainHitArea,
 

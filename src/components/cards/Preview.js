@@ -13,6 +13,7 @@ const PREVIEW_TERRAIN_COLOR = [
   'yellow',
   'green',
   'cyan',
+  'dimgrey', // throne
 ]
 
 function Preview(props) {

@@ -8,6 +8,7 @@ import wallsPNG from '../../pixi/assets/terrain-walls.png'
 import honeyFieldPNG from '../../pixi/assets/terrain-honeyfield.png'
 import wastelandPNG from '../../pixi/assets/terrain-wasteland.png'
 import iceFieldPNG from '../../pixi/assets/terrain-icefield.png'
+import thronePNG from '../../pixi/assets/terrain-throne.png'
 
 import queenPNG from '../../pixi/assets/unit-queen.png'
 import infantryPNG from '../../pixi/assets/unit-infantry.png'
@@ -84,6 +85,10 @@ function BrushPanel(props) {
           brushCode={105}
           selectedBrushCode={state.selectedBrushCode} setSelectedBrushCode={setSelectedBrushCode}
           src={iceFieldPNG} />
+        <BrushForUnitTerrain
+          brushCode={106}
+          selectedBrushCode={state.selectedBrushCode} setSelectedBrushCode={setSelectedBrushCode}
+          src={thronePNG} />
       </div>
       <h1>Units</h1>
       <div>
