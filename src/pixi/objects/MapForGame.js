@@ -403,7 +403,7 @@ class MapForGame extends Map {
     }
     if(playersLeft <= 1) {
       for(let i = 0; i < this.playerData.length; i++) {
-        this._assignPlayerRank(i+1)
+        this._assignPlayerRank(i+1, true)
       }
       this.status = GAME_STATUS_ENDED
       this.turn_player = 0
@@ -414,7 +414,7 @@ class MapForGame extends Map {
     if(this.units[y][x].hp === 0) {
       if(this.units[y][x].type === UNIT_TYPE_QUEEN) {
         // player defeated
-        this._assignPlayerRank(this.units[y][x].owner)
+        this._assignPlayerRank(this.units[y][x].owner, false)
         this._checkGameEnd()
       }
       this.units[y][x] = null
@@ -424,7 +424,7 @@ class MapForGame extends Map {
     if(this.type === MAP_TYPE_ESCAPE) {
       if(this.terrains[y][x].type === TERRAIN_TYPE_THRONE) {
         if(this.units[y][x].type === UNIT_TYPE_QUEEN) {
-          this._assignPlayerRank(this.units[y][x].owner)
+          this._assignPlayerRank(this.units[y][x].owner, true)
           this.units[y][x].setHP(0) // need this additional step to remove the queen sprite
           this.units[y][x] = null
           this._checkGameEnd()
@@ -432,13 +432,29 @@ class MapForGame extends Map {
       }
     }
   }
-  _assignPlayerRank(player) {
+  _assignPlayerRank(player, win) {
     // modifying player directly is dangerous but whatever
     if(this.playerData[player-1].final_turns !== 0) {
       return
     }
-    // final_rank is currently unused, so it's empty here.
-    // if it is needed, copy from BE
+    const rankTaken = []
+    for(let i = 0; i <= this.playerData.length; i++) { rankTaken.push(false) }
+    for(let i = 0; i < this.playerData.length; i++) {
+      if(this.playerData[i].final_rank !== 0) { // player already ranked
+        rankTaken[this.playerData[i].final_rank] = true
+      }
+    }
+    if(win) {
+      this.playerData[player-1].final_rank = 1
+      while(rankTaken[this.playerData[player-1].final_rank]) {
+        this.playerData[player-1].final_rank++
+      }
+    } else {
+      this.playerData[player-1].final_rank = this.playerData.length
+      while(rankTaken[this.playerData[player-1].final_rank]) {
+        this.playerData[player-1].final_rank--
+      }
+    }
     this.playerData[player-1].final_turns = this.turn_count
   }
 
